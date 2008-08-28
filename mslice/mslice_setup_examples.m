@@ -7,7 +7,7 @@ try
     rootpath = fileparts(which('mslice_setup_examples'));
     cd(rootpath)
     % Now get to the main mslice directory
-    cd mslice
+    cd msp_files
     root_new=pwd;
     % Get the root directory for the examples from wherever the mslice installation was copied
     % Assumes mslice root directory contains msp files that between them give the root directory
@@ -25,8 +25,8 @@ try
         end
         fclose(fid);
         if ~isempty(root_old)
-            pos=strfind(root_old,'\mslice');
-            root_old = root_old(1:pos(end)+6);
+            pos=strfind(root_old,'\msp_files');
+            root_old = root_old(1:pos(end)+9);
             break
         end
     end
