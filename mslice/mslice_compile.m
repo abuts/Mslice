@@ -1,3 +1,11 @@
+% >> mslice compile(option, ext)
+%
+% option is the path within the fortran folder to use for the fortran
+% files, i.e. 'win32', 'old', 'win64' to use for compiling. by default
+% 'old' is used.
+%
+
+
 % To change locations etc. edit this file - ..\homer_standalone_src should
 % be replaced with wherever source files should go,
 % ..\homer_standalone\dist for distribution files, homer is the name of the
@@ -6,6 +14,10 @@
 % use relative folders so that it's more robust against folder changes.
 % Also note using things like *.txt, *.msp means that any svn folder is
 % ignored. 
+
+if nargin <1
+    option = 'old';
+end
 
 parent_path = which('mslice_compile');
 parent_dir = fileparts(parent_path);
@@ -17,8 +29,8 @@ mkdir('mslice_standalone\src')
 mkdir('mslice_standalone\dist')
 
 % compile into source folder
-mcc -o 'mslice' -W 'main' -d 'mslice_standalone\src' -T 'link:exe' -v -N 'mslice.m' 
-mcc -o 'setup_examples' -W 'main' -d 'mslice_standalone\src' -T 'link:exe' -v -N 'mslice_setup_examples.m' 
+mcc -o 'mslice' -W 'main' -d 'mslice_standalone\src' -T 'link:exe' -v -N 'mslice.m'
+
 %copy over any msp files
 mkdir('mslice_standalone\dist\msp_files')
 copyfile('msp_files\*.msp','mslice_standalone\dist\msp_files')
@@ -38,6 +50,12 @@ copyfile('mslice\help.txt','mslice_standalone\dist','f')
 mkdir('mslice_standalone\dist\DLL')
 mkdir('mslice_standalone\dist\License')
 
+copyfile('mslice\fortran\*.mex*','mslice_standalone\dist\DLL','f')
+
+try
+copyfile('mslice\fortran\*.dll*','mslice_standalone\dist\DLL','f')
+end
+
 try
 copyfile('win32_distref\*.dll','mslice_standalone\dist\DLL','f')
 end
@@ -56,24 +74,29 @@ end
 
 % copy over instrument files if they exist
 try
-    mkdir('mslice_standalone\msp_files\HET')
-copyfile('msp_files\HET\*','mslice_standalone\msp_files\HET')
+    mkdir('mslice_standalone\dist\msp_files\HET')
+copyfile('msp_files\HET\*.*','mslice_standalone\dist\msp_files\HET')
+rmdir('mslice_standalone\dist\msp_files\HET\.svn','s')
 end
 try
-    mkdir('mslice_standalone\MARI')
-copyfile('msp_files\MARI\*','mslice_standalone\msp_files\MARI')
+    mkdir('mslice_standalone\dist\msp_files\MARI')
+copyfile('msp_files\MARI\*.*','mslice_standalone\dist\msp_files\MARI')
+rmdir('mslice_standalone\dist\msp_files\MARI\.svn','s')
 end
 try
-    mkdir('mslice_standalone\MAPS')
-copyfile('msp_files\MAPS\*','mslice_standalone\msp_files\MAPS')
+    mkdir('mslice_standalone\dist\msp_files\MAPS')
+copyfile('msp_files\MAPS\*.*','mslice_standalone\dist\msp_files\MAPS')
+rmdir('mslice_standalone\dist\msp_files\MAPS\.svn','s')
 end
 try
-    mkdir('mslice_standalone\MERLIN')
-copyfile('msp_files\MERLIN\*','mslice_standalone\msp_files\MERLIN')
+    mkdir('mslice_standalone\dist\msp_files\MERLIN')
+copyfile('msp_files\MERLIN\*.*','mslice_standalone\dist\msp_files\MERLIN')
+rmdir('mslice_standalone\dist\msp_files\MERLIN\.svn','s')
 end
 try
-    mkdir('mslice_standalone\IRIS')
-copyfile('msp_files\IRIS\*','mslice_standalone\msp_files\IRIS')
+    mkdir('mslice_standalone\dist\msp_files\IRIS')
+copyfile('msp_files\IRIS\*.*','mslice_standalone\dist\msp_files\IRIS')
+rmdir('mslice_standalone\dist\msp_files\IRIS\.svn','s')
 end
 
 % copy over the mslice exe and ctf files.
@@ -102,20 +125,7 @@ rmdir('dist','s')
 rmdir('src','s')
 
 try
-rmdir('MAPS','s')
-end
-
-try
-rmdir('MERLIN','s')
-end
-try
-rmdir('MARI','s')
-end
-try
-rmdir('HET','s')
-end
-try
-rmdir('IRIS','s')
+rmdir('msp_files','s')
 end
 
 

@@ -1,4 +1,4 @@
-help.txt 
+help.txt 7
 
 %%%%%%%%%%%%%%%%%%% Matlab Visualisation Software %%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%% for Single Crystal and Powder Time-of-Flight Neutron Data %%%%%%%%%  
@@ -17,6 +17,7 @@ help.txt
 %%%            email: r.coldea@rl.ac.uk                                  %%% 
 %%%            tel: +44 1235 44 6290                                     %%% 
 %%%            fax: +44 1235 44 5270                                     %%%  
+%%%            MATLAB(R). (c) 1984 - 2007 The MathWorks, Inc.            %%% 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

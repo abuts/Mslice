@@ -50,6 +50,10 @@ else  % ==== select given or default .msp file =========
    end
 end
 
+filedir = fileparts(fullname);
+
+cd(filedir)
+
 % === open .msp parameter file for reading as an ASCII text file
 fid=fopen(fullname,'rt');
 if fid==-1,

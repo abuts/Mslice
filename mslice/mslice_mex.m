@@ -35,6 +35,16 @@ try
     % Now get to the main mslice directory
     cd mslice
     cd Fortran
+    
+    display('please choose your C compiler')
+display (' ')
+    mex -setup
+    mex ffind.c
+    
+    display('please choose your Fortran Compiler')
+    display(' ')
+
+    mex -setup
     cd(ver)
     
     mex(['avpix_df.' ext])
