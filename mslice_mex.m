@@ -10,7 +10,6 @@ try
     cd(rootpath)
     % Now get to the main mslice directory
     cd mslice
-    cd Fortran
     mex avpix_df.f
     mex cut2d_df.f
     mex cut3d_df.f
@@ -20,7 +19,7 @@ try
     mex slice_df.f
     mex spe2proj_df.f
     
-    cd ..
+
     cd .. 
     cd mslice_extras
     mex slice_df_full.f
