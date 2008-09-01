@@ -17,9 +17,6 @@ addpath(rootpath)  % MUST have rootpath so that mslice_init, mslice_off included
 addpath_message (rootpath,'mslice');
 % addpath_message (rootpath,'mslice_corrections');
 addpath_message (rootpath,'mslice_extras');
-addpath_message (rootpath,'mslice','Fortran');
-addpath_message (rootpath,'mslice','Matlab');
-addpath_message (rootpath,'mslice','Libisis_funcs');
 
 %--------------------------------------------------------------------------
 function addpath_message (varargin)
