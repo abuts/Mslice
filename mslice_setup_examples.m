@@ -6,9 +6,17 @@ try
     % root directory is assumed to be that in which this function resides
     rootpath = fileparts(which('mslice_setup_examples'));
     cd(rootpath)
-    % Now get to the main mslice directory
+    % Now get to the main mslice directory unless deployed as application
+    if ~isdeployed
     cd mslice
+    else
+        cd ..
+        cd ..
+    end
     root_new=pwd;
+    
+    display(['line 18 reached - got into the directory  ' root_new])
+   
     % Get the root directory for the examples from wherever the mslice installation was copied
     % Assumes mslice root directory contains msp files that between them give the root directory
     filename=dir('*.msp');
@@ -24,9 +32,16 @@ try
             end
         end
         fclose(fid);
-        if ~isempty(root_old)
+        if ~isempty(root_old) && ~isdeployed
             pos=strfind(root_old,'\mslice');
             root_old = root_old(1:pos(end)+6);
+            break
+        elseif ~isempty(root_old)
+            
+            display(root_old)
+            root_old = root_old(1:(end-1));
+            display(root_old)
+            
             break
         end
     end
