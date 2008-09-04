@@ -74,13 +74,13 @@ end
 
 cd ..
 
-if exist('mslice.zip')
- delete mslice.zip
+if exist('mslice_win32.zip')
+ delete mslice_win32.zip
 end
 
 cd mslice_distribution
 
-zip('..\mslice.zip','*')
+zip('..\mslice_win32.zip','*')
 
 cd ..
 
