@@ -16,6 +16,8 @@
 % ignored. 
 
 
+%NOTE -MUST delete the .svn folders when copying things accross. 
+
 
 parent_path = which('mslice_compile_win32');
 parent_dir = fileparts(parent_path);
@@ -27,6 +29,9 @@ mkdir('mslice_standalone\src')
 mkdir('mslice_standalone\dist')
 
 % compile into source folder
+
+% mcc -o <name of .exe file> -W 'main' -d <folder location to put .exe and
+% .ctf files> -T 'link:exe' -v -N <name of mfile to compile (can omit '.m')>
 mcc -o 'mslice' -W 'main' -d 'mslice_standalone\src' -T 'link:exe' -v -N 'mslice.m'
 
 mcc -o 'mslice_setup_examples' -W 'main' -d 'mslice_standalone\src' -T 'link:exe' -v -N 'mslice_setup_examples.m'
@@ -34,10 +39,7 @@ mcc -o 'mslice_setup_examples' -W 'main' -d 'mslice_standalone\src' -T 'link:exe
 %copy over any msp files
 copyfile('mslice\*.msp','mslice_standalone\dist')
 
-%copy over fortran files and such
-% mkdir('mslice_standalone\dist\MEX')
-% copyfile('mslice\Fortran\*.mex*','mslice_standalone\dist\MEX')
-% copyfile('mslice\Fortran\*.dll','mslice_standalone\dist\MEX')
+% should be no need to copy over fortran files. 
 copyfile('mslice\*.dat','mslice_standalone\dist')
 
 
@@ -98,7 +100,7 @@ copyfile('mslice\HET\*.*','mslice_standalone\dist\IRIS')
 rmdir('mslice_standalone\dist\IRIS\.svn','s')
 end
 
-% copy over the mslice exe and ctf files.
+% THE MOST IMPORTANT PART - copy over the mslice exe and ctf files.
  copyfile('mslice_standalone\src\mslice.exe','mslice_standalone\dist','f')
  copyfile('mslice_standalone\src\mslice.ctf','mslice_standalone\dist','f')
  copyfile('mslice_standalone\src\mslice_setup_examples.exe','mslice_standalone\dist','f')
