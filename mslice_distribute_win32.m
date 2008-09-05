@@ -1,7 +1,7 @@
 % Copy required files for a distribution of mslice. Does not copy over any
 % unrequired files.
 
-parent_path = which('mslice_distribute');
+parent_path = which('mslice_distribute_win32');
 parent_dir = fileparts(parent_path);
 cd(parent_dir)
 
@@ -10,11 +10,14 @@ mkdir('mslice_distribution')
 mkdir('mslice_distribution\mslice')
 
 copyfile('mslice\*','mslice_distribution\mslice','f')
+copyfile('mslice\32bit\*.f90','mslice_distribution\mslice\32bit','f')
+copyfile('mslice\64bit\*.f90','mslice_distribution\mslice\64bit','f')
 copyfile('License\*','mslice_distribution\License','f')
 copyfile('mslice_extras\*','mslice_distribution\mslice_extras','f')
 copyfile('*.txt','mslice_distribution','f')
 copyfile('*.m','mslice_distribution','f')
-delete mslice_distribution\mslice_distribute.m
+copyfile('*.pdf','mslice_distribution','f')
+delete mslice_distribution\mslice_distribute_win32.m
 
 cd mslice_distribution
 

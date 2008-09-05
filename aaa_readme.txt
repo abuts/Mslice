@@ -29,6 +29,15 @@ To install:
 (3) After editing your startup.m, start matlab, then type
 	>> mslice_setup_examples
 
+
+OR
+
+
+
+    If running the standalone version, run the mslice_examples.exe file.
+
+ 
+
     Alternatively, if you haven't run the modified startup.m, set the current directory
    in matlab to the mslice home directory:
 	>> cd c:\mprogs\mslice
