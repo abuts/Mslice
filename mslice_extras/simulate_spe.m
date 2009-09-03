@@ -72,7 +72,7 @@ function intensity = simulate_spe(crossection, parameters, data)
 
 [Q,en] = get_hkle(data);    % Get hkle for each pixel
  
-if class(crossection)~='function_handle'    % original ms_sqw format
+if ~strcmp(class(crossection),'function_handle')    % original ms_sqw format
     theta=data.det_theta*ones(size(data.en));
     intensity=ms_sqw(crossection,parameters,Q,en,theta(:),data.ar,data.br,data.cr);
     if isempty(intensity),

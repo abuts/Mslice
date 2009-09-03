@@ -1,10 +1,22 @@
-function ms_cut(cmd);
+function cut_d=ms_cut(cmd,noplot);
 
 % function ms_cut(cmd);
 % callback function for the 'Plot Cut' button on the MSlice Control Window
 % cmd='tomfit' if cut is to be sent directly to Mfit as an xye file
 % cmd='over' for over plotting, new plot otherwise
 % cmd='store_bkg_E' to generate an energy-dependent 'background' estimate from the cut
+%
+% T.G.Perring Feb 2009
+% Add further option, to enforce no plotting if store_bkg_E, and output cut argument
+% Full output possibilities: '*' indicates new; ottherwise exactly the same operation as before
+%   >> ms_cut                           % new plot
+%   >> ms_cut('over')                   % plot over existing gaph
+%   >> ms_cut('tomfit')                 % to mfit, no plotting
+%   >> ms_cut('store_bkg_E')            % store background, with plot
+%
+% * >> ms_cut('noplot')                 % no plot (dones nothing unless >> wout=ms_cut)
+% * >> ms_cut('store_bkg_E','noplot')   % store background, without plot
+% 
 
 % == return if no Control Window present, no data read or projections not calculated yet
 fig=findobj('Tag','ms_ControlWindow');
@@ -156,13 +168,21 @@ elseif exist('cmd','var')&(~isempty(cmd))&(ischar(cmd))&(strcmp(cmd(~isspace(cmd
    else
       temp=get(hh,'String');
       xlabel=temp{get(hh,'Value')};
+        % see if plot wanted or not (added TGP)
+        if exist('noplot','var')&(~isempty(noplot))&(ischar(noplot))&(strcmp(noplot(~isspace(noplot)),'noplot')),
+            noplot=(1>0);   % demand there is no plot
+        else
+            noplot=(1<0);
+        end
       if strcmp(xlabel(~isspace(xlabel)),'Energy'),	% if cut direction is energy, then perform cut and store in window
          disp(['Storing cut as an estimate for an energy-dependent ''background''.']);
          disp(['Adjusting range and binning along the energy axis to match those of the spe data.']);
          if (sample==1)&(analmode==1)&(psd==1), % if sample is single crystal, analysed as single crystal and with psd detectors
-			   cut_d=cut_spe(data,x,data.en(1),data.en(end),data.en(2)-data.en(1),vy_min,vy_max,vz_min,vz_max,i_min,i_max,OutputType,output_filename,tomfit);
+			   cut_d=cut_spe(data,x,data.en(1),data.en(end),data.en(2)-data.en(1),vy_min,vy_max,vz_min,vz_max,i_min,i_max,...
+                   OutputType,output_filename,tomfit,noplot);
 			else	% powder mode
-   			cut_d=cut_spe(data,x,data.en(1),data.en(end),data.en(2)-data.en(1),vy_min,vy_max,i_min,i_max,OutputType,output_filename,tomfit);
+   			cut_d=cut_spe(data,x,data.en(1),data.en(end),data.en(2)-data.en(1),vy_min,vy_max,i_min,i_max,...
+                OutputType,output_filename,tomfit,noplot);
          end         
          set(findobj(fig,'Tag','ms_bkg_E'),'UserData',cut_d);
          return;
@@ -191,10 +211,17 @@ if xaxis~=1,	% choose x-axis for plot not the cut axis but say |Q| or K
 end
 
 % === call cut_spe routine with different parameters for cuts through 3d data (single crystal+psd) and 2d data (single crystal+non-PSD or powder)
-if (sample==1)&(analmode==1)&(psd==1),
-   cut_d=cut_spe(data,x,vx_min,vx_max,bin_vx,vy_min,vy_max,vz_min,vz_max,i_min,i_max,OutputType,output_filename,tomfit);
+% see if plot wanted or not (added TGP)
+if exist('cmd','var')&(~isempty(cmd))&(ischar(cmd))&(strcmp(cmd(~isspace(cmd)),'noplot')),
+    noplot=(1>0);   % demand there is no plot
 else
-   cut_d=cut_spe(data,x,vx_min,vx_max,bin_vx,vy_min,vy_max,i_min,i_max,OutputType,output_filename,tomfit);
+    noplot=(1<0);
+end
+
+if (sample==1)&(analmode==1)&(psd==1),
+   cut_d=cut_spe(data,x,vx_min,vx_max,bin_vx,vy_min,vy_max,vz_min,vz_max,i_min,i_max,OutputType,output_filename,tomfit,noplot);
+else
+   cut_d=cut_spe(data,x,vx_min,vx_max,bin_vx,vy_min,vy_max,i_min,i_max,OutputType,output_filename,tomfit,noplot);
 end
 
 % === remove plot_over attribute for plot_cut figure if plot was over an existing graph and cut was not sent directly to mfit 

@@ -9,3 +9,19 @@ if ~isempty(fig),
     disp('Mslice control window active. Closing mslice...');
     delete(fig);
 end
+
+% Delete all mslice plot windows
+taglist={'plot_slice','surf_slice','plot_cut','plot_traj'};
+for i=1:numel(taglist)
+    h=findobj('Tag',taglist{i});
+    if ~isempty(h)
+        delete(h)
+    end
+    h=findobj('Tag',['old_',taglist{i}]);
+    if ~isempty(h)
+        for j=1:numel(h)
+            delete(h(j));
+        end
+    end
+end
+    

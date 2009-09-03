@@ -9,6 +9,9 @@ function mslice_off
 % root directory is assumed to be that in which this function resides
 rootpath = fileparts(which('mslice_off'));
 
+% Close down mslice, if running
+mslice_finish
+
 warn_state=warning('off','all');    % turn of warnings (so don't get errors if remove non-existent paths)
 try
     paths = genpath(rootpath);

@@ -1,4 +1,4 @@
-function slice_d=ms_slice_write(flname_in,cmd);
+function [slice_d,slice_full]=ms_slice_write(flname_in,cmd)
 
 % function slice_d=ms_slice_write(cmd);
 %
@@ -6,7 +6,9 @@ function slice_d=ms_slice_write(flname_in,cmd);
 % Slightly modified version of ms_slice, to write slice to file if single input dataset.
 % Calls new  function slice_spe_full:
 %
-% e.g.  >> slice = ms_slice_write ('')               % write slice; prompts for filename
+%       >> slice = ms_slice_write ('')               % write slice; prompts for filename
+%
+%       >> slice = ms_slice_write ('$nofile')          % do not write a file
 %
 %       >> slice = ms_slice_write ('c:\myfile.slc')  % writes to named file
 %
@@ -17,11 +19,15 @@ function slice_d=ms_slice_write(flname_in,cmd);
 %         'myfile.slc' saves slice to ASCII file named myfile.slc
 %
 % cmd='',[] or absent for normal slice plot
-%     'noplot' for calculation only 
-%     'surf' for calculation and surface plot
-%     'clear' clear slice data stored in ControlWindow object 'tag','ms_slice_data' 
+%     'noplot'  for calculation only 
+%     'surf'    for calculation and surface plot
+%     'clear'   clear slice data stored in ControlWindow object 'tag','ms_slice_data' 
+% nb  'plot'    will result in a plot
 %
-%
+
+% T.G.Perring   Feb 2009
+% - add slice_full as second output argument
+% - give error if data is a cell array (as slice_spe_full doesn't handle this)
 
 % == return if no Control Window present, no data read or projections not calculated yet
 fig=findobj('Tag','ms_ControlWindow');
@@ -57,15 +63,16 @@ elseif isstruct(data),
    end   
 elseif iscell(data),
    % === multiple data sets
-   for i=1:length(data),
-      if ~isfield(data{i},'S')|isempty(data{i}.S),
-         disp(['No intensity matrix in data set ' num2str(i) '. Construct set again.']);
-         return;
-      elseif ~isfield(data{i},'v')|isempty(data{i}.v),
-         disp(['Calculate projections for set ' num2str(i) ', then do slice.']);
-         return;
-      end
-    end
+   error('Cannot handle multiple data sets')
+%    for i=1:length(data),
+%       if ~isfield(data{i},'S')|isempty(data{i}.S),
+%          disp(['No intensity matrix in data set ' num2str(i) '. Construct set again.']);
+%          return;
+%       elseif ~isfield(data{i},'v')|isempty(data{i}.v),
+%          disp(['Calculate projections for set ' num2str(i) ', then do slice.']);
+%          return;
+%       end
+%     end
 end
 
 % ===== read parameters from ControlWindow
@@ -123,18 +130,19 @@ end
 colordef none;
 if iscell(data),
    % === multiple data sets
-   n=length(data);	% number of data sets
-   slice_d=cell(size(data));
-   weights=zeros(1,n);
-   for i=1:n,
-	   slice_d{i}=slice_spe(data{i},z,vz_min,vz_max,vx_min,vx_max,bin_vx,vy_min,vy_max,bin_vy,...
-         i_min,i_max,shad,'noplot');
-   	if isempty(slice_d{i}),
-   		disp(['Warning : Slice through data set ' num2str (i) ' contains no data.']);
-      end
-      weights(i)=data{i}.monitor;
-   end
-   slice_d=add_slice(slice_d,weights);
+      error('Cannot handle multiple data sets')
+%    n=length(data);	% number of data sets
+%    slice_d=cell(size(data));
+%    weights=zeros(1,n);
+%    for i=1:n,
+% 	   slice_d{i}=slice_spe(data{i},z,vz_min,vz_max,vx_min,vx_max,bin_vx,vy_min,vy_max,bin_vy,...
+%          i_min,i_max,shad,'noplot');
+%    	if isempty(slice_d{i}),
+%    		disp(['Warning : Slice through data set ' num2str (i) ' contains no data.']);
+%       end
+%       weights(i)=data{i}.monitor;
+%    end
+%    slice_d=add_slice(slice_d,weights);
 else
    % === check if range/binning has changed since the last stored slice
    h=findobj(fig,'tag','ms_slice_data');
@@ -149,11 +157,15 @@ else
       end   
    end
    if exist('flname_in','var')&ischar(flname_in)&~isempty(flname_in)
-       flname = flname_in;
+       if ~strcmp(flname_in,'$nofile')
+            flname = flname_in;
+       else
+            flname='';
+       end
    else
        flname = ms_putfile_full('*.slc');
    end
-   slice_d=slice_spe_full(data,z,vz_min,vz_max,vx_min,vx_max,bin_vx,vy_min,vy_max,bin_vy,...
+   [slice_d,slice_full]=slice_spe_full(data,z,vz_min,vz_max,vx_min,vx_max,bin_vx,vy_min,vy_max,bin_vy,...
       i_min,i_max,shad,'noplot',flname);
 end   
 

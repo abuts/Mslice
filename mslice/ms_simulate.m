@@ -74,22 +74,22 @@ function ms_simulate(p1,p2,p3,p4,p5)
 % === return if MSlice ControlWindow not active
 fig=findobj('Tag','ms_ControlWindow');
 if isempty(fig),
-   disp(['MSlice Control Window has to be opened first before simulation can begun.']);
+   disp('MSlice Control Window has to be opened first before simulation can begun.');
    return
 end
 
 % === return if detector information not loaded yet
 data=fromwindow;
 if isempty(data),
-   disp(['Need to load detector information in a .phx file first.']);
+   disp('Need to load detector information in a .phx file first.');
    return;
 end
-ms_calc_proj;
+ms_calc_proj;       % reperforms the calculate projections - so any symmetrisation is lost
 data=fromwindow;
 
 % === generate energy grid
 if nargin==5
-    emin=p1;emax=p2,de=p3;crossection=p4;parameters=p5;
+    emin=p1;emax=p2;de=p3;crossection=p4;parameters=p5;
     data.en=emin:de:emax;
     data.en=data.en(1:(end-1))+de/2; % choose midpoints per each bin
 elseif nargin==2
@@ -103,7 +103,7 @@ end
 % === simulate scattering in each detector
 data.S = simulate_spe(crossection, parameters, data);
 
-if class(crossection)~='function_handle'
+if ~strcmp(class(crossection),'function_handle')
     data.ERR=0.1*data.S;            % put arbitrary errors of 10% intensity - for backwards compatibility
     data.filename=['cross=' num2str(crossection) ', p=['];
     if isempty(data.S),
@@ -121,4 +121,4 @@ data.filename=[data.filename(1:(end-1)) ']'];
 
 % === put data back into mslice control window
 towindow(data);
-ms_calc_proj;
+ms_calc_proj;   % to recalculate the projection axes

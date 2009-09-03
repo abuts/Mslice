@@ -5,31 +5,31 @@ function mslice(MspFile)
 % Radu Coldea 02-October-1999
 
 % *** ISIS changes
-%   T.G.Perring, Ron Fowler: Size of mslice control window changed, and allow resize
+%   T.G.Perring, Ron Fowler ~2007: Size of mslice control window changed, and allow resize
 %
-
-% The following is a list of functions to compile that may only be called
-% as strings. These were found using test2 = []; test = dir, for i = 1:length(test),
-% test2 = [test2, test1(i).name(1:(end-2))] end and then copying and
-% pasting the text contents of test2. 
-
-%#function store_data a2spe add2mask add_psd_ns add_slice add_spe add_spe_example avpix_m basis_d basis_hkl basis_r basis_u bin2d_df buildspe calcproj calcprojb calcprojpowder combil cs2cucl4 cut2d_m cut2mfit cut3d_m cut3dxye_m cut_spe det2spec det_view detectorview disp_spe dv_load_file dv_mask dv_plot_msk dv_plot_sum dv_read_int dv_save_msk executemsp firstword firstzone fitcut genie getb int_det interp_cut isinpath load_fit load_hkl load_ipgascm load_msk load_par load_phx load_spe load_sum load_xye mask maskmore mc2spe mctr2spe mff_cu3d miller ms_analysis_mode ms_ax_linear_log ms_bkg ms_calc_proj ms_cut ms_cut_axes ms_disp ms_disp_axes ms_disp_or_slice ms_errorbar ms_filter ms_fitcut ms_fitcut_load_data ms_fitcut_save_data ms_fitcut_update ms_fitcut_updatepar ms_getfile ms_getstring ms_help ms_iris ms_iris_spe ms_list_pars ms_load_data ms_load_msp ms_pick_output ms_plot_traj ms_powder_menu ms_printc ms_putfile ms_sample ms_save_data ms_save_msp ms_simulate ms_simulate_iris ms_slice ms_slice_axes ms_sqw ms_sqw_iris ms_toggle ms_updatelabel ms_updatelabelu mslicepath mult_cut no_overlap order_m par2phx phx2par pick_wv pickvar pickvar_hkl pickvarb planeperp plot_cut plot_de plot_det plot_slice plot_spe plot_sum plot_traj pos2spec put_in_matrix putb q2rlu read_Q read_spe rebin_cut rlu2q rm_mask save_cut save_msk save_phx save_spe sim_cs2cucl4 simulate slice_spe small smooth_curve smooth_slice smooth_spe sort_msk spe2modQ spe2sqe spe2sqeb spec2matrix spurion sqe2proj sqe2samp sqw stripath sub_cut sum2det surf_slice swapEmodQ towindow units updatemsp uv_2dtr waverage wdisp_cs2cucl4 avoidtex color_slider fromwindow keep load_cut make_cur
-
-% === find MSlice directory and place at top of MATLAB search path if not in path already
+%   Dean Whittaker, August 2008
+%      The following is a list of functions to compile that may only be called
+%      as strings. These were found using test2 = []; test = dir, for i = 1:length(test),
+%      test2 = [test2, test1(i).name(1:(end-2))] end and then copying and
+%      pasting the text contents of test2. 
+%      #function store_data a2spe add2mask add_psd_ns add_slice add_spe add_spe_example avpix_m basis_d basis_hkl basis_r basis_u bin2d_df buildspe calcproj calcprojb calcprojpowder combil cs2cucl4 cut2d_m cut2mfit cut3d_m cut3dxye_m cut_spe det2spec det_view detectorview disp_spe dv_load_file dv_mask dv_plot_msk dv_plot_sum dv_read_int dv_save_msk executemsp firstword firstzone fitcut genie getb int_det interp_cut isinpath load_fit load_hkl load_ipgascm load_msk load_par load_phx load_spe load_sum load_xye mask maskmore mc2spe mctr2spe mff_cu3d miller ms_analysis_mode ms_ax_linear_log ms_bkg ms_calc_proj ms_cut ms_cut_axes ms_disp ms_disp_axes ms_disp_or_slice ms_errorbar ms_filter ms_fitcut ms_fitcut_load_data ms_fitcut_save_data ms_fitcut_update ms_fitcut_updatepar ms_getfile ms_getstring ms_help ms_iris ms_iris_spe ms_list_pars ms_load_data ms_load_msp ms_pick_output ms_plot_traj ms_powder_menu ms_printc ms_putfile ms_sample ms_save_data ms_save_msp ms_simulate ms_simulate_iris ms_slice ms_slice_axes ms_sqw ms_sqw_iris ms_toggle ms_updatelabel ms_updatelabelu mslicepath mult_cut no_overlap order_m par2phx phx2par pick_wv pickvar pickvar_hkl pickvarb planeperp plot_cut plot_de plot_det plot_slice plot_spe plot_sum plot_traj pos2spec put_in_matrix putb q2rlu read_Q read_spe rebin_cut rlu2q rm_mask save_cut save_msk save_phx save_spe sim_cs2cucl4 simulate slice_spe small smooth_curve smooth_slice smooth_spe sort_msk spe2modQ spe2sqe spe2sqeb spec2matrix spurion sqe2proj sqe2samp sqw stripath sub_cut sum2det surf_slice swapEmodQ towindow units updatemsp uv_2dtr waverage wdisp_cs2cucl4 avoidtex color_slider fromwindow keep load_cut make_cur
+%
+%   T.G.Perring, 3 April 2009: No longer put mslice at top of the mslice path
 
 [temp,MSliceDir]=stripath(which('mslice.m'));
-% if in deployed mode, one needs to move upwards by a few levels in order
-% to get to the correct path. This is an unfortunately "hacky" way to do it
-% - DW
 
 if isdeployed
+    % if in deployed mode, one needs to move upwards by a few levels in order
+    % to get to the correct path. *** This is an unfortunately "hacky" way to do it
+    % Dean Whittaker, August 2008
     cd(MSliceDir)
     cd ..
     cd ..
     MSliceDir = [pwd filesep];
 end
     
-path(MSliceDir,path);
+% === find MSlice directory and place at top of MATLAB search path if not in path already
+% path(MSliceDir,path); %   T.G.Perring, 3 April 2009: Removed
 
 % === start by default in Crystal PSD mode if no MspFile given
 if ~exist('MspFile','var')|isempty(MspFile)|~ischar(MspFile),

@@ -1,4 +1,4 @@
-function cut=cut_spe(data,x,vx_min,vx_max,bin_vx,vy_min,vy_max,vz_min,vz_max,i_min,i_max,out_type,out_file,tomfit)
+function cut=cut_spe(data,x,vx_min,vx_max,bin_vx,vy_min,vy_max,vz_min,vz_max,i_min,i_max,out_type,out_file,tomfit,noplot)
 
 % function cut=cut_spe(data,x,vx_min,vx_max,bin_vx,vy_min,vy_max,vz_min,vz_max,i_min,i_max,out_type,out_file,tomfit)
 %       for single crystal data with PSD detectors and 
@@ -28,6 +28,12 @@ function cut=cut_spe(data,x,vx_min,vx_max,bin_vx,vy_min,vy_max,vz_min,vz_max,i_m
 %      y_min: 0.1000
 %      y_max: 0.6000
 % Radu Coldea 22-Oct-2000
+%
+% T.G.Perring Feb 2009
+% - Add further input argument, noplot, to indicate if plot required or not. If not present, noplot=false
+%   Gives complete backwards compatibility with earlier versions
+% - If out_file = '$full' then the returned cut contains the same fields that would have been passed to save_cut,
+%   but no file is written. For use with custom functions; does not alter standard mslice functionality.
 
 % === if .spe data file not read in the MSlice ControlWindow or if projections not calculated, return
 if ~exist('data','var')|~isfield(data,'v'),
@@ -56,6 +62,9 @@ end
    
 % === rename variables to maintain compatbility between cut2d_df and cut3d_df (2 or 3 viewing axes)
 if size(data.v,3)==2,	%=== 2d data set 
+   if exist('out_file','var'),
+      noplot=out_file;
+   end
    if exist('out_type','var'),
       tomfit=out_type;
    end
@@ -358,7 +367,8 @@ if exist('tomfit','var')&~isempty(tomfit)&islogical(tomfit)&tomfit,
    % === do not plot cut in plot_cut window, but send directly to Mfit    
    cut2mfit(cut);
 else
-   plot_cut(cut);
+   if ~exist('noplot','var'), noplot=(1>0); end
+   if ~noplot, plot_cut(cut); end
 end
 
 % === save cut to a file, if required
@@ -374,6 +384,8 @@ if ~isempty(out_file)&isempty(findstr(out_type,'none')),
          cut.uv=data.uv;	% [ux uy uz; vx vy vz]
          cut.psi_samp=data.psi_samp;	% numeric
       end
-   end   
-	save_cut(cut,out_file,out_type);   
+    end
+    if ~strcmp(out_file,'$full')
+        save_cut(cut,out_file,out_type);
+    end
 end

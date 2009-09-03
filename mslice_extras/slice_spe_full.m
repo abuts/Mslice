@@ -1,4 +1,4 @@
-function slice_d=slice_spe_full(data,z,vz_min,vz_max,vx_min,vx_max,bin_vx,vy_min,vy_max,bin_vy,i_min,i_max,shad,noplot,out_file)
+function [slice_d,slice_full]=slice_spe_full(data,z,vz_min,vz_max,vx_min,vx_max,bin_vx,vy_min,vy_max,bin_vy,i_min,i_max,shad,noplot,out_file)
 
 % function slice_d=slice_spe_full(data,z,vz_min,vz_max,vx_min,vx_max,bin_vx,vy_min,vy_max,bin_vy,i_min,i_max,shad,noplot,out_file)
 % required inputs:
@@ -18,7 +18,8 @@ function slice_d=slice_spe_full(data,z,vz_min,vz_max,vx_min,vx_max,bin_vx,vy_min
 % 21-May-2004 T.G.Perring
 %     Modified version of slice_spe (original by R.Coldea) to write out slice to file.
 %
-
+% T.G.Perring   Feb 2009
+%     Add slice_full as output argument
 
 % === check presence of required input parameters
 if ~exist('z','var')|isempty(z)|~isnumeric(z)|(length(z)~=1)
@@ -271,11 +272,30 @@ slice_full.title  = slice_d.title;
 slice_full.x_label = labelx;
 slice_full.y_label = labely;
 slice_full.z_label = deblank(data.axis_unitlabel(4,:));
-slice_full.x_unitlength = data.axis_unitlength(x);
-slice_full.y_unitlength = data.axis_unitlength(y);
+% TGP 18 Dec 2008: so that mgenie mplot routine does not alter aspect ratio if one axis is energy, set unitlength to zero
+% slice_full.x_unitlength = data.axis_unitlength(x);
+% slice_full.y_unitlength = data.axis_unitlength(y);
+if strcmp(data.axis_unitlabel(x,1:5),'(meV)')
+    slice_full.x_unitlength = 0;
+else
+    slice_full.x_unitlength = data.axis_unitlength(x);
+end
+if strcmp(data.axis_unitlabel(y,1:5),'(meV)')
+    slice_full.y_unitlength = 0;
+else
+    slice_full.y_unitlength = data.axis_unitlength(y);
+end
+
 if exist('out_file','var') & ~isempty(out_file)
     save_slice_full (slice_full, out_file); % save slice to file
 end
+
+% Add slice information to end of the structure, for comsistency with ms_slice (but not slice_spe)
+slice_d.z=z; % normal axis to slice plane 
+slice_d.v=[vz_min vz_max vx_min vx_max bin_vx vy_min vy_max bin_vy]; % slice parameters
+
+slice_full.z=z; % normal axis to slice plane 
+slice_full.v=[vz_min vz_max vx_min vx_max bin_vx vy_min vy_max bin_vy]; % slice parameters
 
 %=======================================================================
 % Plot 2d slice with a vertical colorbar, unless 'noplot' is specified

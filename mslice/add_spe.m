@@ -1,15 +1,37 @@
 function data=add_spe(weight,spedir,spefiles,spefileout,scale)
+% Adds normalised spe files together, normalising the final output
+% 
+%   >> add_spe(weight,spedir,spefiles,spefileout)
+%   >> add_spe(weight,spedir,spefiles,spefileout,scale)
+%
+%   weight      Array of relative weights e.g. [1000,1500] (proton current in uAhrs);
+%
+%   spedir      Directory containing the spe files e.g. 'c:\temp\mt_data\spe\'
+%
+%   spefiles    Cell array of spe file names e.g. {'map01234.spe','map01299.spe'}
+%
+%   spefileout  Name of spe file to contain the overall sum e.g. 'map01234_99.spe'
+%               Default: place in the directory spedir if a full path is not given
+%
+%   scale       [Optional] Overall scaling factor by which to multiply the resulting data file
+%               Default: unity
+%
+% EXAMPLE:
+%         % define relative or absolute weights of different spe files (these numbers can be uAhrs)
+%         weights=[222.6 267.7 250.1 233.8 250.1];
+% 
+%         % give path and filenames of spe files to be added
+%         spedir='m:\matlab\iris\ornl\';
+%         files={'irs17866.spe','irs17867.spe','irs17868.spe',...
+%                'irs17869.spe','irs17870.spe'}; 
+% 
+%         % give filename to save results 
+%         fileout=[spedir 'irs17866sum.spe']; 
+%         data=add_spe(weights,spedir,files,fileout);
+%
 
-% function data=add_spe(weights,spedir,spefiles,spefileout)
-% adds several .spe files to build up statistics
-% parameters: weight={100 200 } (proton current in uAhrs);
-%             spedir='m:\matlab\anal_spe\spe\'; (directory of .spe files)
-%             spefiles={'','',}; (names of .spe files to be added)
-%             spefileout='combinedfiles.spe'; (name of file with combined spe files to be saved in directory spedir)												
-% scale number to multiply the overall scale of the resulting data file
-% example: look up function add_spe_example
 % Radu Coldea 02-Oct-1999 
-
+% Modified T.G.Perring to improve help and use default output directory as spedir
 
 % === define value for nulldata
 nulldata=-1e+30;
@@ -21,22 +43,16 @@ if length(weight)~=length(spefiles),
    return;
 end
 
-%detail.index=zeros(length(weight),1);
-%detail.weight=weight(:)';
-%detail.S=zeros(length(weight),1);
-%detail.ERR=zeros(length(weight),1);
-
 % === read one file at a time
 for i=1:length(weight),
-%   disp([spedir spefiles{i}]);
+
    data=load_spe([spedir spefiles{i}]);
    if isempty(data),
       disp(['Could not load .spe file ' spedir spefiles{i}]);
       return;
    end
    index=~(data.S(:,1)<=nulldata);	% (ndet,1) is 1 where pixel is data and 0 where detector has 'nulldata' in current data set
-   %drawdet([400+data.det_group(~index)'],'y');
-   %hold on;
+
    if ~exist('cumm_index','var'),	% if it is the first file to be loaded, initaialize cumm_index, cumm_S, ERR2 ...
       det_theta=data.det_theta;
       en=data.en;
@@ -49,9 +65,10 @@ for i=1:length(weight),
          disp('Current data set not consistent with number of detectors or energy bins of previous data sets. Return.');
          return;
       end
-      if any(det_theta~=data.det_theta),
-         disp('Warning: phi grid not equivalent');
-      end
+%     Accept any values in the arrays for det_theta
+%       if any(det_theta~=data.det_theta),
+%          disp('Warning: phi grid not equivalent');
+%       end
       if any(en~=data.en),
          disp('Warning: energy grid not equivalent');
       end
@@ -61,9 +78,6 @@ for i=1:length(weight),
       cumm_S=cumm_S+weight(i)*(index*ones(size(data.en))).*data.S;	% (ndet,ne)
 	   cumm_ERR2=cumm_ERR2+(weight(i).^2)*((data.ERR).^2).*(index*ones(size(data.en)));	% (ndet,ne)
    end
-%   detail.index(i)=index(det);
-%   detail.S(i)=data.S(det,enbin);
-%   detail.ERR(i)=data.ERR(det,enbin);
    disp(sprintf('masked detectors %d and weight %15.5g',sum(not(index(:))),weight(i)));
    disp(sprintf('overall masked detectors %d',sum(not(cumm_index(:)))));      
 end
@@ -74,21 +88,17 @@ data.S(cumm_index,:)=cumm_S(cumm_index,:)./(cumm_weight(cumm_index)*ones(size(da
 data.ERR=zeros(size(data.ERR));
 data.ERR(cumm_index,:)=sqrt(cumm_ERR2(cumm_index,:))./(cumm_weight(cumm_index)*ones(size(data.en)));
 
-%detail.cumm_index=cumm_index(det);
-%detail.cumm_weight=cumm_weight(det);
-%detail.cumm_S=cumm_S(det,enbin);
-%detail.cumm_ERR2=cumm_ERR2(det,enbin);
-%detail.data_S=data.S(det,enbin);
-%detail.data_ERR=data.ERR(det,enbin);
-
 if exist('scale','var')&~isempty(scale)&isnumeric(scale),
    data.S=data.S*scale;
    data.ERR=data.ERR*scale;
 end
    
 % === save result in filename fileout
-data.filename=spefileout;
+tmp=fileparts(spefileout);
+if ~isempty(tmp)
+    data.filename=spefileout;
+else
+    data.filename=fullfile(spedir,spefileout);
+end
 save_spe(data,spefileout);
 disp(sprintf('masked detectors %d and weight %15g',sum(not(index(:))),sum(weight(:))));
-
-

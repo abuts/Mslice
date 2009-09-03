@@ -25,16 +25,28 @@ try
    
     mex -setup
     switch option   % if original_32 then the extension is .f not .f90
-        case {'original_32' 'mac_32'}
-             mex avpix_df.F
+        case 'original_32'
+            mex avpix_df.F
             mex cut2d_df.F
             mex cut3d_df.F
             mex cut3dxye_df.F
             mex load_spe_df.F
             %mex ms_iris.f
+            mex put_spe_fortran.F
             mex slice_df.F
             mex spe2proj_df.F
             
+        case 'mac_32'
+            mex avpix_df.F
+            mex cut2d_df.F
+            mex cut3d_df.F
+            mex cut3dxye_df.F
+            mex load_spe_df.F
+            %mex ms_iris.f
+            %mex put_spe_fortran.F
+            mex slice_df.F
+            mex spe2proj_df.F
+        
         otherwise
             
             mex avpix_df.f90
@@ -43,6 +55,7 @@ try
             mex cut3dxye_df.f90
             mex load_spe_df.f90
             %mex ms_iris.f
+            %mex put_spe_fortran.F
             mex slice_df.f90
             mex spe2proj_df.f90
     

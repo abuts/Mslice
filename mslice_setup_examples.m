@@ -8,7 +8,7 @@ try
     cd(rootpath)
     % Now get to the main mslice directory unless deployed as application
     if ~isdeployed
-    cd mslice
+        cd mslice
     else
         cd ..
         cd ..
