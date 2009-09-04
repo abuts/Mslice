@@ -190,7 +190,7 @@ h=uicontrol('Parent',fig,'Style','popupmenu','String',{'single crystal','powder'
 
 %========== Top Figure Menu ===========================
 h=uimenu(fig,'Label','Exit');
-h=uimenu(h,'Label','Exit','Callback','mslice_finish;');
+h=uimenu(h,'Label','Exit','Callback','ms_close_windows;');
 
 % === construct Parameters menu
 h=uimenu(fig,'Label','Parameters');

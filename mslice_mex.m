@@ -10,7 +10,8 @@ function mslice_mex(option)
 %
 %   If the 32 or 64 options do not work, then the original_32 option may compile
 %  correctly and be a quick-fix solution to the problem. 
-%   Checked to work with R2007a
+%
+%   Checked to work with R2007a, windows original 32bit
 
 if ~exist('option','var')
     error('Must give installation option (''32'',''mac_32'',''64'',''original_32'')')
@@ -25,11 +26,11 @@ try
     % Source code directories, and output directories:
     %  - mslice main directory:
     mslice_mex_rel_dir='mslice';
-    mslice_fortcode_rel_dir=fullfile('mslice',[option,'bit']);
+    mslice_fortcode_rel_dir=fullfile('mslice','fortran',[option,'bit']);
     mslice_Ccode_rel_dir='mslice';
     %  - mslice extras directory:
     mslice_extras_mex_rel_dir='mslice_extras';
-    mslice_extras_code_rel_dir='mslice_extras';
+    mslice_extras_code_rel_dir=fullfile('mslice_extras','fortran');
 
     % Prompt for fortran compiler, and compile all fortran
     % -----------------------------------------------------

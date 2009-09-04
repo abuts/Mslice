@@ -16,8 +16,58 @@
 % ignored. 
 
 
-%NOTE -MUST delete the .svn folders when copying things accross. 
+% Make stanadlon windows 32 version of mslice
+%
 
+
+start_dir=pwd;
+try
+    % Get root directory, and ensure this is the pwd
+    parent_dir = fileparts(which('mslice_init'));
+    cd (parent_dir)
+
+    % Create a temporary directory
+    tmpdir=tempdir;   % get temporary directory
+    if isempty(tmpdir)
+        error('Unable to locate temporary directory name')
+    end
+    tmpdir = fullfile(tmpdir,'mslice_temporary_standalone_creation');
+    if exist(tmpdir,'dir')
+        rmdir(tmpdir,'s')
+    end
+    mkdir(tmpdir);
+
+    % Compile into the temporary folder
+    % Command is:
+    % mcc -o <name of .exe file> -W 'main' -d <folder location to put .exe and.ctf files> ...
+    %     -T 'link:exe' -v -N <name of mfile to compile (can omit '.m')>
+    mcc -o 'mslice' -W 'main' -d 'mslice_standalone\src' -T 'link:exe' -v -N 'mslice.m'
+    mcc -o 'mslice_setup_examples' -W 'main' -d 'mslice_standalone\src' -T 'link:exe' -v -N 'mslice_setup_examples.m'
+
+    % Copy over 
+    
+    % Copy files:
+    copyfile([parent_dir,'*.*'],tmpdir,'f');
+
+    % Remove all the .svn folders
+    directoryRecurse(tmpdir,@remove_svn)
+
+    % Create zip file
+    if exist(zipfile,'file')
+        delete(zipfile)     % Delete any zip file with the output name
+    end
+    zip(zipfile,'*',tmpdir)    % Create zip file
+
+    % Delete the temporary folder
+    rmdir(tmpdir,'s')
+
+    % Return to starting directory
+    cd(start_dir);
+
+catch
+    cd(start_dir);
+    error('Problems creating mex files. Please try again.')
+end
 
 parent_path = which('mslice_compile_win32');
 parent_dir = fileparts(parent_path);
