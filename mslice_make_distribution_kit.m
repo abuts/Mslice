@@ -1,6 +1,9 @@
 function mslice_make_distribution_kit
 % Run this function to convert the contents of the mslice svn as checked out
 % to convert into a distribution kit.
+%
+% Creates a temporary directory in which to make the distribution, and then
+% creates a zip file, mslice.zip, in the mslice home directory.
 
 
 % Name of zip file to hold distribution (no path must be given)
