@@ -16,6 +16,7 @@ addpath(rootpath)  % MUST have rootpath so that mslice_init, mslice_off included
 % Other directories
 addpath_message (rootpath,'mslice');
 addpath_message (rootpath,'mslice_extras');
+addpath_message (rootpath,'mslice_more_extras');
 
 %--------------------------------------------------------------------------
 function addpath_message (varargin)

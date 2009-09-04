@@ -1,86 +1,113 @@
 function mslice_mex(option)
 % Create mex files for all the mslice fortran routines
 %
-% >> mslice_mex(option)
+%   >> mslice_mex(option)
 %
-% option is either '32', '64' or 'original_32' . This uses files from the '32bit' or
-% '64bit' directory respectively to mex. All .mex* files are put into the
-% mslice directory. If the 32 or 64 options do not work, then the
-% original_32 option may compile correctly and be a quick-fix solution to
-% the problem. 
+%   option      Architecture:
+%                   '32', 'mac_32', '64' or 'original_32' . 
+%               This uses files from the '32bit', '64bit' or original 32 bit
+%               fortran code directory respectively.
+%
+%   If the 32 or 64 options do not work, then the original_32 option may compile
+%  correctly and be a quick-fix solution to the problem. 
+%   Checked to work with R2007a
 
-% this seems to work with R2007a
+if ~exist('option','var')
+    error('Must give installation option (''32'',''mac_32'',''64'',''original_32'')')
+end
 
 start_dir=pwd;
 try
-    % root directory is assumed to be that in which this function resides
-    rootpath = fileparts(which('mslice_mex'));
+    % root directory is assumed to be that in which mslice_init resides
+    rootpath = fileparts(which('mslice_init'));
     cd(rootpath)
-    % Now get to the main mslice directory
-    cd mslice
-    cd([option 'bit'])
-    
-    
-   display('please select your FORTRAN compiler')
-   
+
+    % Source code directories, and output directories:
+    %  - mslice main directory:
+    mslice_mex_rel_dir='mslice';
+    mslice_fortcode_rel_dir=fullfile('mslice',[option,'bit']);
+    mslice_Ccode_rel_dir='mslice';
+    %  - mslice extras directory:
+    mslice_extras_mex_rel_dir='mslice_extras';
+    mslice_extras_code_rel_dir='mslice_extras';
+
+    % Prompt for fortran compiler, and compile all fortran
+    % -----------------------------------------------------
+    display('--------------------------------------------------------------')
+    display('Please select your FORTRAN compiler')
     mex -setup
-    switch option   % if original_32 then the extension is .f not .f90
+    
+    switch option
         case 'original_32'
-            mex avpix_df.F
-            mex cut2d_df.F
-            mex cut3d_df.F
-            mex cut3dxye_df.F
-            mex load_spe_df.F
-            %mex ms_iris.f
-            mex put_spe_fortran.F
-            mex slice_df.F
-            mex spe2proj_df.F
+            mex_single (mslice_fortcode_rel_dir, mslice_mex_rel_dir, 'avpix_df.F')
+            mex_single (mslice_fortcode_rel_dir, mslice_mex_rel_dir, 'cut2d_df.F')
+            mex_single (mslice_fortcode_rel_dir, mslice_mex_rel_dir, 'cut3d_df.F')
+            mex_single (mslice_fortcode_rel_dir, mslice_mex_rel_dir, 'cut3dxye_df.F')
+            mex_single (mslice_fortcode_rel_dir, mslice_mex_rel_dir, 'load_spe_df.F')
+            % mex_single (mslice_fortcode_rel_dir, mslice_mex_rel_dir, 'ms_iris.F')
+            mex_single (mslice_fortcode_rel_dir, mslice_mex_rel_dir, 'put_spe_fortran.F')
+            mex_single (mslice_fortcode_rel_dir, mslice_mex_rel_dir, 'slice_df.F')
+            mex_single (mslice_fortcode_rel_dir, mslice_mex_rel_dir, 'spe2proj_df.F')
             
+            mex_single (mslice_extras_code_rel_dir, mslice_extras_mex_rel_dir, 'slice_df_full.F')
+
         case 'mac_32'
-            mex avpix_df.F
-            mex cut2d_df.F
-            mex cut3d_df.F
-            mex cut3dxye_df.F
-            mex load_spe_df.F
-            %mex ms_iris.f
-            %mex put_spe_fortran.F
-            mex slice_df.F
-            mex spe2proj_df.F
+            mex_single (mslice_fortcode_rel_dir, mslice_mex_rel_dir, 'avpix_df.F')
+            mex_single (mslice_fortcode_rel_dir, mslice_mex_rel_dir, 'cut2d_df.F')
+            mex_single (mslice_fortcode_rel_dir, mslice_mex_rel_dir, 'cut3d_df.F')
+            mex_single (mslice_fortcode_rel_dir, mslice_mex_rel_dir, 'cut3dxye_df.F')
+            mex_single (mslice_fortcode_rel_dir, mslice_mex_rel_dir, 'load_spe_df.F')
+            % mex_single (mslice_fortcode_rel_dir, mslice_mex_rel_dir, 'ms_iris.F')
+            % mex_single (mslice_fortcode_rel_dir, mslice_mex_rel_dir, 'put_spe_fortran.F')
+            mex_single (mslice_fortcode_rel_dir, mslice_mex_rel_dir, 'slice_df.F')
+            mex_single (mslice_fortcode_rel_dir, mslice_mex_rel_dir, 'spe2proj_df.F')
         
+            % mex_single (mslice_extras_code_rel_dir, mslice_extras_mex_rel_dir, 'slice_df_full.F')
+
         otherwise
-            
-            mex avpix_df.f90
-            mex cut2d_df.f90
-            mex cut3d_df.f90
-            mex cut3dxye_df.f90
-            mex load_spe_df.f90
-            %mex ms_iris.f
-            %mex put_spe_fortran.F
-            mex slice_df.f90
-            mex spe2proj_df.f90
+            mex_single (mslice_fortcode_rel_dir, mslice_mex_rel_dir, 'avpix_df.f90')
+            mex_single (mslice_fortcode_rel_dir, mslice_mex_rel_dir, 'cut2d_df.f90')
+            mex_single (mslice_fortcode_rel_dir, mslice_mex_rel_dir, 'cut3d_df.f90')
+            mex_single (mslice_fortcode_rel_dir, mslice_mex_rel_dir, 'cut3dxye_df.f90')
+            mex_single (mslice_fortcode_rel_dir, mslice_mex_rel_dir, 'load_spe_df.f90')
+            % mex_single (mslice_fortcode_rel_dir, mslice_mex_rel_dir, 'ms_iris.f90')
+            % mex_single (mslice_fortcode_rel_dir, mslice_mex_rel_dir, 'put_spe_fortran.f90')
+            mex_single (mslice_fortcode_rel_dir, mslice_mex_rel_dir, 'slice_df.f90')
+            mex_single (mslice_fortcode_rel_dir, mslice_mex_rel_dir, 'spe2proj_df.f90')
     
+            % mex_single (mslice_extras_code_rel_dir, mslice_extras_mex_rel_dir, 'slice_df_full.f90')
+
     end
-    
-    copyfile('*.mex*','../','f')
-    
-    cd .. 
-    cd .. 
-    cd mslice_extras
-    mex slice_df_full.F
-    
-    cd ..
-    
-    cd mslice
-    
-    display('please select your C compiler')
-    
+
+    % Prompt for C compiler, and compile all C code
+    % -----------------------------------------------------
+    display('--------------------------------------------------------------')
+    display('Please select your C compiler')
     mex -setup
-    mex ffind.c
-    cd(start_dir);
     
-    disp('Succesfully created all required mex files from fortran.')
+    mex_single (mslice_Ccode_rel_dir, mslice_mex_rel_dir, 'ffind.c')
+    
+    cd(start_dir);
+    display (' ')
+    display('--------------------------------------------------------------')
+    display('--------------------------------------------------------------')
+    display('Succesfully created all required mex files from fortran and C.')
+    display(' ')
+    display(' To return to your original mex options, type >> mex -setup')
+    display('--------------------------------------------------------------')
     
 catch
-    disp('Problems creating mex files. Please try again.')
     cd(start_dir);
+    rethrow(lasterror)
 end
+
+%----------------------------------------------------------------
+function mex_single (in_rel_dir, out_rel_dir, flname)
+% mex a single file, with the input and output directories
+% relative to the current directory
+curr_dir = pwd;
+flname = fullfile(curr_dir,in_rel_dir,flname);
+outdir = fullfile(curr_dir,out_rel_dir);
+
+disp(['Mex file creation from ',flname,' ...'])
+mex(flname, '-outdir', outdir);
