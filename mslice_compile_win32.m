@@ -18,6 +18,12 @@
 
 %NOTE -MUST delete the .svn folders when copying things accross. 
 
+% *** WARNING ***
+% T.G.Perring looked over this 4 Sep 2009. Not sure how it works; probably needs a change
+% following alterations of some file locations in the mslice directory structure. Certainly,
+% mslice has changes (and corrections) since the standalone build ont he web. Have not checked
+% if that standalone build works.
+
 
 parent_path = which('mslice_compile_win32');
 parent_dir = fileparts(parent_path);
