@@ -97,9 +97,17 @@ for i=1:ne
     end
 end
 
-disp('% zeros     % contribute')
-disp('--------------------------')
-[nzero'*(100/nmax),nsum'.*(100./ns(i))];
-[en',nzero',nnotfinite',ns',nsum']
-% Create background spectrum
-wback=spectrum(en,yback,eback,'Energy cut','Energy transfer (meV)','Intensity','meV',0);
+% disp('% zeros     % contribute')
+% disp('--------------------------')
+% [nzero'*(100/nmax),nsum'.*(100./ns(i))];
+% [en',nzero',nnotfinite',ns',nsum']
+
+% Make a structure that mslice recognises as a 1D cut
+%  [previously an mgenie spectrum:
+%   wback=spectrum(en,yback,eback,'Energy cut','Energy transfer (meV)','Intensity','meV',0);]
+wback.x=en;
+wback.y=yback;
+wback.e=eback;
+wback.title='Energy cut';
+wback.x_label='Energy transfer (meV)';
+wback.y_label='Intensity';
