@@ -1,8 +1,12 @@
-function data=read_spe(spe_filename,phx_filename,sum_filename,data_plot_symbol)
+function data=read_spe_mslice(spe_filename,phx_filename,sum_filename,data_plot_symbol)
 
-% function data=read_spe(spe_filename,phx_filename,sum_filename,data_plot_symbol)
+% function data=read_spe_mslice(spe_filename,phx_filename,sum_filename,data_plot_symbol)
 % reads a .spe file   
 % R.C. 20-July-1998
+%
+% T.G.Perring  8 Sep 2009
+%   Renamed to read_spe_mslice. No function uses this routine in mslice, and conflicts with libisis, mgene, Horace etc.
+%   Function is superceded by Libisis, mgenie.
 
 data=load_spe(spe_filename); % data.en (1,ne), data.S (ndet,ne),  data.ERR (ndet,ne)
 phx=load_phx(phx_filename);	% [det_num, theta(deg), psi(deg)] (ndet,3)
