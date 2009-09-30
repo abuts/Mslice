@@ -67,8 +67,8 @@
 
 !     If binning recipe inconsistent then clean up memory and return error message
       if (Ntotal .eq. 0) then 
-         call mxFreeMatrix(plhs(1))
-         call mxFreeMatrix(plhs(2))        
+         call mxDestroyArray(plhs(1))
+         call mxDestroyArray(plhs(2))        
 !         call mexErrMsgTxt('Error, binning recipe and given number of pixels not compatible')
       end if   
       return

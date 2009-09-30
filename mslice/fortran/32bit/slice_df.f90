@@ -24,7 +24,7 @@ subroutine mexFunction(nlhs, plhs, nrhs, prhs)
   integer,pointer:: vx_pr, vy_pr, vz_pr, pixel_int_pr, pixel_err_pr, grid_pr
   integer,pointer:: intensity_pr, error_int_pr
   ! declare calling functions
-  integer:: mxCreateFull, mxGetM, mxGetN, mxIsNumeric
+  integer:: mxCreateDoubleMatrix, mxGetM, mxGetN, mxIsNumeric
   ! declare local operating variables of the interface function
   integer:: ndet, ne, n, m
   real*8 ::grid(8), vx_min, vx_max, bin_vx, &
@@ -100,8 +100,8 @@ subroutine mexFunction(nlhs, plhs, nrhs, prhs)
   m=int((vy_max+bin_vy-(vy_min-bin_vy/2.0d0))/bin_vy)
 
   !     Create matrices for the return arguments
-  plhs(1)   =mxCreateFull(m,n,0)
-  plhs(2)   =mxCreateFull(m,n,0)
+  plhs(1)   =mxCreateDoubleMatrix(m,n,0)
+  plhs(2)   =mxCreateDoubleMatrix(m,n,0)
   intensity_pr =>mxGetPr(plhs(1))
   error_int_pr =>mxGetPr(plhs(2))
 

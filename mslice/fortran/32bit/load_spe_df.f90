@@ -21,7 +21,7 @@ subroutine mexFunction(nlhs, plhs, nrhs, prhs)
   ! declare pointers to output variables  
   integer,pointer:: data_S_pr, data_ERR_pr, data_en_pr
   ! declare external calling functions
-  integer  mxGetString,mxCreateFull, mxGetM, mxIsString,  mxGetN !, mxGetPr
+  integer  mxGetString,mxCreateFull, mxGetM, mxIsChar,  mxGetN !, mxGetPr
 
   ! declare local operating variables of the interface funnction
   integer ndet, ne, strlen, status
@@ -41,7 +41,7 @@ subroutine mexFunction(nlhs, plhs, nrhs, prhs)
   elseif (nlhs .ne. 3) then
      write(*,*)nlhs
      call mexErrMsgTxt ('Three outputs (data_S,data_ERR,data_en) required.')
-  elseif (mxIsString(prhs(1)) .ne. 1) then
+  elseif (mxIsChar(prhs(1)) .ne. 1) then
      call mexErrMsgTxt('Input <filename> must be a string.')
   elseif (mxGetM(prhs(1)).ne.1) then
      call mexErrMsgTxt('Input <filename> must be a row vector.')

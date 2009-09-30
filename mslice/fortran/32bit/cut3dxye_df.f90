@@ -140,17 +140,17 @@ subroutine mexFunction(nlhs, plhs, nrhs, prhs)
      temp=mxCreatedoublematrix(1,m,0)
      temp_pr=>mxgetpr(temp)
      call reduce_output(m,n,x_pr,temp_pr)     
-     call mxFreeMatrix(plhs(1))
+     call mxDestroyArray(plhs(1))
      plhs(1)=temp
      temp=mxCreatedoublematrix(1,m,0)
      temp_pr=>mxgetpr(temp)
      call reduce_output(m,n,intensity_pr,temp_pr)
-     call mxFreeMatrix(plhs(2))
+     call mxDestroyArray(plhs(2))
      plhs(2)=temp
      temp=mxCreatedoublematrix(1,m,0)
      temp_pr=>mxgetpr(temp)
      call reduce_output(m,n,error_int_pr,temp_pr)
-     call mxFreeMatrix(plhs(3))
+     call mxDestroyArray(plhs(3))
      plhs(3)=temp
   end if
 
