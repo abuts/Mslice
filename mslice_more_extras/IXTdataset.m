@@ -1,7 +1,8 @@
-function wout=IXTdataset(data)
+function [wout,ndim]=IXTdataset(data)
 % Convert 1D, 2D or 3D mslice data structure to corresponding Libisis structure
 %
-%   >> wout=IXTdataset_nd(data)
+%   >> wout=IXTdataset(data)
+%   >> [wout,ndim]=IXTdataset(data)
 
 % Has to be a function with name *different* to IXTdatset_1d, IXTdataset_2d, IXTdataset_3d and IXTdataset_nd
 % because otherwise Matlab will call the IXTdataset_1d (2D,3D,nd) constructor, as the argument

@@ -132,8 +132,8 @@ function plot_vol_libisis(win, varargin)
 %      On the 'Object_Defaults' menu select 'Slice Color Texture'
 
 
-w = IXTdataset_nd(win);             % make IXTdataset_3d from data
-if dimensions(w)~=3
+[w,ndim] = IXTdataset(win);             % make IXTdataset_3d from data
+if ndim~=3
     error('Input structure must correspond to a 3D mslice section')
 end
 
