@@ -94,7 +94,7 @@ New functions that add functionality to mslice. See the word document
 
 Further functions that add functionality to mslice, mostly easing the use
 of mslice from the command line when operating in single crystal PSD mode.
-Some of them require that you have mgenie installed.
+The 3D viewing option requires that one of mgenie or Libisis is installed.
 
 
 

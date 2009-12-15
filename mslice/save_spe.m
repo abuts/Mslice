@@ -123,7 +123,7 @@ try
 catch
     try     % matlab write
         disp(['Matlab writing of .spe file : ' file_tmp]);
-        [ok,mess]=put_spe_matlab(data,file_tmp)
+        [ok,mess]=put_spe_matlab(data,file_tmp);
         if ~ok
             error(mess)
             filename='';
