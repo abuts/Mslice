@@ -17,19 +17,19 @@ if strcmp(cmd,'slider'),
 elseif strcmp(cmd,'min'), 
    % only change i_min if numeric value entered and would not make range=0
    try 
-      temp=eval(get(slider_min_value,'String'));
-      if temp==i_max, % do not change i_min if range becoms 0
+      temp=str2double(get(slider_min_value,'String'));
+      if isnan(temp) | temp==i_max, % do not change i_min if range becoms 0 or NaN
          i_min=get(slider_min,'value');
       else
          i_min=temp;
       end   
    catch
-	end
+   end
 elseif strcmp(cmd,'max'),
    % only change i_max if numeric value entered and would not make range=0
    try
-      temp=eval(get(slider_max_value,'String'));      
-      if temp==i_min, % do not change i_max if range becoms 0
+      temp=str2double(get(slider_max_value,'String'));      
+      if isnan(temp) | temp==i_min, % do not change i_max if range becoms 0
          i_max=get(slider_max,'value');
       else
          i_max=temp;

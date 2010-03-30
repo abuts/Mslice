@@ -4,7 +4,7 @@ function [name,pathname]=stripath(filename)
 % ex. [name,pathname]=stripath('c:\radu\matlab\anal_spe\stripath.m') --> ['stripath.m','c:\radu\matlab\anal_spe\'] 
 % R.C. 23-Aug-1998
 
-if ~exist('filename','var')|isempty(filename)|~ischar(filename),
+if ~exist('filename','var')||isempty(filename)||~ischar(filename),
    disp('[Empty filename]');
    name=[];
    pathname=[];

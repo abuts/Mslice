@@ -9,7 +9,10 @@ if isempty(directory)|~ischar(directory),
 end
 
 n=length(directory);
-if strcmp(directory(n),'\')
+fs=filesep;
+if strcmp(directory(n),fs)
    directory=directory(1:(n-1));
 end
-flag=~isempty(findstr(path,[directory '\;'))
+ps = pathsep;
+flag=~isempty(findstr([path,ps],[directory, ps]));
+

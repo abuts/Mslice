@@ -10,7 +10,7 @@ if isempty(h_cw),
 end
 h_dir=findobj(h_cw,'Tag','ms_MspDir');
 h_file=findobj(h_cw,'Tag','ms_MspFile');
-if isempty(h_dir)|isempty(h_file),
+if isempty(h_dir)||isempty(h_file),
   	disp(['Could not associate objects to .msp directory and filename. Parameter file not read.']);
   	return;
 end
@@ -69,40 +69,55 @@ end
 disp(['Proceed reading parameter file ' fullname]);
 t=fgetl(fid);
 while (ischar(t))&(~isempty(t(~isspace(t)))),
-   pos=findstr(t,'=');
-   field=t(1:pos-1);
-   field=field(~isspace(field));
-   
-   % === if having reached det_type, the sample is single crystal and analysis mode is undefined
-   % === put by default analysis mode = single crystal
-   if strcmp(lower(field),'det_type')&(get(findobj(h_cw,'Tag','ms_sample'),'Value')==1),
-      analobj=findobj(h_cw,'Tag','ms_analysis_mode');
-      if ~isempty(analobj)&(get(analobj,'Value')~=1),	
-	      set(analobj,'Value',1);
-         ms_analysis_mode;
-         drawnow;
-      end
-   end   
-   h=findobj(h_cw,'Tag',['ms_' field]);
-   if ~isempty(h),
-      value=t(pos+1:length(t));
-   	value=deblank(value);	% remove trailing blanks from both the beginning and end of string
-   	value=fliplr(deblank(fliplr(value)));
-   	if strcmp(get(h,'Style'),'popupmenu')|strcmp(get(h,'Style'),'checkbox'),
-      	set(h,'Value',str2num(value));
-   	%	disp(['ms_' field ' gets ''Value'' property ' value]);   
-   	else
-      	set(h,'String',value);
-   	%   disp(['ms_' field ' gets ''String'' property ' value]); 
-   	end 
-      eval(get(h,'Callback'));
-      drawnow;
-   else   
-      disp(['Field ms_' field ' not defined. Check .msp file.']);
-      %fclose(fid);
-      %return;
-   end 
-   t=fgetl(fid);
+    pos=findstr(t,'=');
+    field=t(1:pos-1);
+    field=field(~isspace(field));
+
+    % === if having reached det_type, the sample is single crystal and analysis mode is undefined
+    % === put by default analysis mode = single crystal
+    if strcmp(lower(field),'det_type')&(get(findobj(h_cw,'Tag','ms_sample'),'Value')==1),
+        analobj=findobj(h_cw,'Tag','ms_analysis_mode');
+        if ~isempty(analobj)&(get(analobj,'Value')~=1),
+            set(analobj,'Value',1);
+            ms_analysis_mode;
+            drawnow;
+        end
+    end
+    h=findobj(h_cw,'Tag',['ms_' field]);
+    if ~isempty(h),
+        value=t(pos+1:length(t));
+        value=deblank(value);	% remove trailing blanks from both the beginning and end of string
+        value=fliplr(deblank(fliplr(value)));
+        if strcmp(get(h,'Style'),'popupmenu')|strcmp(get(h,'Style'),'checkbox'),
+            set(h,'Value',str2num(value));
+        else
+            set(h,'String',value);
+        end
+       % To avoid the use of eval set the sample mode implicity everytime and execute ms_sample to
+       % generate the correct fields in the main window.
+       % The code
+       %    switch field
+       %       :
+       %    end
+       % replaces
+       %    eval(get(h,'Callback'));
+        switch field
+            case{'sample'}
+                set(h,'Value',str2num(value))
+                ms_sample
+            case{'analysis_mode'}
+                set(h,'Value',str2num(value))
+                ms_analysis_mode
+            case{'det_type'}
+                set(h,'Value',str2num(value))
+                ms_disp_or_slice
+            otherwise
+        end
+        drawnow;
+    else
+        disp(['Field ms_' field ' not defined. Check .msp file.']);
+    end
+    t=fgetl(fid);
 end
 fclose(fid);
 disp(['Successfully read parameter file ' fullname]);

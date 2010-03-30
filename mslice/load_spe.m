@@ -111,6 +111,7 @@ try % fortran algorithm
    disp([num2str(ndet) ' detector(s) and ' num2str(ne) ' energy bin(s)']);   
    data.det_theta=ones(ndet,1);
 catch % matlab algorithm  
+   disp([' fortran can not read spe data, error: ',lasterr]);    
    disp(['Matlab loading of .spe file : ' filename]);         
    fid=fopen(filename,'rt');
    % === read number of detectors and energy bins

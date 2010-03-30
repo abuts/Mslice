@@ -1,4 +1,4 @@
-function ms_calc_proj;
+function ms_calc_proj
 
 % function ms_calc_proj;
 
@@ -26,62 +26,103 @@ end
 
 % === establish which variable names are to be read depending on sample type, analysis mode and detector type
 samp=get(findobj(fig,'Tag','ms_sample'),'Value');
-if samp==1,
-   analmode=get(findobj('Tag','ms_analysis_mode'),'Value');
-end  
-
-if samp==2,	%sample is powder 
-   vars=str2mat('u1','u1label','u2','u2label','efixed','emode','IntensityLabel','TitleLabel');
+if samp==2,     % sample is powder 
+   vars={'u1','u1label','u2','u2label','efixed','emode','IntensityLabel','TitleLabel'};
 elseif samp==1, % sample is single crystal 
-   vars=str2mat('as','bs','cs','aa','bb','cc','ux','uy','uz');
-   vars=str2mat(vars,'vx','vy','vz','psi_samp','efixed','emode','IntensityLabel','TitleLabel');
+   vars={'as','bs','cs','aa','bb','cc','ux','uy','uz','vx','vy','vz','psi_samp','efixed','emode','IntensityLabel','TitleLabel'};
+   analmode=get(findobj('Tag','ms_analysis_mode'),'Value');
    if analmode==2,	% analysed as powder
-      vars=str2mat(vars,'u1','u1label','u2','u2label');	   	  
+      vars=[vars,{'u1','u1label','u2','u2label'}];	   	  
       psd=(1<0);	% FALSE
    else	% analysed as single crystal
-      vars=str2mat(vars,'u1label','u2label','u11','u12','u13','u14','u21','u22','u23','u24');
+      vars=[vars,{'u1label','u2label','u11','u12','u13','u14','u21','u22','u23','u24'}];
 		dettype=findobj('Tag','ms_det_type');
 		% === read flag for detector type and identify if PSD
 		if isempty(dettype),
-   		disp('Detector type not defined');
-   		return;
+   		   disp('Detector type not defined');
+   		   return;
 		end
 		psd=(get(dettype,'value')==1);
 		if psd,	% for PSD detectors add one more viewing vector 
-  			vars=str2mat(vars,'u3label','u31','u32','u33','u34');
-		end   
-	end
+  			vars=[vars,{'u3label','u31','u32','u33','u34'}];
+        end   
+    end
 end
 
 % ===== read relevant parameters from ControlWindow
-for i=1:size(vars,1),
-   name=vars(i,:);
-   name=name(~isspace(name));
-   h=findobj(fig,'Tag',['ms_' name]);
-   if isempty(h),
-      disp(['Warning: Object ms_' name 'not found;']);
-   end;   
-   if strcmp(get(h,'Style'),'popupmenu')|strcmp(get(h,'Style'),'checkbox'),
-      value=num2str(get(h,'Value'));
-   	eval([ name '=' value ';']);   
-   else
-      value=get(h,'String');
-      if strcmp(name,'u1label')|strcmp(name,'u2label')|((samp==1)&(analmode==1)&psd&strcmp(name,'u3label'))|strcmp(name,'IntensityLabel')|...
-            strcmp(name,'TitleLabel'),		% interpret value as a string
-         if isempty(value),
-  				eval([name '=[];']);
-			else          
-            eval([ name '=''' value ''';']);
-         %   disp([name ' gets value ' value ]);
-         end
-      else	% transform string into number
-         if isempty(value),
-           	eval([name '=[];']);
-         else
-            eval([name '=' value ';']);
-         end
-      end         
-   end
+
+for i=1:size(vars,2)
+    name=vars{i};
+    switch vars{i}
+        case{'emode'}
+            emode=ms_getvalue(name,'raw');
+        case{'efixed'}
+            efixed=ms_getvalue(name);
+        case{'IntensityLabel'}
+            IntensityLabel=ms_getvalue(name,'noeval');
+        case{'TitleLabel'}
+            TitleLabel=ms_getvalue(name,'noeval');
+        case{'u1label'}
+            u1label=ms_getvalue(name,'noeval');
+        case{'u2label'}
+            u2label=ms_getvalue(name,'noeval');
+        case{'u3label'}
+            u3label=ms_getvalue(name,'noeval');
+        case{'u1'}
+            u1=ms_getvalue(name,'raw');
+        case{'u2'}
+            u2=ms_getvalue(name,'raw');
+        case{'psi_samp'}
+            psi_samp=ms_getvalue(name);
+        case{'ux'}
+            ux=ms_getvalue(name);
+        case{'uy'}
+            uy=ms_getvalue(name);
+        case{'uz'}
+            uz=ms_getvalue(name);
+        case{'vx'}
+            vx=ms_getvalue(name);
+        case{'vy'}
+            vy=ms_getvalue(name);
+        case{'vz'}
+            vz=ms_getvalue(name);
+        case{'as'}
+            as=ms_getvalue(name);
+        case{'bs'}
+            bs=ms_getvalue(name);
+        case{'cs'}
+            cs=ms_getvalue(name);
+        case{'aa'}
+            aa=ms_getvalue(name);
+        case{'bb'}
+            bb=ms_getvalue(name);
+        case{'cc'}
+            cc=ms_getvalue(name);
+        case{'u11'}
+            u11=ms_getvalue(name);
+        case{'u12'}
+            u12=ms_getvalue(name);
+        case{'u13'}
+            u13=ms_getvalue(name);
+        case{'u14'}
+            u14=ms_getvalue(name);
+        case{'u21'}
+            u21=ms_getvalue(name);
+        case{'u22'}
+            u22=ms_getvalue(name);
+        case{'u23'}
+            u23=ms_getvalue(name);
+        case{'u24'}
+            u24=ms_getvalue(name);
+        case{'u31'}
+            u31=ms_getvalue(name);
+        case{'u32'}
+            u32=ms_getvalue(name);
+        case{'u33'}
+            u33=ms_getvalue(name);
+        case{'u34'}
+            u34=ms_getvalue(name);
+    end
 end
 
 % if no spe data but only detector layout read then make energy bin range
@@ -124,7 +165,7 @@ if samp==1,	% single crystal sample
 end   
 
 if (samp==1)&(analmode==1), % single crystal data analysed in single crystal mode
-   if psd, % PSD detectors
+    if psd, % PSD detectors
 		data.axis_label=str2mat(u1label,u2label,u3label);
    	data.axis_unitlabel=str2mat('','','',IntensityLabel);
    	data.title_label=TitleLabel;
@@ -134,16 +175,16 @@ if (samp==1)&(analmode==1), % single crystal data analysed in single crystal mod
       % === clear stored slice data 
       ms_slice('clear');
    else % non-PDS detectors
-		data.axis_label=str2mat(u1label,u2label);
+	data.axis_label=str2mat(u1label,u2label);
    	data.axis_unitlabel=str2mat('','',IntensityLabel);
    	data.title_label=TitleLabel;
    	data.u=[u11 u12 u13 u14; u21 u22 u23 u24];  
    	data=calcprojb(data);
-	end
+   end
 else	% sample is powder or analysed as powder
    data.axis_label=str2mat(u1label,u2label);
-  	data.axis_unitlabel=str2mat('','',IntensityLabel);
-  	data.title_label=TitleLabel;
+   data.axis_unitlabel=str2mat('','',IntensityLabel);
+   data.title_label=TitleLabel;
    data.u=[u1;u2];
    data=calcprojpowder(data);  
 end
@@ -156,6 +197,6 @@ end
 % === highlight green button indicating 'not busy' 
 if ~isempty(h_status)&ishandle(h_status),
    green=[0 1 0];
-	set(h_status,'BackgroundColor',green);
+   set(h_status,'BackgroundColor',green);
    drawnow;
 end

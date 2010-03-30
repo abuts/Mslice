@@ -18,7 +18,7 @@ function slice_d=slice_spe(data,z,vz_min,vz_max,vx_min,vx_max,bin_vx,vy_min,vy_m
 % === check presence of required input parameters
 if ~exist('z','var')|isempty(z)|~isnumeric(z)|(length(z)~=1)
    disp('Slice cannot be performed if plane is not specified.');
-   cut_d=[];
+   slice_d=[];
    return;
 end
 flag=(~exist('vx_min','var'))|isempty(vx_min)|~isnumeric(vx_min)|(length(vx_min)~=1);

@@ -167,7 +167,7 @@ if ~isempty(wavevectors)&(sum(x==[1:(3+length(wavevectors))])==1), 	% choose a w
       	unitlength=[];
       	shortlabel=[];   
    	otherwise,
-      	v=[],
+      	v=[];
       	axislabel=[];
       	unitname=[];
       	unitlength=[];

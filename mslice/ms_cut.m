@@ -34,47 +34,62 @@ elseif ~isfield(data,'v'),
 end
 
 % ===== read cut parameters from ControlWindow
-vars=str2mat('x','vx_min','vx_max','bin_vx','vy_min','vy_max');
+vars={'x','vx_min','vx_max','bin_vx','vy_min','vy_max'};
 sample=get(findobj(fig,'Tag','ms_sample'),'Value');
 if sample==1,	% single crystal sample
    analmode=get(findobj(fig,'Tag','ms_analysis_mode'),'Value');
    if analmode==1,	% analysed as single crystal
 	   psd=get(findobj(fig,'Tag','ms_det_type'),'Value');	
 		% =1 if PSD detectors = 2 if conventional detectors
-		if (psd==1),  % extra cut dimension for single crystal psd data 
-   		vars=str2mat(vars,'vz_min','vz_max');
-      end
+       if (psd==1),  % extra cut dimension for single crystal psd data 
+   		  vars=[vars,{'vz_min','vz_max'}];
+       end
    end
 end
-vars=str2mat(vars,'intensity','i_min','i_max','symbol_colour','symbol_type','symbol_line');
-vars=str2mat(vars,'OutputType','OutputDir','OutputFile','xaxis');
-for i=1:size(vars,1),
-   name=vars(i,:);	% take one variable name at a time
-   name=name(~isspace(name));	% strip off white spaces
-   h=findobj(fig,'Tag',['ms_cut_' name]);	% find associated object
-   if isempty(h),	% display warning message if object not found
-      disp(['Warning: object with Tag ms_cut_' name ' not found.']);
-   end
-   if strcmp(get(h,'Style'),'popupmenu')|strcmp(get(h,'Style'),'checkbox'),
-      if strcmp(name,'OutputType'),	% extract value as a string label
-         strings=get(h,'String');
-         value=strings{get(h,'Value')};	% {'none','.cut','.xye','.smh'}
-         eval([ name '=''' value ''';']);
-      else	% extract value as an index in the list
-         value=num2str(get(h,'Value'));
-		   eval([ name '=' value ';']);  
-      end
-   else
-      value=get(h,'String');
-      if strcmp(name,'OutputDir')|strcmp(name,'OutputFile'),
-         eval([ name '=''' value ''';']);  % assign as a string 
-      elseif isempty(value);
-         eval([name '=[];']);
-      else
-         eval([name '=' value ';']);	% assign as a number or an expression to be evaluated
-      end         
-   end
+vars=[vars,{'intensity','i_min','i_max','symbol_colour','symbol_type','symbol_line','OutputType','OutputDir','OutputFile','xaxis'}];
+
+for i=1:size(vars,2)
+    name=['cut_',vars{i}];
+    switch vars{i}
+        case{'x'}
+            x=ms_getvalue(name,'raw');
+        case{'vx_min'}
+            vx_min=ms_getvalue(name);
+        case{'vx_max'}
+            vx_max=ms_getvalue(name);
+        case{'bin_vx'}
+            bin_vx=ms_getvalue(name);
+        case{'vy_min'}
+            vy_min=ms_getvalue(name);
+        case{'vy_max'}
+            vy_max=ms_getvalue(name);
+        case{'vz_min'}
+            vz_min=ms_getvalue(name);
+        case{'vz_max'}
+            vz_max=ms_getvalue(name);
+        case{'i_min'}
+            i_min=ms_getvalue(name);
+        case{'i_max'}
+            i_max=ms_getvalue(name);
+        case{'intensity'}
+            intensity=ms_getvalue(name,'raw');
+        case{'symbol_colour'}
+            symbol_colour=ms_getvalue(name,'raw');
+        case{'symbol_type'}
+            symbol_type=ms_getvalue(name,'raw');
+        case{'symbol_line'}
+            symbol_line=ms_getvalue(name,'raw');
+        case{'OutputType'}
+            OutputType=ms_getvalue(name,'noeval');
+        case{'OutputDir'}
+            OutputDir=ms_getvalue(name,'noeval');
+        case{'OutputFile'}
+            OutputFile=ms_getvalue(name,'noeval');
+        case{'xaxis'}
+            xaxis=ms_getvalue(name,'raw');
+    end
 end
+
 colours=str2mat('w','r','b','m','g','c','y','k');
 symbols=str2mat('o','s','d','p','h','*','x','+','^','v','>','<','.');
 lines=str2mat('','-','--',':','-.');

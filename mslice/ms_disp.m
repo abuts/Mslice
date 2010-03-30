@@ -19,24 +19,29 @@ elseif ~isfield(data,'v'),
 end
 
 % === read disp parameters from ControlWindow
-vars=str2mat('vx_min','vx_max','vy_min','vy_max');
-vars=str2mat(vars,'i_min','i_max');
-vars=str2mat(vars,'colmap','nsmooth','shad');
-for i=1:size(vars,1),
-   name=vars(i,:);
-   name=name(~isspace(name));
-   h=findobj('Tag',['ms_disp_' name]);
-   if strcmp(get(h,'Style'),'popupmenu')|strcmp(get(h,'Style'),'checkbox'),
-      value=num2str(get(h,'Value'));
-   else
-      value=get(h,'String');
-      value=value(~isspace(value));
-   end
-   if ~isempty(value),	    
-      eval([ name '=' value ';']); 
-   else
-      eval([name '=[];']);
-   end
+vars={'vx_min','vx_max','vy_min','vy_max','i_min','i_max','colmap','nsmooth','shad'};
+for i=1:size(vars,2)
+    name=['disp_',vars{i}];
+    switch vars{i}
+        case{'vx_min'}
+            vx_min=ms_getvalue(name);
+        case{'vx_max'}
+            vx_max=ms_getvalue(name);
+        case{'vy_min'}
+            vy_min=ms_getvalue(name);
+        case{'vy_max'}
+            vy_max=ms_getvalue(name);
+        case{'i_min'}
+            i_min=ms_getvalue(name);
+        case{'i_max'}
+            i_max=ms_getvalue(name);
+        case{'colmap'}
+            colmap=ms_getvalue(name,'raw');
+        case{'nsmooth'}
+            nsmooth=ms_getvalue(name);
+        case{'shad'}
+            shad=ms_getvalue(name,'raw');
+    end
 end
 
 % === establish shading option

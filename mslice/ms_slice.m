@@ -1,4 +1,4 @@
-function slice_d=ms_slice(cmd);
+function slice_d=ms_slice(cmd)
 
 % function slice_d=ms_slice(cmd);
 % cmd='',[] or absent for normal slice plot
@@ -53,28 +53,40 @@ elseif iscell(data),
 end
 
 % ===== read parameters from ControlWindow
-vars=str2mat('z','vz_min','vz_max','vx_min','vx_max','bin_vx');
-vars=str2mat(vars,'vy_min','vy_max','bin_vy','i_min','i_max');
-vars=str2mat(vars,'colmap','nsmooth','shad');
-for i=1:size(vars,1),
-   name=vars(i,:);
-   name=name(~isspace(name));
-   h=findobj(fig,'Tag',['ms_slice_' name]);
-   if isempty(h),
-      disp(['Warning: object with Tag ms_slice_' name ' not found']);
-   end
-   if strcmp(get(h,'Style'),'popupmenu')|strcmp(get(h,'Style'),'checkbox'),
-      value=num2str(get(h,'Value'));
-   else
-      value=get(h,'String');
-   end
-   if ~isempty(value),	    
-      eval([ name '=' value ';']); 
-%   	disp([name '=' value ';']);   
-   else
-      eval([name '=[];']);
-%      disp([name '=[];']);
-   end
+vars={'z','vz_min','vz_max','vx_min','vx_max','bin_vx','vy_min','vy_max','bin_vy','i_min','i_max','colmap','nsmooth','shad'};
+
+for i=1:size(vars,2)
+    name=['slice_',vars{i}];
+    switch vars{i}
+        case{'z'}
+            z=ms_getvalue(name,'raw');
+        case{'vz_min'}
+            vz_min=ms_getvalue(name);
+        case{'vz_max'}
+            vz_max=ms_getvalue(name);
+        case{'vx_min'}
+            vx_min=ms_getvalue(name);
+        case{'vx_max'}
+            vx_max=ms_getvalue(name);
+        case{'bin_vx'}
+            bin_vx=ms_getvalue(name);
+        case{'vy_min'}
+            vy_min=ms_getvalue(name);
+        case{'vy_max'}
+            vy_max=ms_getvalue(name);
+        case{'bin_vy'}
+            bin_vy=ms_getvalue(name);
+        case{'i_min'}
+            i_min=ms_getvalue(name);
+        case{'i_max'}
+            i_max=ms_getvalue(name);
+        case{'colmap'}
+            colmap=ms_getvalue(name,'raw');
+        case{'nsmooth'}
+            nsmooth=ms_getvalue(name);
+        case{'shad'}
+            shad=ms_getvalue(name,'raw');
+    end
 end
 
 % === read shading option
@@ -84,11 +96,11 @@ shad=shad_opt{shad};	% change type from number to 'flat','faceted','interp'
 % === read colour table
 if colmap==3,
    map=jet;	% MATLAB blue -> red 'jet.m' RGB colour table
-	linearlog='linear';   
+   linearlog='linear';   
 else
    % read PHOENIX-type colour map black->red
    map=get(findobj('Tag','ms_slice_colmap'),'UserData');
-	 if colmap==1,
+   if colmap==1,
       linearlog='linear';	% linear scale 
    else
       linearlog='log';		% logarithmmic scale
@@ -178,5 +190,3 @@ if ~isempty(h_status)&ishandle(h_status),
 	set(h_status,'BackgroundColor',green);
    drawnow;
 end
-   
-   

@@ -1,17 +1,23 @@
-function str=ms_getstring(h_cw,tag)
+function [str,value]=ms_getstring(h_cw,tag)
+% Get string property of object with given tag in the ControlWindow (handle h_cw)
+%
+% Get string value:
+%   >> str=ms_getstring(h_cw,tag)       
+%   
+% Get raw value as well:
+%   >> [str,raw_value]=ms_getstring(h_cw,tag)   
+%           if check box:     raw_value = 0 or 1 for 'off' or 'on'
+%           if pulldown menu: raw_value = index of string (1,2,3...) in pull down list
 
-% function ms_getstring(h_cw,tag)
-% get string property of object with given tag in the ControlWindow (handle h_cw)
-
-% === return if handle to COntrol Window is invalidor if error reading tag 
+% === return if handle to COntrol Window is invalid or if error reading tag 
 if ~exist('h_cw','var')|isempty(h_cw)|~ishandle(h_cw),
    disp('Could not locate ControlWindow. Return.');
-   str=[];
+   str=[]; value=[];
    return;   
 end
 if ~exist('tag','var')|isempty(tag)|~ischar(tag),
    disp('Error reading handle Tag. Return.');
-   str=[];
+   str=[]; value=[];
    return;
 end
 
@@ -20,13 +26,13 @@ end
 h=findobj(h_cw,'Tag',tag);
 if isempty(h),
    disp(['Could not find handle of object with Tag ' tag ' in the figure with handle' num2str(h_cw)]);
-   str=[];
+   str=[]; value=[];
    return;
 end
 if length(h)>1,
    disp(['Have located more instances of an object with the same handle.']);
-   disp(['Can not extract string property uniquely. Return.']);
-   str=[];
+   disp(['Cannot extract string property uniquely. Return.']);
+   str=[]; value=[];
    return;
 end
 
@@ -44,9 +50,10 @@ elseif strcmp(get(h,'Style'),'checkbox'),
       str='on';
    end
 elseif strcmp(get(h,'Style'),'text')|strcmp(get(h,'Style'),'edit'),
+   value=get(h,'string');
    str=get(h,'string');
 else
    disp(['Have not defined string property of an object of style ' get(h,'Style')]);
-   str=[];
+   str=[]; value=[];
    return;
-end 
+end

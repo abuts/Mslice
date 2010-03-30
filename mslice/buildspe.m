@@ -33,7 +33,7 @@ else
       data.ERR=data.ERR(~masked,:);
       data.det_group=data.det_group(~masked);
       % === if still more individual pixels to be masked continue
-      if ~isempty(masked_pixels)&sum(masked_pixels(:))>=1,
+      if ~isempty(masked_pixels) && sum(masked_pixels(:))>=1,
          data.S(masked_pixels)=NaN;
          data.ERR(masked_pixels)=0;
          disp(sprintf('%d individual pixels masked in otherwise good detectors',sum(masked_pixels(:))));

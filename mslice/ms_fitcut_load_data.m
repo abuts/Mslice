@@ -67,7 +67,7 @@ end
    
 fields=fieldnames(cut);
 for i=1:length(fields),
-   h=findobj(h_cw,'Tag',['ms_fitcut_'fields{i}]);
+   h=findobj(h_cw,'Tag',['ms_fitcut_',fields{i}]);
    if ~isempty(h),
       if strcmp(get(h,'Style'),'popupmenu')|strcmp(get(h,'Style'),'checkbox'),
          set(h,'Value',str2num(getfield(cut,fields{i})));         

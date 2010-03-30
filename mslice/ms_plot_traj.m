@@ -17,9 +17,8 @@ if isempty(data),
 end
 
 % ===== read plot parameters from ControlWindow
-vars=str2mat('x','vx_min','vx_max','y','vy_min','vy_max','z','vz_min','vz_max');
-vars=str2mat(vars,'cont_lines','cont_min','cont_max','cont_step1','cont_step2');
-vars=str2mat(vars,'command');
+vars={'x','vx_min','vx_max','y','vy_min','vy_max','z','vz_min','vz_max',...
+    'cont_lines','cont_min','cont_max','cont_step1','cont_step2','command'};
 h_samp=findobj(fig_cw,'Tag','ms_sample');
 if isempty(h_samp),
    disp(['Not able to identify sample type. Return.']);
@@ -27,31 +26,47 @@ if isempty(h_samp),
 end
 samp=get(h_samp,'Value');
 if samp==1,	% if sample is single crystal, add options about (hkl) points on graphs
-   vars=str2mat(vars,'hkl_points','hkl_labels');
+   vars=[vars,{'hkl_points','hkl_labels'}];
 end  
-for i=1:size(vars,1),
-   name=vars(i,:);
-   name=name(~isspace(name));
-   h=findobj(fig_cw,'Tag',['ms_plot_traj_' name]);
-   if isempty(h),
-      disp(['Warning: object ms_plot_traj_' name ' not found']);
-   end
-   if strcmp(get(h,'Style'),'popupmenu')|strcmp(get(h,'Style'),'checkbox'),
-      value=num2str(get(h,'Value'));
-   else
-      value=get(h,'String');
-   end
-   if ~isempty(value),	    
-      if strcmp(name,'command'),		% value should be interpreted as a string
-         eval([name '=' ''''  value  '''' ';']);
-      else % === value should be interpreted as a number
-      	eval([ name '=' value ';']); 
-         %	disp([name '=' value ';']);   
-      end   
-   else
-      eval([name '=[];']);
-   %  disp([name '=[];']);
-   end
+
+for i=1:size(vars,2)
+    name=['plot_traj_',vars{i}];
+    switch vars{i}
+        case{'x'}
+            x=ms_getvalue(name,'raw');
+        case{'vx_min'}
+            vx_min=ms_getvalue(name);
+        case{'vx_max'}
+            vx_max=ms_getvalue(name);
+        case{'y'}
+            y=ms_getvalue(name,'raw');
+        case{'vy_min'}
+            vy_min=ms_getvalue(name);
+        case{'vy_max'}
+            vy_max=ms_getvalue(name);
+        case{'z'}
+            z=ms_getvalue(name,'raw');
+        case{'vz_min'}
+            vz_min=ms_getvalue(name);
+        case{'vz_max'}
+            vz_max=ms_getvalue(name);
+        case{'cont_lines'}
+            cont_lines=ms_getvalue(name,'raw');
+        case{'cont_min'}
+            cont_min=ms_getvalue(name);
+        case{'cont_max'}
+            cont_max=ms_getvalue(name);
+        case{'cont_step1'}
+            cont_step1=ms_getvalue(name);
+        case{'cont_step2'}
+            cont_step2=ms_getvalue(name);
+        case{'command'}
+            command=ms_getvalue(name,'noeval');
+        case{'hkl_points'}
+            hkl_points=ms_getvalue(name,'raw');
+        case{'hkl_labels'}
+            hkl_labels=ms_getvalue(name,'raw');
+    end
 end
 
 % === pick up data fields to be displayed 
@@ -154,11 +169,6 @@ end
 
 % === create menu option to be able to do colour hardcopy printouts   
 h=uimenu(fig,'Label','ColourPrint','Tag','Color_Print','Enable','on');
-uimenu(h,'Label','Phaser560','Callback','ms_printc('' \\NDAIRETON\Phaser560:'');');
-uimenu(h,'Label','Phaser0','Callback','ms_printc('' \\NDAIRETON\Phaser0:'');');
-uimenu(h,'Label','DACColour','Callback','ms_printc('' \\NDAIRETON\DACColour:'');');
-uimenu(h,'Label','CRISPColour','Callback','ms_printc('' \\NDAIRETON\CRISPColour:'');');
-uimenu(h,'Label','MAPSColour','Callback','ms_printc('' \\NDAIRETON\MAPSColour:'');');   
 uimenu(h,'Label','default printer','Callback','ms_printc;');   
 % === create menu option to be able to keep figure
 h=uimenu(fig,'Label','Keep','Tag','keep','Enable','on');
@@ -329,6 +339,10 @@ end
 % === if command is given (for example to draw the dispersion relation on top of 
 % === the detector trajectories plot) then execute command
 if ~isempty(command)&~isempty(command(~isspace(command))),
-   evalin('base',command,'disp([''Cannot execute command  '' command ''. Check path.''])');
-end   
+    if ~isdeployed
+        evalin('base',command,'disp([''Cannot execute command  '' command ''. Check path.''])');
+    else
+        disp('Cannot use detector trajectories command field in standalone mode. Command ignored.')
+    end
+end
 set(gcf,'PaperPositionMode','auto');   
