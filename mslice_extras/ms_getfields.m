@@ -5,9 +5,12 @@ function vals = ms_getfields
 %   >> vals = ms_getfields
 %
 % T.G.Perring 13 July 2005
-
+%
+% $Rev: 51 $  ($Date: 2009-12-21 18:29:42 +0000 (Mon, 21 Dec 2009) $)
+%
 % After examining the function ms_setvalue, the following would appear to get
 % all the tags corresponding to mslice variables
+
 h_cw=findobj('Tag','ms_ControlWindow');
 h=findobj(h_cw);
 a=get(h,'Tag'); % all the tags
