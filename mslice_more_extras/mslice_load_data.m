@@ -33,12 +33,12 @@ ms_setvalue('emode',emode)
 
 % load spe file:
 [path,file,ext,ver] = fileparts(spe_file);
-ms_setvalue('DataDir',[path '\']); 
+ms_setvalue('DataDir',[path filesep]); 
 ms_setvalue('DataFile',[file ext]); 
 
 % load phx file:
 [path,file,ext,ver] = fileparts(phx_file);
-ms_setvalue('PhxDir',[path '\']); 
+ms_setvalue('PhxDir',[path filesep]); 
 ms_setvalue('PhxFile',[file ext]); 
 
 % Optional labels

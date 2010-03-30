@@ -24,7 +24,7 @@ try
         fid=fopen(filename(ifile).name,'rt');
         root_old='';
         temp='';
-        while isempty(root_old) & ischar(temp)
+        while isempty(root_old) && ischar(temp)
             temp=fgetl(fid);
             if strfind(temp,'MspDir')==1
                 pos=strfind(temp,'=');
