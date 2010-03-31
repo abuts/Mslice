@@ -48,15 +48,15 @@ if(nargin==0)
 else
     dirname = varargin{1};
 end
-
-version_number = sscanf(version_string(1:3),'%f');
-if(version_number<7.4) % should be oldest supported here (7.3?)
+version_number = matlab_version_num();
+%version_number = sscanf(version_string(1:3),'%f');
+if(version_number<7.04) % should be oldest supported here (7.3?)
     warning(['This version of mex-files has not been tasted with Matlab version %s \n',...
              'Trying to use the files tested with Matlab 7.4 (2007a) but they may not work'],...
             version_string);
     folderName='_R2007a';
 end
-if(version_number>7.9) % should be recent supported here
+if(version_number>7.10) % should be recent supported here
     warning(['This subversion of mex-files has not been tasted with Matlab version %s \n',...
              'Trying to use the files tested with Matlab 7.9 (2009b) but they may not work'],...
             version_string);
