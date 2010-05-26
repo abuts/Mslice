@@ -6,9 +6,11 @@ function p = gen_System_path(d)
 % It also analyses and usually ignores the folders, which names start with underscore _
 % but if the name of this folder corresponds to the Matlab name of the system running on the machine
 % it adds this folder to the path.
-% In addition it analyses the current matlab version and ads to the path only to the
-% folders with names equal to the current version
-% it also copies the dll=s which are prererquested for the application, and
+%
+% In addition to the above, the function analyses the current matlab version
+% and appends to the path only to the folders with names relevant to the
+% current MATLAB version. 
+% The function also copies the dll=s which are prererquested for the application, and
 % reside in the system folder to the location where the application can
 % access these DLL
 

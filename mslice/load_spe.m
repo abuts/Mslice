@@ -90,7 +90,28 @@ if ~isempty(spe_filename2)   % must be a difference that is required
         return
     end
 end
+[pathname,name,ext]=fileparts(spe_filename);  
+hdf_file_str=spe_hdf_filestructure();
+name=[name,ext];
+if strcmpi(ext,hdf_file_str.spe_hdf_file_ext)
+    try %try hdf5
+        fields={hdf_file_str.data_field_names{1:3}};
+        [data.en,data.S,data.ERR]=read_hdf_fields(strtrim(spe_filename),fields);
+    %     spe_data=spe(spe_filename);
+    %     data.S  = spe_data.S;
+    %     data.ERR= spe_data.ERR;    
+    %     data.en = spe_data.en;    
+        [ndet,ne]=size(data.S);
+        data.det_theta=ones(ndet,1);
+        libisis_failed=false;  
+    catch
+        libisis_failed=true;    
+    end
+else    
+  libisis_failed=true;        
+end
 
+if libisis_failed
 % Single file only; leave load_spe untouched from this point onwards
 % -------------------------------------------------------------------
 filename=deblank(spe_filename); % remove blancs from beginning and end of spe_filename
@@ -158,9 +179,9 @@ catch % matlab algorithm
    data.S=S;
    data.ERR=ERR;
 end
+end
 
 data.det_group=(1:ndet)';
-[name,pathname]=stripath(spe_filename);  
 data.filename=name;
 data.filedir=pathname;
 data.total_ndet=ndet;

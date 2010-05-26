@@ -17,17 +17,22 @@ addpath(rootpath)  % MUST have rootpath so that mslice_init, mslice_off included
 addpath_message (rootpath,'ISIS_utilities');
 if exist('libisis_init.m','file')   % if libisis is on the path we populate ISIS_utilities with contents from Libisis
     try % this is to deal with problem of really old version of libisis initiated on the machine
-    if libisis_version('number')>1620 % this is the Libisis version which supports this feature
+     libisis_ver=libisis_version('number');
+     last_copied_ver=get(mslice_config,'last_copied_libisis');
+     if libisis_ver>last_copied_ver % this is the Libisis version which supports this feature
         source_path=find_path(['Libisis',filesep,'ISIS_utilities']);
-        [sucsess,message,messageID]=copyfile([source_path,'/*.m'],[rootpath,'/ISIS_utilities/'],'f');
+        filelist=copy_files_list(source_path,[rootpath,'/ISIS_utilities/']);
+        sucsess=numel(filelist);
         if ~sucsess
             warning(messageID,' Error copying libisis-dependant mslice function, Reason: ',message);
+        else
+            set(mslice_config,'last_copied_libisis',libisis_ver);            
         end
-    end
+     end
     catch
         warning('Mslice::OldEnvironmnet',...
                  [' You have very old Luibisis initiated on your computer;',...
-                 ' It may preven this program from working properly',...
+                 ' It may prevent this program from working properly',...
                  ' You adwised to update your Libisis version to more recent version']);
     end
 end

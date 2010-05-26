@@ -1,3 +1,4 @@
-The contents of this folder is copied from Libisis utilites automatically, during mslice initialisation overwriting everything with equivalents found in Libisis/ISIS_utilites
+This folder intended to keep the general matlab utilites which are not related to libisis or neutron experiments but are used by all ISIS packages
+It is used primary during packages installation
 
-The folder is for decrease the dependence between packages
+The purpose of this folder is to decrease the interdependence between the packages, as each package which is installed separately would need a copy of this folder. 

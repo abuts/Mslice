@@ -1,4 +1,4 @@
-function cancel=ms_getfile(hdir,hfile,filter,titlewindow);
+function cancel=ms_getfile(hdir,hfile,filter,titlewindow)
 
 % function ms_getfile(hdir,hfile,filter,titlewindow);
 % uses the uiwindow to select a file with a given filter
@@ -35,8 +35,11 @@ if isempty(pathname)|~(exist(pathname,'dir')==7),
       end
    end
 end
-
-[filename,pathname]=uigetfile([pathname filter],titlewindow);
+if numel(filter)>1
+    [filename,pathname]=uigetfile(filter',titlewindow,pathname);        
+else
+    [filename,pathname]=uigetfile([pathname filter],titlewindow);    
+end
 if ischar(filename),
 	set(hdir,'String',pathname);
    set(hfile,'String',filename);
