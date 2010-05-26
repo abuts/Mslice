@@ -15,5 +15,5 @@ end
 
 n_fields=min(numel(fieldnames),nargout);
 for i=1:n_fields
-    varargout(i)={hdf5read(hdf_file,fieldnames{i})};
+    varargout(i)={hdf5read(hdf_file,fieldnames{i})'};
 end

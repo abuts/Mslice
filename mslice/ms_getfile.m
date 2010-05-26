@@ -35,13 +35,13 @@ if isempty(pathname)|~(exist(pathname,'dir')==7),
       end
    end
 end
-if numel(filter)>1
+if iscell(filter)
     [filename,pathname]=uigetfile(filter',titlewindow,pathname);        
 else
     [filename,pathname]=uigetfile([pathname filter],titlewindow);    
 end
 if ischar(filename),
-	set(hdir,'String',pathname);
+   set(hdir,'String',pathname);
    set(hfile,'String',filename);
    cancel=0;
 else
