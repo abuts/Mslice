@@ -101,6 +101,7 @@ if strcmpi(ext,hdf_file_str.spe_hdf_file_ext)
     %     data.S  = spe_data.S;
     %     data.ERR= spe_data.ERR;    
     %     data.en = spe_data.en;    
+        data.en=data.en';
         [ndet,ne]=size(data.S);
         data.det_theta=ones(ndet,1);
         libisis_failed=false;  
