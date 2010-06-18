@@ -97,6 +97,7 @@ if strcmpi(ext,hdf_file_str.spe_hdf_file_ext)
     try %try hdf5
         fields={hdf_file_str.data_field_names{1:3}};
         [data.en,data.S,data.ERR]=read_hdf_fields(strtrim(spe_filename),fields);
+    % the way below is better but ties mslice and libisis;
     %     spe_data=spe(spe_filename);
     %     data.S  = spe_data.S;
     %     data.ERR= spe_data.ERR;    

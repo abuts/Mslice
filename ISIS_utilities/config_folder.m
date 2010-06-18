@@ -13,12 +13,16 @@ function folder_path=config_folder(folder_short_name)
 % in the following order:
 %
 % 1) in the place where the startup.m file is located.
-% 2) if there are no startup.m file or its folder is write-protected 
+% 2) in Matlab preferences directory;
+% 3) if there are no startup.m file or its folder is write-protected 
 %    try to create this folder under the user profile folder
-% 3) if this location does not exist or write protected, try userpath
-% 4) if 3) fails, try working directory
+% 4) if this location does not exist or write protected, try userpath
+% 5) if 3) fails, try working directory
 %    
-%  if 4) fails than something is fundamentally wrong and error is thrown. 
+%  if 5) fails than something is fundamentally wrong and error is thrown. 
+%
+%
+% $Revision$ ($Date$)
 %
     location = which('startup.m');    
     if ~isempty(location)
@@ -28,7 +32,15 @@ function folder_path=config_folder(folder_short_name)
             end
     end
     
-    % startup does not exist, try user profile;
+    % try to use matlab preferences directory
+    location = prefdir();
+    if exist(location,'dir')    
+        [success,folder_path] = try_to_create_folder(location,folder_short_name);
+        if success;   return;
+        end                
+    end
+    
+    % startup does not exist, preferences are ?unavailible? try user profile;
     if ispc
         location = getenv('USERPROFILE');
     else

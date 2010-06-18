@@ -36,7 +36,7 @@ if isempty(pathname)|~(exist(pathname,'dir')==7),
    end
 end
 if iscell(filter)
-    [filename,pathname]=uigetfile(filter',titlewindow,pathname);        
+    [filename,pathname]=uigetfile(filter,titlewindow,pathname);        
 else
     [filename,pathname]=uigetfile([pathname filter],titlewindow);    
 end
