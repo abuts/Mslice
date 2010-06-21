@@ -136,14 +136,16 @@ if id.add2startup
     disp(mess1);
     if startup_modified
         disp('! It will be automatically availble after you restart MATLAB        !')
-        eval([lower(id.package_name),'_init']);        
+        f_name=[lower(id.package_name),'_init'];
     else
         mess = sprintf('! You need to type %s_on to initiate it after MATLAB restarted',lower(id.package_name));           
         disp(mess) ;
-        eval([lower(id.package_name),'_on']);                
+        f_name=[lower(id.package_name),'_on'];        
     end
+    rehash;       
+    eval(f_name);        
+    
     disp('!-------------------------------------------------------------------!')   
-    rehash;
 else
     mess = sprintf('! Sucsessfully installed ISIS application: %s',id.package_name);
     disp(mess);
@@ -312,7 +314,7 @@ else
 end
 startup_present  =true;
 
-app_startup_string1=['addpath(''',fullfile(id.pack_install_folder),''')'];
+app_startup_string1=['addpath(''',fullfile(id.pack_install_folder,''),''')'];
 app_startup_string2=[lower(id.package_name),'_init'];
 fprintf(fout,'%s\n',app_startup_string1);    
 fprintf(fout,'%s\n',app_startup_string2);    
