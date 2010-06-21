@@ -136,13 +136,13 @@ if id.add2startup
     disp(mess1);
     if startup_modified
         disp('! It will be automatically availble after you restart MATLAB        !')
-        f_name=[lower(id.package_name),'_init'];
+%        f_name=[lower(id.package_name),'_init'];
     else
         mess = sprintf('! You need to type %s_on to initiate it after MATLAB restarted',lower(id.package_name));           
         disp(mess) ;
-        f_name=[lower(id.package_name),'_on'];        
     end
-    rehash;       
+    f_name=[lower(id.package_name),'_on'];            
+    rehash toolbox;       
     eval(f_name);        
     
     disp('!-------------------------------------------------------------------!')   
@@ -309,8 +309,12 @@ if isempty(stf)
     fout = fopen(stf,'w');
 else
     fout=fopen(stf,'a+');
-    warning('install_isis:startup_exists','! You have matlab startup file located in %s',fileparts(stf));
-    warning('install_isis:startup_exists','! You had to modify this file manualy if you initiated %s in startup before',id.package_name)
+
+    warning('install_isis:startup_exists',...
+            ['! You have matlab startup file located in %s \n',...
+             '! You have to modify this file manualy if you initiated %s in startup before'],...
+        fileparts(stf),id.package_name);        
+    fprintf(fout,'\n');        
 end
 startup_present  =true;
 
