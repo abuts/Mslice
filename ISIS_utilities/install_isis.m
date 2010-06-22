@@ -97,8 +97,8 @@ end
 %--------------------------------------------------------------------------
 % actions start
 if id.old_found && id.replace_existing
-    disp('!------------------------------------------------------------------!')
-    disp('! deleting existing and placing the path to put new pack there     !')
+disp('!-------------------------------------------------------------------!')
+disp('! deleting existing and placing the path to put new pack there      !')
     old_path_pack   =fileparts(old_pack);
     rmdir(old_path_pack);
     id.allPacks_dest_folder = fileparts(old_path_pack);
@@ -106,8 +106,8 @@ if id.old_found && id.replace_existing
     
 end
 %--------------------------------------------------------------------------
-disp('!------------------------------------------------------------------!')
-disp('!  unpacking package into the destination folder                   !')
+disp('!-------------------------------------------------------------------!')
+disp('!  unpacking package into the destination folder                    !')
 if ~id.unpacked
     unzip(fullfile(id.package_orig_folder,id.package_file),id.unpack_folder);
     id.unpacked=true;
@@ -121,8 +121,8 @@ if ~strcmp(id.unpack_folder,id.allPacks_dest_folder)
     rmdir(app_tmp_folder,'s');
     delete_tmp=true;    
 end
-disp('!------------------------------------------------------------------!')
-disp('!  Modifying MATLAB search path to look for application            !')
+disp('!-------------------------------------------------------------------!')
+disp('!  Modifying MATLAB search path to look for application             !')
 %
 id=create_init_folder(id);
 %
@@ -135,7 +135,7 @@ if id.add2startup
     mess1 = sprintf('! Sucsessfully installed ISIS application: %s',id.package_name);
     disp(mess1);
     if startup_modified
-        disp('! It will be automatically availble after you restart MATLAB        !')
+disp('! It will be automatically availble after you restart MATLAB        !')
 %        f_name=[lower(id.package_name),'_init'];
     else
         mess = sprintf('! You need to type %s_on to initiate it after MATLAB restarted',lower(id.package_name));           
@@ -145,7 +145,7 @@ if id.add2startup
     rehash toolbox;       
     eval(f_name);        
     
-    disp('!-------------------------------------------------------------------!')   
+disp('!-------------------------------------------------------------------!')   
 else
     mess = sprintf('! Sucsessfully installed ISIS application: %s',id.package_name);
     disp(mess);
@@ -311,9 +311,11 @@ else
     fout=fopen(stf,'a+');
 
     warning('install_isis:startup_exists',...
-            ['! You have matlab startup file located in %s \n',...
-             '! You have to modify this file manualy if you initiated %s in startup before'],...
-        fileparts(stf),id.package_name);        
+            ['! You have matlab startup file located in: %s \n',...
+             '! The installation script have added %s initiation code to the startup \n',...
+             '! To avoid multiple initiations of the package %s, \n',...
+             '! You have to modify startup file manualy if you have initiated it in the startup before'],...
+        fileparts(stf),id.package_name,id.package_name);        
     fprintf(fout,'\n');        
 end
 startup_present  =true;
