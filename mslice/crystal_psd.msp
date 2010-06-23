@@ -1,7 +1,7 @@
 efixed                          = 250
 emode                           = 1
-DataDir                         = C:\Users\wkc26243.ndlt369\Documents\work\svn\mslice\mslice\HET\ 
-DataFile                        = SPE250.SPE 
+DataDir                         = C:\mprogs\maridata\ 
+DataFile                        = MAR00019.SPE 
 PhxDir                          = C:\Users\wkc26243.ndlt369\Documents\work\svn\mslice\mslice\HET\ 
 PhxFile                         = PIX_981.PHX 
 MspDir                          = 
