@@ -1,0 +1,24 @@
+function batch_subtract(phx,f1,f2,save,scale);
+
+phx_filename=phx;
+datafile=f1;
+backfile=f2;
+savefile=save;
+
+data=buildspe(datafile,phx_filename);
+back=buildspe(backfile,phx_filename);
+% sort out scaling
+if scale == 'e'
+    %scale to elastic scattering
+    j=find(data.en<0.1 &data.en>-.1)
+    int_data=sum(sum(data.S(:,j),2));
+    int_back=sum(sum(data.S(:,j),2));
+    scale=
+    
+
+r=scale
+ corrected_data=data;
+ corrected_data.S=data.S-(back.S.*r);
+ corrected_data.ERR=sqrt(data.ERR.^2+(back.ERR.*r).^2);
+ save_spe(corrected_data,savefile)
+

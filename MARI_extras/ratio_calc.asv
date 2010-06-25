@@ -1,0 +1,7 @@
+function ratio=ratio_calc(num)
+
+
+for i=1:num
+    dat=ginput(2)
+    ratio
+    ratio(:,i)=dat(3)/dat(4)

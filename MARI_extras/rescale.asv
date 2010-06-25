@@ -1,0 +1,6 @@
+function rescale.m
+%rescales .SPE data 
+
+data=fromwindow;
+dat=ginput(2)
+upper=ginput(2)

@@ -1,0 +1,51 @@
+%batch_cut2
+data_path='c:\maridata\'
+phx_path='c:\mprogs\mslice\MARI\'
+%run numbers
+
+%fname for mcm41+d2O
+%fname={'12314','12315','12316','12317','12318','12319','12320','12321','12322','12323','12324','12325','12326'}
+%fname for D2O
+fname={'12328','12329','12330','12331','12332','12333','12334','12335','12336','12337','12338','12339','12340'}%,'12324','12325','12326'}
+%names for subtraction of mcm41 and d20
+%fname={'1','2','3','4','5','6','7','8','9','10','11','12','13'}
+%names for vycor and d2o
+%fname={'12341','12342','12343','12344','12345','12346','12347','12348','12349','12350','12351','12352','12353'}
+%runs for d2o+vyc subtraction
+%fname={'21','22','23','24','25','26','27','28','29'}
+%runs for fine mcm41 scan
+fname={'12354','12355','12356','12357','12358','12359','12360','12361','12362','12363'}
+ei=18
+dir=2; %direction for cut 1 = Q    2 = Energy
+par(1)=.7;   %min energy for cut
+par(2)=16;  %max energy for cut
+par(3)=.4;  % binwidth for cut
+par(4)=1;   %min Q for cut
+par(5)=7;   %max Q for cut
+par(6)=1.1;   %energy for integration
+par(7)=3;  %max energy for intergration
+%temperatures for the data
+%temp=[330,320,310,300,290,280,275,270,265,260,250,240,230]'
+%temp=[330,320,310,300,290,280,275,270,265,260,250,240,230]'
+temp=[300,295,290,285,282,280,276,274,270,265]'
+temparray=temp;
+% for no bose uncomment following line
+%temp=zeros(length(temp),1)
+
+
+figure
+title('cuts for the d20 in mcm-41')
+hold all
+%%for the mcm-41
+integration=[];
+for i=1:length(fname)
+[data,cut,int_dat]=batch_integrate(strcat(phx_path,'mari_resa.phx'),strcat(data_path,'MAR',char(fname(i)),'.spe'),ei,temp(i),par,dir);
+errorbar(cut.x,cut.y,cut.e,'.-')
+integration=cat(1,integration,int_dat);
+end
+
+figure
+title('temperature dependence d20 in mcm-41')
+hold all
+temp=temparray;
+errorbar(temp,integration(:,1)./integration(1,1),integration(:,2),'.-')

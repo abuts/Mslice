@@ -1,0 +1,18 @@
+
+data_path='c:\maridata\'
+phx_path='c:\mprogs\mslice\MARI\'
+
+
+%fname for mcm41+d2O
+fname1={'12314','12315','12316','12317','12318','12319','12320','12321','12322','12323'}%,'12324','12325','12326'}
+%fname for D2O
+fname2={'12328','12329','12330','12331','12332','12333','12334','12335','12336','12337'}
+fname3={'1','2','3','4','5','6','7','8','9','10'}
+
+
+for i=1:length(fname)
+batch_subtract(strcat(phx_path,'mari_resa.phx'),strcat(data_path,'MAR',char(fname2(i)),'.spe'),...
+    strcat(data_path,'MAR',char(fname1(i)),'.spe'),save,scale);
+    
+end
+
