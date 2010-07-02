@@ -283,8 +283,16 @@ en_grid=round(en_grid*1e5)/1e5;	%truncate at the 5th decimal point
     jjjjj=find(corrected_data.ERR >= 1e10);
     corrected_data.ERR(jjjjj)=0;
     corrected_data.en=en_grid;
-    
-   put_spe(corrected_data,savefile);
+data=corrected_data;
+%data.S=data.S';
+%data.ERR=data.ERR';
+de=data.en(1,2)-data.en(1,1);
+data.en=[data.en-de/2,data.en(end)+de/2]';
+
+
+ierr=put_spe_fortran(savefile,data.S,data.ERR,data.en);
+
+ % save_spe(corrected_data,savefile);
    
  
 end

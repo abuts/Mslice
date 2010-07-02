@@ -218,20 +218,81 @@ function pushbutton5_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton5 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+disp('########################################################################')
+disp('spe file subtraction routine')
+disp('########################################################################')
+tomslice=1;
 phx_filename=get(handles.edit1,'String');
 datafile=get(handles.edit2,'String');
 backfile=get(handles.edit3,'String');
-savefile=get(handles.edit4,'String')
+savefile=get(handles.edit4,'String');
 
 data=buildspe(datafile,phx_filename);
 back=buildspe(backfile,phx_filename);
+choice=input('Correct for bose factor ? 1=Yes 0=no   ');
+if choice == 1
+temp_sample1=input('Temperature of sample data   ');
+temp_back1=input('Temperature of background data ');
+else
+    disp('not correcting for temperature');
+    temp_sample1='xx';
+    temp_back1='xx';
+end
 
+if length(data.det_group)~=length(back.det_group)
+    disp('########################################################################')
+    disp('Data files have masked groups... will unmask all data before subtraction')
+    disp('Read data into mslice manually')
+    disp('########################################################################')
+    tomslice=0;
+    data=unmask(data);
+    back=unmask(back);
+end
+corrected_data=data;
+if isnumeric(temp_sample1) & isnumeric(temp_back1)
+    data=bosefactor2(data,temp_sample1);
+    back=bosefactor2(back,temp_back1);
+end
+r=input('Enter normalisation factor  ');
 
-
- corrected_data=data;
- corrected_data.S=data.S-back.S;
- corrected_data.ERR=sqrt(data.ERR.^2+back.ERR.^2);
- towindow(corrected_data)
-
+r2=input('input background level difference sample to can ');
+ 
+ 
+ back.S=back.S.*r;
+ back.ERR=back.ERR.*r;
+ data.S=data.S+r2;
+ corrected_data.S=data.S-(back.S);
+ corrected_data.ERR=sqrt(data.ERR.^2+(back.ERR).^2);
+ corrected_data.S=corrected_data.S';
+ corrected_data.ERR=corrected_data.ERR';
+ 
+ if tomslice==1
+ towindow(corrected_data);
+ end
+ 
+ 
 %save the file
-save_spe(corrected_data,savefile)
+if isempty(savefile)
+     disp('No file name given not saving');
+else
+ne=length(data.en);
+de=data.en(1,2)-data.en(1,1);
+en_grid=[data.en-de/2 data.en(1,ne)+de/2];
+en_grid=round(en_grid*1e5)/1e5;	%truncate at the 5th decimal point
+
+    jjjjj=find(corrected_data.ERR >= 1e10);
+    corrected_data.ERR(jjjjj)=0;
+    corrected_data.en=en_grid;
+data=corrected_data;
+data.S=data.S';
+data.ERR=data.ERR';
+de=data.en(1,2)-data.en(1,1);
+data.en=[data.en-de/2,data.en(end)+de/2]';
+
+disp(['Saving .spe file ' spe_filename]);
+put_spe_fortran(savefile,data.S,data.ERR,data.en);
+
+   save_spe(corrected_data,savefile);
+   
+ 
+end
