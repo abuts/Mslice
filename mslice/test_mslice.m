@@ -18,11 +18,14 @@ else
 end
 
 % Location of example spe and phx files:
-data_dir=fullfile(rootpath,'HET');
+sample_dir = get(mslice_config,'SampleDir');
+data_dir   = fullfile(sample_dir,'Het'); 
+%data_dir=fullfile(rootpath,'Het');
 
 
 % Set values of arguments to pass to functions
 % ------------------------------------------------
+
 spefile=fullfile(data_dir,'SPE250.SPE');
 phxfile=fullfile(data_dir,'PIX_981.PHX');
 

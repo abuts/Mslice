@@ -17,11 +17,8 @@ if ~isempty(h_cw),
    end
    % === update data file directory : ms_DataDir
    if isfield(data,'filedir')&~isempty(data.filedir)&...
-         ischar(data.filedir),
-      h=findobj(h_cw,'Tag','ms_DataDir');
-      if ~isempty(h),
-         set(h,'String',deblank(data.filedir));
-      end
+         ischar(data.filedir)
+         set(mslice_config,'DataDir',deblank(data.filedir));
    end
    % === update detector file : ms_PhxFile
    if isfield(data,'detfilename')&~isempty(data.detfilename)&...
@@ -34,10 +31,7 @@ if ~isempty(h_cw),
    % === update detector file directory : ms_PhxDir
    if isfield(data,'detfiledir')&~isempty(data.detfiledir)&...
          ischar(data.detfiledir),
-      h=findobj(h_cw,'Tag','ms_PhxDir');
-      if ~isempty(h),
-         set(h,'String',deblank(data.detfiledir));
-      end
+         set(mslice_config,'PhxDir',data.detfiledir);
    end   
    % === update TitleLabel : ms_TitleLabel
    if isfield(data,'title_label')&~isempty(data.title_label)&...

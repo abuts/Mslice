@@ -1,4 +1,4 @@
-function cut_d=ms_cut(cmd,noplot);
+function cut_d=ms_cut(cmd,noplot)
 
 % function ms_cut(cmd);
 % callback function for the 'Plot Cut' button on the MSlice Control Window
@@ -82,7 +82,7 @@ for i=1:size(vars,2)
         case{'OutputType'}
             OutputType=ms_getvalue(name,'noeval');
         case{'OutputDir'}
-            OutputDir=ms_getvalue(name,'noeval');
+            OutputDir= get(mslice_config,name);
         case{'OutputFile'}
             OutputFile=ms_getvalue(name,'noeval');
         case{'xaxis'}
@@ -101,7 +101,7 @@ colordef none;
 
 % === set full path to OutputFile if cut data is to be saved and calculate hkl projections if required
 if ~isempty(OutputFile)&(~strcmp('none',OutputType(~isspace(OutputType)))),
-   output_filename=[OutputDir OutputFile];		      
+   output_filename=fullfile(OutputDir,OutputFile);		      
    % === if cut to be saved in .hkl format calculate reciprocal space projections 
    if (sample==1)&~isempty(findstr(lower(OutputType),'hkl')),
       % === calculate h,k,l, projections 
@@ -135,8 +135,8 @@ if ~isempty(OutputFile)&(~strcmp('none',OutputType(~isspace(OutputType)))),
             data.det_psi*180/pi*ones(size(data.en)));	% (|Q| (Angs^{-1}),2Theta (deg), Azimuth(deg)) 
 		end         
    elseif ~isempty(findstr(lower(OutputType),'cut'))&(~isempty(findstr(lower(OutputType),'mfit'))),
-      data.MspDir=ms_getstring(fig,'ms_MspDir');
-      data.MspFile=ms_getstring(fig,'ms_MspFile');
+      data.MspDir = get(mslice_config,'MspDir');
+      data.MspFile= get(mslice_config,'MspFile');
       data.sample=sample;	% numerinc
       if sample==1,	% if sample is single crystal put also lattice parmeters
          data.abc=[str2num(get(findobj(fig,'Tag','ms_as'),'String')) ...

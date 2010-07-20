@@ -97,8 +97,8 @@ end
 %--------------------------------------------------------------------------
 % actions start
 if id.old_found && id.replace_existing
-    disp('!------------------------------------------------------------------!')
-    disp('! deleting existing and placing the path to put new pack there     !')
+disp('!-------------------------------------------------------------------!')
+disp('! deleting existing and placing the path to put new pack there      !')
     old_path_pack   =fileparts(old_pack);
     rmdir(old_path_pack);
     id.allPacks_dest_folder = fileparts(old_path_pack);
@@ -106,13 +106,15 @@ if id.old_found && id.replace_existing
     
 end
 %--------------------------------------------------------------------------
-disp('!------------------------------------------------------------------!')
-disp('!  unpacking package into the destination folder                   !')
+disp('!-------------------------------------------------------------------!')
+disp('!  Unpacking package into the destination folder                    !')
 if ~id.unpacked
     unzip(fullfile(id.package_orig_folder,id.package_file),id.unpack_folder);
     id.unpacked=true;
     id.unpack_folder=fullfile(id.unpack_folder,'ISIS');
 end
+disp('!  Successfull                                                      !')
+
 
 delete_tmp=false;
 if ~strcmp(id.unpack_folder,id.allPacks_dest_folder)
@@ -121,8 +123,8 @@ if ~strcmp(id.unpack_folder,id.allPacks_dest_folder)
     rmdir(app_tmp_folder,'s');
     delete_tmp=true;    
 end
-disp('!------------------------------------------------------------------!')
-disp('!  Modifying MATLAB search path to look for application            !')
+disp('!-------------------------------------------------------------------!')
+disp('!  Modifying MATLAB search path to look for application             !')
 %
 id=create_init_folder(id);
 %
@@ -135,15 +137,16 @@ if id.add2startup
     mess1 = sprintf('! Sucsessfully installed ISIS application: %s',id.package_name);
     disp(mess1);
     if startup_modified
-        disp('! It will be automatically availble after you restart MATLAB        !')
-        eval([lower(id.package_name),'_init']);        
+disp('! It will be automatically availble after you restart MATLAB        !')
+%        f_name=[lower(id.package_name),'_init'];
     else
         mess = sprintf('! You need to type %s_on to initiate it after MATLAB restarted',lower(id.package_name));           
         disp(mess) ;
-        eval([lower(id.package_name),'_on']);                
     end
-    disp('!-------------------------------------------------------------------!')   
-    rehash;
+    f_name=[lower(id.package_name),'_on'];            
+    rehash toolbox;       
+    eval(f_name);        
+    
 else
     mess = sprintf('! Sucsessfully installed ISIS application: %s',id.package_name);
     disp(mess);
@@ -188,7 +191,23 @@ if ~(package_file||package_dir)
 end
 % identify the package name one of list of availible
 % 
-[path,last_name,ext]=fileparts(package_f_or_dir);
+if package_dir
+    ext='';
+    dir_path=regexprep(package_f_or_dir,'\\','/');
+    dir_tree=regexp(dir_path,'/','split');
+    if isempty(dir_tree{end});
+        dir_tree=dir_tree(1:end-1);
+    end
+    last_name=dir_tree{end};
+    path='';
+    fs=filesep;
+    for i=1:numel(dir_tree)-1
+        path=[path,dir_tree{i},fs];
+    end
+    
+else
+    [path,last_name,ext]=fileparts(package_f_or_dir);
+end
 % idenfify full package path;
 cur_path=pwd;
 if ~isempty(path)
@@ -307,12 +326,18 @@ if isempty(stf)
     fout = fopen(stf,'w');
 else
     fout=fopen(stf,'a+');
-    warning('install_isis:startup_exists','! You have matlab startup file located in %s',fileparts(stf));
-    warning('install_isis:startup_exists','! You had to modify this file manualy if you initiated %s in startup before',id.package_name)
+
+    warning('install_isis:startup_exists',...
+            ['! You have matlab startup file located in: %s \n',...
+             '! The installation script have added %s initiation code to the startup \n',...
+             '! To avoid multiple initiations of the package %s, \n',...
+             '! You have to modify startup file manualy if you have initiated it in the startup before'],...
+        fileparts(stf),id.package_name,id.package_name);        
+    fprintf(fout,'\n');        
 end
 startup_present  =true;
 
-app_startup_string1=['addpath(''',fullfile(id.pack_install_folder),''')'];
+app_startup_string1=['addpath(''',fullfile(id.pack_install_folder,''),''')'];
 app_startup_string2=[lower(id.package_name),'_init'];
 fprintf(fout,'%s\n',app_startup_string1);    
 fprintf(fout,'%s\n',app_startup_string2);    

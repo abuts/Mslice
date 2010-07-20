@@ -25,6 +25,7 @@ end
 % === locate object in the ControlWindow
 h=findobj(h_cw,'Tag',tag);
 if isempty(h),
+   % may be the object is saved in mslice configuration?
    disp(['Could not find handle of object with Tag ' tag ' in the figure with handle' num2str(h_cw)]);
    str=[]; value=[];
    return;

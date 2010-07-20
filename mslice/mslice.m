@@ -36,20 +36,22 @@ if isdeployed
 % *** Verify
 %   January 2010, AB: Modified to do that this is no longer valid but need to verify
 %
-    MSliceDir = [pwd filesep];
-    disp('Current Mslice Dircetory is..'), disp(MSliceDir)
+    MSliceDir = get(mslice_config,'MSliceDir');
+    disp('Current Mslice Dircetory is..'), disp(MSliceDir);
 end
     
-% === find MSlice directory and place at top of MATLAB search path if not in path already
-% path(MSliceDir,path); %   T.G.Perring, 3 April 2009: Removed
 
-% === start by default in Crystal PSD mode if no MspFile given
-if ~exist('MspFile','var')||isempty(MspFile)||~ischar(MspFile),
-   MspFile=[MSliceDir 'crystal_psd.msp'];
+if ~exist('MspFile','var')||isempty(MspFile)||~ischar(MspFile),        
+% === start by default in Crystal PSD mode if no MspFile given   
+   %MspFile=fullfile(get(mslice_config,'SampleDir'),'crystal_psd.msp');
+% === start by default in the mode of the previous session; at first start
+%     it would be Crystal PSD mode if no MspFile given, all following --
+%     the modes you were working with. 
+    MspFile=fullfile(get(mslice_config,'MspDir'),get(mslice_config,'MspFile'));   
 else
-   if isempty(findstr(MspFile,'.msp')),
+  if isempty(findstr(MspFile,'.msp')),
       MspFile=[MspFile '.msp'];
-   end
+  end
 end
 
 % === define colours in RGB format
@@ -120,12 +122,7 @@ oneline=[0 lineheight+0*interlines 0 0];
 pos=pos-[0 interlines 0 0];
 
 % ============== MSliceDir, MspDir and MspFile 
-h=uicontrol('Parent',fig,'Style','text','String',MSliceDir,...
-   'Position',pos,'Tag','ms_MSliceDir','Visible','off');
-h=uicontrol('Parent',fig,'Style','text','String','',...
-   'Position',pos,'Tag','ms_MspDir','Visible','off');
-h=uicontrol('Parent',fig,'Style','text','String','',...
-   'Position',pos,'Tag','ms_MspFile','Visible','off');
+% are moved to configurations
 green=[0 1 0];
 red  =[1 0 0];
 h=uicontrol('Parent',fig,'Style','frame',...
@@ -147,8 +144,8 @@ h=uicontrol('Parent',fig,'Style','text','String','geometry',...
 
 %========= DataFile ==================
 pos=pos-oneline;
-h=uicontrol('Parent',fig,'Style','text','String',[pwd '\'],...
-   'Position',pos,'Visible','off','Tag','ms_DataDir');
+%h=uicontrol('Parent',fig,'Style','text','String',[pwd '\'],...
+%   'Position',pos,'Visible','off','Tag','ms_DataDir');
 h=uicontrol('Parent',fig,'Style','text','String','DataFile(.spe)',...
    'Position',pos);
 h=uicontrol('Parent',fig,'Style','edit','Enable','on','Tag','ms_DataFile',...
@@ -158,23 +155,23 @@ h=uicontrol('Parent',fig,'Style','edit','Enable','on','Tag','ms_DataFile',...
   
 h=uicontrol('Parent',fig,'Style','pushbutton','String','Browse',...
    'Callback',...
-   'ms_getfile(findobj(''Tag'',''ms_DataDir''),findobj(''Tag'',''ms_DataFile''),spe_ext(1),''Choose Data File'');',...
+   'ms_getfile(''DataDir'',findobj(''Tag'',''ms_DataFile''),spe_ext(1),''Choose Data File'');',...
    'Position',pos+[4*pos(3) interlines/2 0 0]);   
+
 
 %========= DetFile, Save Data As... and Load Data pushbuttons ==================
 pos=pos-oneline;
 h=uicontrol('Parent',fig,'Style','text','String','DetFile(.phx)',...
    'Position',pos);
-h=uicontrol('Parent',fig,'Style','text','String',[pwd '\'],...
-   'Position',pos,'Visible','off','Tag','ms_PhxDir');
 h=uicontrol('Parent',fig,'Style','edit','Enable','on','Tag','ms_PhxFile',...
    'Position',pos+[pos(3) 0 2*pos(3) interlines],...
    'HorizontalAlignment','left',...
 	'BackgroundColor',white);
 h=uicontrol('Parent',fig,'Style','pushbutton','String','Browse',...
    'Callback',...
-   'ms_getfile(findobj(''Tag'',''ms_PhxDir''),findobj(''Tag'',''ms_PhxFile''),''*.phx'',''Choose Detector File'');',...
+   'ms_getfile(''PhxDir'',findobj(''Tag'',''ms_PhxFile''),''*.phx'',''Choose Detector File'');',...
    'Position',pos+[4*pos(3) interlines/2 0 0]);   
+
 h=uicontrol('Parent',fig,'Style','pushbutton','String','Save Data As ...',...
    'Callback','ms_save_data;',...
    'Position',pos+[5.5*pos(3) interlines 0.5*pos(3) 0]);   
@@ -217,6 +214,14 @@ h1=uimenu(h,'Label','Load Parameters','Callback','ms_load_msp;');
 h1=uimenu(h,'Label','Save Parameters','Callback','ms_save_msp;');
 h1=uimenu(h,'Label','List Parameters','Callback','ms_list_pars;');
 h1=uimenu(h,'Label','Save List to File','Callback','ms_list_pars(''file'');');
+h1=uimenu(h,'Label','Set Data Folders','Callback','setup_data_folders','Separator','on');
+h1=uimenu(h,'Label','Reset Folders to defaults','Callback','reset_to_powder0');
+h1=uimenu(h,'Label','Reset Particular folder');
+uimenu(h1,'Label','Reset Data (spe) folder','Callback','setup_data_folders(''spe'')');
+uimenu(h1,'Label','Reset Detector (phx) folder','Callback','setup_data_folders(''phx'')');
+uimenu(h1,'Label','Reset target (cut) folder','Callback','setup_data_folders(''cut'')');
+uimenu(h1,'Label','Reset msp folder','Callback','setup_data_folders(''msp'')');
+
 
 % === construct Background menu
 h=uimenu(fig,'Label','Background');

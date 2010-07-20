@@ -1,4 +1,4 @@
-function cancel=ms_putfile(hdir,hfile,filter,titlewindow);
+function cancel=ms_putfile(hdir,hfile,filter,titlewindow)
 
 % function cancel=ms_getfile(hdir,hfile,filter,titlewindow);
 % uses the uiwindow to select a file with a given filter
@@ -12,31 +12,42 @@ if isempty(h_cw),
    return;
 end
 
-pathname=get(hdir,'String');
+pathname=get(mslice_config,hdir);
+
 % === if pathname is empty or could not be located in the current search path
-% === replace with MSlice directory
-if isempty(pathname)|isempty(dir(pathname)), 
-   h_mslicedir=findobj(h_cw,'Tag','ms_MSliceDir');
-   if ~isempty(h_mslicedir),
-      MSliceDir=get(h_mslicedir,'String');
-      if ~isempty(MSliceDir),
-         pathname=MSliceDir;
-      else   
-      	disp(['MSlice path appears to be empty. Return.']);
-         cancel=1;
-         return;
-   	end 
-   else
-      disp(['Could not determine MSlice path. Return.']);
-      cancel=1;
-      return;
+% === replace with MSlice Examples directory
+if isempty(pathname)|| ~exist(pathname,'dir')
+   pathname=get(mslice_config,'SampleDir');
+   if ~exist(pathname,'dir')
+       disp('MSlice samples path appears can not be found. Return.');
+       cancel=1;
+       return;       
    end
 end
 
-[filename,pathname]=uiputfile([pathname ms_filter(hfile,filter)],titlewindow);
+if(pathname(end)~=filesep)
+    pathname=[pathname,filesep];
+end
+%
+if ishandle(hfile)  
+   [filename,pathname]=uiputfile([pathname ms_filter(hfile,filter)],titlewindow);
+elseif ischar(hfile)
+    file_name=get(mslice_config,hfile);
+    [ff,file_base]=fileparts(file_name);    
+    [filename,pathname]=uiputfile([pathname,filter],titlewindow);    
+else
+    error('ms_getfile:wrong_parameters',' second parameter of ms_getfile has to be graphical handler or character string');     
+end
+    
+
 if ischar(filename),
-	set(hdir,'String',pathname);
-   set(hfile,'String',filename);
+   set(mslice_config,hdir,pathname);
+% save the file name in graphical handle or configuration depending on call parameters   
+   if ishandle(hfile)   
+       set(hfile,'String',filename);
+   elseif ischar(hfile)
+        set(mslice_config,hfile,filename);       
+   end
    cancel=0;
 else
    cancel=1;

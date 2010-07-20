@@ -10,10 +10,9 @@ if isempty(fig),
    return;
 end
 
-hdir=findobj(fig,'Tag','ms_cut_OutputDir');
 hfile=findobj(fig,'Tag','ms_cut_OutputFile');
 htype=findobj(fig,'Tag','ms_cut_OutputType');
-if isempty(hdir)|isempty(hfile)|isempty(htype),
+if isempty(hfile)||isempty(htype),
    disp('Could not locate all handles to define the OutputFile. Return.')
    return;
 end
@@ -30,5 +29,5 @@ else
    else
       value=['*' value];	% for '*.cut', '*.xye', '*.smh'
    end
-   ms_putfile(hdir,hfile,value,'Choose output file.');
+   ms_putfile('cut_OutputDir',hfile,value,'Choose output file.');
 end

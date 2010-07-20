@@ -72,6 +72,13 @@ end
 
 % define the target subdirectory by replacing the root path of the source
 % directory with the root path of the target directory. 
+if strncmp(computer,'PC',2)
+    rep_expr='\\$';
+else
+    rep_expr='/$';    
+end
+source_dir_root=regexprep(source_dir_root,rep_expr,'');
+targ_dir_root  =regexprep(targ_dir_root,rep_expr,'');
 targ_dir= strrep(source_dir,source_dir_root,targ_dir_root);
 
 if(~exist(targ_dir,'dir'))

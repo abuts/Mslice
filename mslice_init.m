@@ -19,8 +19,9 @@ if exist('libisis_init.m','file')   % if libisis is on the path we populate ISIS
     try % this is to deal with problem of really old version of libisis initiated on the machine
      libisis_ver=libisis_version('number');
      last_copied_ver=get(mslice_config,'last_copied_libisis');
-     if libisis_ver>last_copied_ver % this is the Libisis version which supports this feature
-        source_path=find_path(['Libisis',filesep,'ISIS_utilities']);
+     if libisis_ver>last_copied_ver % libisis_ver==last_copied_ver this is the Libisis version which supports this feature
+        path = fileparts(which('libisis_init.m'));
+        source_path=find_path([path,filesep,'ISIS_utilities']);
         filelist=copy_files_list(source_path,[rootpath,'/ISIS_utilities/']);
         sucsess=numel(filelist);
         if ~sucsess

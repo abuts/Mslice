@@ -8,18 +8,12 @@ function ms_help(entry)
 % === return if MSlice ControlWindow not active 
 h_cw=findobj('Tag','ms_ControlWindow');
 if isempty(h_cw),
-   disp(['No ControlWidow opened, no help available.']);
+   disp('No ControlWidow opened, no help available.');
    return;
 end
-
-% === return if help file could not be located
-h_mslicedir=findobj(h_cw,'Tag','ms_MSliceDir');
-if isempty(h_mslicedir)|isempty(get(h_mslicedir,'String')),
-   disp('Could not locate MSlice directory. Help file could not be loaded');
-   return;
-end
-helpfile=[get(h_mslicedir,'String') 'help.txt'];	% MSlice help file
-if isempty(dir(helpfile)),
+%
+helpfile=fullfile(get(mslice_config,'MSliceDir'),'help.txt');	% MSlice help file
+if ~exist(helpfile,'file')
    disp(['Could not find help file ' helpfile ]);
    return;
 end

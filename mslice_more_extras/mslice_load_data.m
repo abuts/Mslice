@@ -20,10 +20,10 @@ function mslice_load_data (spe_file, phx_file, efix, emode, intensity_label, tit
 
 
 % check all files exist:
-if(exist(spe_file)~=2)
+if ~exist(spe_file,'file')
     error (['SPE file ' spe_file ' does not exist'])
 end
-if(exist(phx_file)~=2)
+if ~exist(phx_file,'file')
     error (['PHX file ' phx_file ' does not exist'])
 end
 
@@ -32,13 +32,13 @@ ms_setvalue('efixed',efix)
 ms_setvalue('emode',emode)
 
 % load spe file:
-[path,file,ext,ver] = fileparts(spe_file);
-ms_setvalue('DataDir',[path filesep]); 
+[path,file,ext] = fileparts(spe_file);
+set(mslice_config,'DataDir',[path filesep]); 
 ms_setvalue('DataFile',[file ext]); 
 
 % load phx file:
-[path,file,ext,ver] = fileparts(phx_file);
-ms_setvalue('PhxDir',[path filesep]); 
+[path,file,ext] = fileparts(phx_file);
+set(mslice_config,'PhxDir',[path filesep]); 
 ms_setvalue('PhxFile',[file ext]); 
 
 % Optional labels
