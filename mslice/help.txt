@@ -192,28 +192,32 @@ file powder.msp
         in Mslice have to be in the special .msp format, not 
         in plain .txt format.   
         Command line operation:
-        >> ms_load_msp('C:\mprogs\mslice\HET\HET_spe250_psd_la2cuo4_example.msp'); 
+        >>ms_load_msp('C:\mprogs\mslice\HET\HET09779_2m_cftd_example.msp'); 
 	================================================================
 	Set Data Folders:
 	Lasest version *.msp files contain all information visible and 
-	not visible in mslice control window except the location of all data files
-	you will use. When Mslice starts first time, these location is set up to 
-	the mslice/Data folder, which contains standard msp files and example data files
-	Unless you are going to place your working files into this directory (which is higly 
-	not recommended) you shoud set up you own location for your msp, spe phx files and 
-	cuts. This menue allows you to select thses folders. Mslice will remember your choice
-	for the future.
+	not visible in mslice control window except the location of all 
+	data files you will use. 
+	  When Mslice starts first time, these locations are set up 
+	to the mslice/Data folder, which contains standard msp files
+	and example data files.
+	Unless you are going to place your working files into this 
+	directory (which is higly not recommended) you shoud set up 
+	you own location for your msp, spe phx files and cuts. 
+	This menue allows you to select these folders. 
+	Mslice will remember your choice for the next time.
 	----- command line option:
 	>>set(mslice_config,'MspDir',location) for setting location of msp files 
-	>>set(mslice_config,'DataDir',location) for setting location of spe files 	
-	>>set(mslice_config,'PhxDir',location) for setting location of phx files 		
-	>>set(mslice_config,'cut_OutputDir',location) where to place cut files 			
+	>>set(mslice_config,'DataDir',location) -- spe files 	
+	>>set(mslice_config,'PhxDir',location)  -- phx files 		
+	>>set(mslice_config,'cut_OutputDir',location) -- 
+	   - where to place cut files 			
 	-----
 	Set folders to defaults:  
 	will reset your choice to the state Mslice was after installation.
 	You may want to do it if decided to look through the 
 	examples of Mslice operations, availible in "mslice/Data" folder
-	>>reset_to_powder0() will do it from the command line.
+	>>reset_to_powder0() will do the same from the command line.
 
 :Background:
 	Use this menu to subtract an estimate of the energy-dependent 

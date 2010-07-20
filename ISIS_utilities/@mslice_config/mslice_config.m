@@ -45,8 +45,13 @@ defaults = ...
     
 
 % and the location of the default configuration file
-defaults.MSliceDir    = fullfile(fileparts(which('mslice_init.m')),'mslice');
-defaults.SampleDir    = fullfile(fileparts(which('mslice_init.m')),'Data');
+if isdeployed
+     defaults.MSliceDir=pwd;
+     defaults.SampleDir=fullfile(defaults.MSliceDir,'Data');
+else
+    defaults.MSliceDir    = fullfile(fileparts(which('mslice_init.m')),'mslice');
+    defaults.SampleDir    = fullfile(fileparts(which('mslice_init.m')),'Data');
+end
 defaults.DataDir      = defaults.SampleDir;
 defaults.PhxDir       = defaults.SampleDir;
 

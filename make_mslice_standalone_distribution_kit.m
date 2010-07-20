@@ -24,50 +24,65 @@ else
     target_dir  = [this_dir,filesep,'mslice_standalone'];    
 end
 
+if exist(target_dir,'dir')  % remove target directory and create it again
+    rmdir(target_dir,'s');
+end
 mkdir(target_dir);
-mslice_src_dir = [target_dir,filesep,'src'];   % code directory
-mslice_tmp_dir = [target_dir,filesep,'tmp'];   % working directory
-mslice_dist_dir= [target_dir,filesep,'distr']; % target directory
+%
+mslice_src_dir = [target_dir,filesep,'src'];   % code directory (not used but distribuited as reference to look through the code)
+mslice_tmp_dir = [target_dir,filesep,'tmp'];   % working directory 
+mslice_targ_dir= [target_dir,filesep,'distr'];  % target directory (the directory with for final mslice program to be located)
 
 
 disp('!===================================================================!')
 disp('!==> Preparing MSLICE standalone distributon kit ===================!')
 disp('!    Start collecting the mslice  program files ====================!')
+
+% get configuration and clear it to avoid referring to wrong configuration
+% in a future
+config_folder=get(config,'config_folder');
+all_config   = fullfile(config_folder,'config.mat');
+msl_config   = fullfile(config_folder,'mslice_config.mat');
+if exist(all_config,'file')
+    delete(all_config);
+end
+if exist(msl_config,'file')
+    delete(msl_config);
+end
+
+%
 % these are mslice program files in all their subfolders
-mslice_dll =  [mslice_src_dir,filesep,'DLL'];
+mslice_dll  = [mslice_src_dir,filesep,'DLL'];
 mslice_m1   = [mslice_src_dir,filesep,'mslice'];
+mslice_m2   = [mslice_src_dir,filesep,'ISIS_utilities'];
 mslice_add1 = [mslice_src_dir,filesep,'mslice_extras'];
 mslice_add2 = [mslice_src_dir,filesep,'mslice_more_extras'];
 %
 if exist(mslice_src_dir,'dir')  % source directory;
      rmdir(mslice_src_dir,'s');
 end
+% create src folder;
 mex_files_extention =  mexext;
 copy_files_list([source_dir,filesep,'DLL'], mslice_dll,mex_files_extention); 
 copy_files_list([source_dir,filesep,'mslice'],mslice_m1,'.m'); 
+copy_files_list([source_dir,filesep,'ISIS_utilities'],mslice_m2,'.m'); 
 copy_files_list([source_dir,filesep,'mslice_extras'],mslice_add1,'.m'); 
 copy_files_list([source_dir,filesep,'mslice_more_extras'],mslice_add2,'.m'); 
 % the files which will not be necessary for stand-alone but will be used
 % during installation:
-copyfile([source_dir,filesep,'mslice_setup_examples.m '],[mslice_src_dir,filesep,'mslice_setup_examples.m ']);
+%copyfile([source_dir,filesep,'mslice_setup_examples.m '],[mslice_src_dir,filesep,'mslice_setup_examples.m ']);
 %copyfile([source_dir,filesep,'mslice_off.m'],[mslice_src_dir,filesep,'mslice_off.m']);
 %
 disp('!    Start collecting the mslice Data and Setup files ==============!')
-% we gather this files directrly into the targed directory
-if exist(mslice_dist_dir,'dir')  % target directory
-     rmdir(mslice_dist_dir,'s');
-end
 
-% copy everything except m-files into distributive
-copy_files_list(source_dir,mslice_dist_dir,'-.m');
+% copy auxiliary files into the destination  except m-files into distributive
+copy_files_list([source_dir,filesep,'Data'],[mslice_targ_dir,filesep,'Data']); 
+copyfile(fullfile(source_dir,'mslice','help.txt'),mslice_targ_dir,'f');
+copyfile(fullfile(source_dir,'mslice','coltab.dat'),mslice_targ_dir,'f');
 
-% remove leftovers
-if exist([mslice_dist_dir,filesep,'DLL'],'dir')  % remove DLL directory (to many bothering to avoid copying it)
-    rmdir([mslice_dist_dir,filesep,'DLL'],'s');
-end
-if exist([mslice_dist_dir,filesep,'ISIS_utilities'],'dir')  % remove ISIS_utilities directory (to many bothering to avoid copying it)
-    rmdir([mslice_dist_dir,filesep,'ISIS_utilities'],'s');
-end
+copyfile(fullfile(source_dir,'mslice_manual.pdf '),mslice_targ_dir,'f');
+%copy_files_list(source_dir,mslice_dist_dir,'-.m');
+
 
 % create working directory
 if exist(mslice_tmp_dir,'dir')  
@@ -90,7 +105,7 @@ cd(target_dir);
 %BundleFileString=['-o  homer -W main -d  ''',homer_tmp_dir,''' -a ''',homer_src_DLL,''' -T link:exe -v -N ',Homer_GUI];
 mslice_main= 'mslice.m';
 msliceFileString=['-o  mslice -W main -d  ''',mslice_tmp_dir,...
-                ''' -a ''',mslice_m1,''' -a ''',mslice_add1,''' -a ''',mslice_add2,''' -a ''',mslice_dll,...
+                ''' -a ''',mslice_m1,''' -a ''',mslice_m2,''' -a ''',mslice_add1,''' -a ''',mslice_add2,''' -a ''',mslice_dll,...
                 ''' -T link:exe -v -N ',mslice_main];
 %
 %
@@ -98,23 +113,36 @@ fid = fopen('MCC_msliceString.txt', 'w');
 fwrite(fid, msliceFileString);
 fclose(fid);
 
+
+
 %------------------------------>
 mcc -B 'MCC_msliceString.txt'   %
 %<-----------------------------
 delete('MCC_msliceString.txt');
-disp('!    Start compiling auxiliary utilites ============================!')
+%disp('!    Start compiling auxiliary utilites ============================!')
 % build the utility to modify the set-up files. Unnecessary, but let it
 % be if it is already here. 
 %------------------------------>
-mcc -o 'mslice_setup_examples' -W 'main' -d './tmp' -T 'link:exe' -v -N 'mslice_setup_examples.m'
+%mcc -o 'mslice_setup_examples' -W 'main' -d './tmp' -T 'link:exe' -v -N 'mslice_setup_examples.m'
 %<-----------------------------
-disp('!    Compilation completed: Copying results to target directory ====!')
+%disp('!    Compilation completed: Copying results to target directory ====!')
 % THE MOST IMPORTANT PART - copy over the mslice exe and ctf files.
-copyfile([mslice_tmp_dir,filesep,'*.exe'],[mslice_dist_dir,filesep,'mslice'],'f');
-try
-    copyfile([mslice_tmp_dir,filesep,'*.cft'],mslice_m1,'f');
-catch
+copyfile([mslice_tmp_dir,filesep,'*.exe'],mslice_targ_dir,'f');
+
+% remove leftovers 
+if exist(mslice_dll,'dir')  % remove DLL directory (it is no use to standalone source
+    rmdir(mslice_dll,'s');
 end
+if exist(mslice_tmp_dir,'dir')
+    rmdir(mslice_tmp_dir,'s')
+end
+if exist(mslice_src_dir,'dir')
+    movefile([mslice_src_dir,filesep,'*'],[mslice_targ_dir,filesep,'src']);
+    rmdir(mslice_src_dir,'s');
+end
+
+    
+
 
 cd(target_dir);
 
@@ -126,16 +154,13 @@ else
     MCRInstaller= 'MCRInstaller.bin';    
 end
 MCRstring = fullfile(matlabroot, 'toolbox','compiler','deploy',MCR_folder);
-copyfile(fullfile(MCRstring,MCRInstaller),fullfile(mslice_dist_dir,MCRInstaller),'f')
+copyfile(fullfile(MCRstring,MCRInstaller),fullfile(mslice_targ_dir,MCRInstaller),'f')
 
 disp('====> compressing mslice distribution together with installer ======!')
-zip(['mslice_standalone_kit_',MCR_folder,'.zip'],[mslice_dist_dir,'/*'])
+zip(['mslice_standalone_kit_',MCR_folder,'.zip'],[mslice_targ_dir,'/*'])
 % remove unecessary  files.
 disp('====> deleting intermediate and temporary files ====================!')
-rmdir(mslice_tmp_dir,'s')
-rmdir(mslice_src_dir,'s')
-rmdir(mslice_dist_dir,'s')
-%delete([homer_root_dir,'/homer_standalone.zip']);
+rmdir(mslice_targ_dir,'s')
 
 
 % Give a confirmation text file for this

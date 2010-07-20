@@ -24,22 +24,9 @@ function mslice(MspFile)
 %  $Revision: 57 $   ($Date: 2010-01-08 17:22:35 +0000 (Fri, 08 Jan 2010) $)
 %
 global MSliceDir;
-[temp,MSliceDir]=stripath(which('mslice.m'));
+MSliceDir = get(mslice_config,'MSliceDir');
 
-if isdeployed
-%     % if in deployed mode, one needs to move upwards by a few levels in order
-%     % to get to the correct path. *** This is an unfortunately "hacky" way to do it
-%     % Dean Whittaker, August 2008
-%     cd(MSliceDir)
-%     cd ..
-%     cd ..
-% *** Verify
-%   January 2010, AB: Modified to do that this is no longer valid but need to verify
-%
-    MSliceDir = get(mslice_config,'MSliceDir');
-    disp('Current Mslice Dircetory is..'), disp(MSliceDir);
-end
-    
+  
 
 if ~exist('MspFile','var')||isempty(MspFile)||~ischar(MspFile),        
 % === start by default in Crystal PSD mode if no MspFile given   
@@ -68,7 +55,7 @@ if ~isempty(h),
 end
 
 % === display MSlice version ===
-helpfile=[MSliceDir 'help.txt'];
+helpfile=fullfile(MSliceDir,'help.txt');
 try
     fpos=ffind(helpfile,'%%% version');
     err_ll='';
@@ -80,7 +67,7 @@ if fpos<1,
    disp(['Cannot determine MSlice version date. ' err_ll]);
    lastupdate='(date of last update not available)';   
 else
-	fid=fopen(helpfile,'rt');
+   fid=fopen(helpfile,'rt');
    fseek(fid,fpos+length('%%% version'),'bof');
    lastupdate=fgetl(fid);
    fclose(fid);
