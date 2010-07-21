@@ -71,9 +71,24 @@ end
 
 % === pick up data fields to be displayed 
 Q=[];
+mode =    ms_getstring(fig_cw,'ms_emode');
+switch mode
+    case 'elastic'   
+        data.emode=0;
+    case 'direct'
+        data.emode=1;
+    case 'indirect'
+        data.emode=2;        
+    otherwise
+        error('MSLICE:ms_plot_traj','uncnown mode %s',mode);
+end
+data.efixed=str2double(ms_getstring(fig_cw,'ms_efixed'));
+
 [vx,axislabelx,unitnamex,unitlengthx,shortlabelx,Q]=pickvar(data,x,Q);
 [vy,axislabely,unitnamey,unitlengthy,shortlabely,Q]=pickvar(data,y,Q);
 [vz,axislabelz,unitnamez,unitlengthz,shortlabelz,Q]=pickvar(data,z,Q);
+
+
 
 % === establish which range of points of each detector is to be plotted
 index=(vx==vx);
@@ -346,3 +361,7 @@ if ~isempty(command)&~isempty(command(~isspace(command))),
     end
 end
 set(gcf,'PaperPositionMode','auto');   
+% remove emode and efixed from data as it is used by this routine only;
+%data=rmfield(data,{'emode','efixed'});
+
+
