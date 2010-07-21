@@ -1,10 +1,10 @@
 efixed				= 19.92
 emode				= 1
-DataDir				= .\
+DataDir				= ./
 DataFile			= Mar06384.spe
-PhxDir				= .\
+PhxDir				= ./
 PhxFile				= MARI_CSTARTVERT_974_wide.phx
-MspDir				= .\
+MspDir				= ./
 MspFile				= mar6384_csnicl3_qce__det1to94_powder_example.msp
 IntensityLabel			= k_i/k_f d^2 \sigma/d\Omega dE (arb. units)
 TitleLabel			= 5895.9.4\muAhrs (c\perp k_i) 6.2K
