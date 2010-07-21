@@ -21,12 +21,28 @@ global class_names;
 if isempty(configurations)
     config_data = struct(...
        'config_folder_name','libisis_config',...
+       'instruments_root_dir','',     ...   % the folder where instrument files reside
+       'instruments_allowed','', ...    % field for instruments libisis understands;      
        'config_folder','');  % folder where user configurations should reside; it is calculated 
    % automatically by the config_folder function;
        
   % fields which are not allowed to change using set methods
-    config_data.fields_sealed={'nInstances','config_folder'};
+    config_data.fields_sealed={'nInstances','config_folder','instrument_names_allowed'};
    
+   % the instruments LIBISIS understands
+    config_data.instruments_allowed={'het','let','maps','mari','merlin'};
+    
+    % Verify if the default instrument directory variable exisits (it would
+    % if you are in Libisis) and if not  set it to the folder
+    % under the directory where the Homer_ver0 has been called from (this will be
+    % the stand-alone default location
+    rootpath = fileparts(which('libisis_init'));
+    instr_files_location = parse_path([rootpath '/../InstrumentFiles/']);
+    if ~exist(instr_files_location,'dir') % stand-alone?
+        instr_files_location=fullfile(pwd,'InstrumentFiles');        
+    end
+    config_data.instruments_root_dir=instr_files_location;
+    
 
     
 % save-restore configuration

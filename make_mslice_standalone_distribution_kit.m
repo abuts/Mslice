@@ -80,7 +80,7 @@ copy_files_list([source_dir,filesep,'Data'],[mslice_targ_dir,filesep,'Data']);
 copyfile(fullfile(source_dir,'mslice','help.txt'),mslice_targ_dir,'f');
 copyfile(fullfile(source_dir,'mslice','coltab.dat'),mslice_targ_dir,'f');
 
-copyfile(fullfile(source_dir,'mslice_manual.pdf '),mslice_targ_dir,'f');
+copyfile(fullfile(source_dir,'mslice_manual.pdf'),mslice_targ_dir,'f');
 %copy_files_list(source_dir,mslice_dist_dir,'-.m');
 
 
@@ -126,8 +126,12 @@ delete('MCC_msliceString.txt');
 %mcc -o 'mslice_setup_examples' -W 'main' -d './tmp' -T 'link:exe' -v -N 'mslice_setup_examples.m'
 %<-----------------------------
 %disp('!    Compilation completed: Copying results to target directory ====!')
-% THE MOST IMPORTANT PART - copy over the mslice exe and ctf files.
-copyfile([mslice_tmp_dir,filesep,'*.exe'],mslice_targ_dir,'f');
+% THE MOST IMPORTANT PART - copy over the mslice exe files.
+if ispc
+    copyfile([mslice_tmp_dir,filesep,'*.exe'],mslice_targ_dir,'f');
+else
+    copyfile([mslice_tmp_dir,filesep,'mslice'],mslice_targ_dir,'f');    
+end
 
 % remove leftovers 
 if exist(mslice_dll,'dir')  % remove DLL directory (it is no use to standalone source
