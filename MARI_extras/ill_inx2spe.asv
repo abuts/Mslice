@@ -1,4 +1,0 @@
-function ill_inx_spe(fname,inst)
-% converts an inx file to a .spe file for lamp to mslice convertion
-%
-s=read_inx(fname,'i)

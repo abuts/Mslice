@@ -1,9 +1,0 @@
-function r=absorbtion(phx)
-%calculates an absorbtion correction factor for the annualr geometry from
-%bashirs published transmission factors
-% reqs phx: vector containing 2 theta values 
-% from bashirs paper
-data=[16.05 22.09 27.43 33.06 39.23 46.14 53.99 63.01 73.58 86.41 104.61];
-
-ttheta=[0    40    54    66    80    90   102   114   126   144   180];
-
