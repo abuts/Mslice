@@ -1,4 +1,4 @@
-function color_slider(fig,cmd)
+function color_slider_ms(fig,cmd)
 
 % function color_slider(fig,obj,index)
 % fig = current figure
