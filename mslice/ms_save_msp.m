@@ -114,7 +114,8 @@ while (ischar(t)&(~isempty(t(~isspace(t))))),	% until reaching the end of the de
        if strcmp(fieldname,'MspFile')
         fprintf(f2,'%s%2s%s\n',field,'= ',newfile);
        else
-        fprintf(f2,'%s%2s%s\n',field,'= ','compartibility field moved into mslice_config and left here for compartibility with previous mslice version'); 
+        value=get(mslice_config,fieldname);
+        fprintf(f2,'%s%2s%s\n',field,'= ',value); 
        end
    else
         h=findobj('Tag',['ms_' fieldname]);

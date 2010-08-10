@@ -13,7 +13,8 @@ end
 %   	disp('Could not associate objects to .msp filename. Parameter file not read.');
 %   	return;
 % end
-
+% if the file is example file
+is_read_only=false;
 %=== SELECT .MSP PARAMETER FILE 
 if ~exist('file','var'), 
    % ==== select .msp file by browsing =====
@@ -73,8 +74,6 @@ if ~isempty(h_status)&ishandle(h_status),
 end
 nmodific    = 0;
 modificators='';
-% example files are read only. 
-file_is_read_only=false;
 %=== READ .MSP FILE LINE BY LINE
 disp(['Proceed reading parameter file ' fullname]);
 t=fgetl(fid);
@@ -124,11 +123,12 @@ while (ischar(t))&(~isempty(t(~isspace(t)))),
             otherwise
         end
         drawnow;
-     else % it is possible that the field is defined in configuration now. 
+     else % it is possible that the field is defined in configuration now. This field is a path then
         if isfield(msl_conf,field) 
-            % this is compartibility mode allowing to undersand old msp
-            % files
-            if (strcmp(field,'MspDir')||strcmp(field,'MspFile')) % if it is MspDir por MspFile, then it has been set already
+            % this is a path which may be specified either in the file
+            % itself, or in configuration; Arbitration would occur. 
+
+            if (strcmp(field,'MspDir')||strcmp(field,'MspFile')) % if it is MspDir or MspFile, then it has been set already
                 if strcmp(field,'MspFile') && ~strcmp(value,file_name) % but the msp file name in defined in the file is different from the filename itself
                     % need to fix it;
                       nmodific =nmodific+1;
@@ -136,18 +136,37 @@ while (ischar(t))&(~isempty(t(~isspace(t)))),
                       nmodific =nmodific+1;
                       modificators{nmodific}=file_name;                    
                 end            
+            elseif strncmp(value,'$.',2) % this is probably relative path to a sample data and the field is read only
+               full_dir=fullfile(get(mslice_config,'MspDir'),value(4:length(value)));
+               set(mslice_config,field,full_dir);               
+               is_read_only=true;
             elseif strncmp(value,'.',1) % this is probably relative path to a sample data below
                full_dir=fullfile(get(mslice_config,'MspDir'),value(3:length(value)));
-               set(mslice_config,field,full_dir);
-            elseif ~(isempty(value)|| strncmpi(value,'compartibility',14)) % the path is already specified by config variables
-                                                     % do nothing
-                % it may be a wrong path or something else. we do not set anything except path at the moment but may be you are reading old msp file
-                 % it may be old file in old format; redefine it
-                % with compartibility settings 
-                  nmodific =nmodific+1;
-                  modificators{nmodific}=field;
-                  nmodific =nmodific+1;
-                  modificators{nmodific}='compartibility';
+               if exist(full_dir,'dir')
+                    set(mslice_config,field,full_dir);
+               else
+                   full_dir=get(mslice_config,field);
+                   msp_dir =get(mslice_config,'MspDir');
+                   short_dir=strrep(full_dir,msp_dir,'./');
+                   nmodific =nmodific+1;
+                   modificators{nmodific}=field;
+                   nmodific =nmodific+1;
+                   modificators{nmodific}=short_dir;                
+               end
+               
+            else
+                if exist(value,'dir') % the path is specified by sting in the file;
+                    set(mslice_config,field,value);
+                else % the path should be y specified by config variables
+                   path=get(mslice_config,field);
+                   msp_dir =get(mslice_config,'MspDir');
+                   path  =strrep(path,msp_dir,'./');
+                  
+                   nmodific =nmodific+1;
+                   modificators{nmodific}=field;
+                   nmodific =nmodific+1;
+                   modificators{nmodific}=path;
+                end
                   
             end                      
        else        
@@ -161,7 +180,7 @@ disp(['Successfully read parameter file ' fullname]);
 
 % replace sting in old msp file with its new equivalents
 
-if ~isempty(modificators)
+if ~isempty(modificators)&&(~is_read_only)
     for i=1:floor(nmodific/2)
         perl('set_key_value.pl',fullname,modificators{2*i-1},modificators{2*i});       
     end

@@ -1,8 +1,8 @@
 efixed                          = 250
 emode                           = 1
-DataDir                         = ./
+DataDir                         = $./
 DataFile                        = Spe250.spe
-PhxDir                          = ./
+PhxDir                          = $./
 PhxFile                         = Pix_981.phx
 MspDir                          = 
 MspFile                         = HET_spe250_psd_la2cuo4_example.msp

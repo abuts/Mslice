@@ -1,10 +1,10 @@
 efixed				= 50
 emode				= 1
-DataDir				= ./
+DataDir				= $./
 DataFile			= mar05765.spe
-PhxDir				= ./
+PhxDir				= $./
 PhxFile				= powder_wide.phx
-MspDir				= ./
+MspDir				= $./
 MspFile				= mar05765_powder_example.msp
 IntensityLabel			= k_i/k_f d^2 \sigma /d\Omega dE (mbarns meV^{-1} sr^{-1} f.u.^{-1})
 TitleLabel			= skutterdite @T=20 K

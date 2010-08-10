@@ -1,10 +1,10 @@
 efixed				= 1.8463
 emode				= 2
-DataDir				= ./
+DataDir				= $./
 DataFile			= irs18670.spe
-PhxDir				= ./
+PhxDir				= $./
 PhxFile				= irispg002.phx
-MspDir				= ./
+MspDir				= $./
 MspFile				= irs18670_powder_example.msp
 IntensityLabel	    = Corrected Intensity (arb. units)
 TitleLabel			= Hematite 1401.8\muAhrs 325 K

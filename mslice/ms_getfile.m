@@ -28,6 +28,7 @@ else
 end
 if ischar(filename),
    set(mslice_config,hdir,pathname);
+   
    if ishandle(hfile)
         set(hfile,'String',filename);
    elseif ischar(hfile)
@@ -36,6 +37,7 @@ if ischar(filename),
        error('ms_getfile:wrong_parameters',' second parameter of ms_getfile has to be graphical handler or character string'); 
    end
    cancel=0;
+   
 else
    cancel=1;
 end

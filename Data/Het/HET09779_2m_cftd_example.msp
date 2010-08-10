@@ -1,10 +1,10 @@
 efixed				= 25
 emode				= 1
-DataDir				= ./
+DataDir				= $./
 DataFile			= HET09779_2M_4.SPE 
-PhxDir				= ./
+PhxDir				= $./
 PhxFile				= 2M_32d.phx 
-MspDir				= ./
+MspDir				= $./
 MspFile				= HET09779_2m_cftd_example.msp
 IntensityLabel			= Intensity (abs. units)
 TitleLabel			= CFTD 2738.2 \muAhrs 8.2K

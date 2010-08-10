@@ -1,8 +1,8 @@
 efixed				= 50
 emode				= 1
-DataDir				= ./Mari
+DataDir				= $./Mari
 DataFile			= mar05765.spe
-PhxDir				= ./Mari
+PhxDir				= $./Mari
 PhxFile				= powder_wide.phx
 MspDir				= 
 MspFile				= powder.msp

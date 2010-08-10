@@ -1,11 +1,11 @@
 efixed				= 50
 emode				= 1
-DataDir				= ./Mari
-DataFile			='mar05765.spe'
-PhxDir				= ./Mari
+DataDir				= $./Mari
+DataFile			= mar05765.spe 
+PhxDir				= $./Mari
 PhxFile				= powder_wide.phx
-MspDir				= ./
-MspFile				= mari_al_can.msp
+MspDir				= C:\Users\wkc26243.ndlt369\Documents\work\svn\mslice\Data\ $./
+MspFile				= mari_al_can.msp 
 IntensityLabel			= k_i/k_f d^2 \sigma /d\Omega dE (mbarns meV^{-1} sr^{-1} f.u.^{-1})
 TitleLabel			= Al empty can, 20K 50meV 5S
 sample				= 2

@@ -1,8 +1,8 @@
 efixed				= 75
 emode				= 1
-DataDir				= ./Het
+DataDir				= $./Het
 DataFile			= SPE250.SPE 
-PhxDir				= ./Het
+PhxDir				= $./Het
 PhxFile				= 2m_32.phx
 MspDir				= ./
 MspFile				= crystal_no_psd.msp
