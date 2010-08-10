@@ -73,6 +73,8 @@ if ~isempty(h_status)&ishandle(h_status),
 end
 nmodific    = 0;
 modificators='';
+% example files are read only. 
+file_is_read_only=false;
 %=== READ .MSP FILE LINE BY LINE
 disp(['Proceed reading parameter file ' fullname]);
 t=fgetl(fid);

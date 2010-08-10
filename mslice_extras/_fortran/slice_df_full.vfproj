@@ -15,7 +15,7 @@
 				<Tool Name="VFPostBuildEventTool"/>
 				<Tool Name="VFManifestTool" SuppressStartupBanner="true"/></Configuration>
 		<Configuration Name="Release|Win32" ConfigurationType="typeDynamicLibrary">
-				<Tool Name="VFFortranCompilerTool" SuppressStartupBanner="true" Preprocess="preprocessYes" AdditionalIncludeDirectories="$(MATLABDIR)extern\include" FixedFormLineLength="fixedLength80" RuntimeLibrary="rtMultiThreadedDLL"/>
+				<Tool Name="VFFortranCompilerTool" SuppressStartupBanner="true" Preprocess="preprocessYes" AdditionalIncludeDirectories="$(MATLABDIR)extern\include" FixedFormLineLength="fixedLength80"/>
 				<Tool Name="VFLinkerTool" AdditionalOptions="/EXPORT:MEXFUNCTION" OutputFile="$(OutDir)\$(ProjectName).mexw32" SuppressStartupBanner="true" AdditionalLibraryDirectories="$(MATLABDIR)\extern\lib\win32\microsoft" SubSystem="subSystemWindows" LinkDLL="true" AdditionalDependencies="libmx.lib libmex.lib libmat.lib"/>
 				<Tool Name="VFResourceCompilerTool"/>
 				<Tool Name="VFMidlTool" SuppressStartupBanner="true"/>
@@ -35,8 +35,8 @@
 				<Tool Name="VFPostBuildEventTool"/>
 				<Tool Name="VFManifestTool" SuppressStartupBanner="true"/></Configuration>
 		<Configuration Name="Release|x64" ConfigurationType="typeDynamicLibrary">
-				<Tool Name="VFFortranCompilerTool" SuppressStartupBanner="true" Preprocess="preprocessYes" AdditionalIncludeDirectories="$(MATLABDIR)extern\include" FixedFormLineLength="fixedLength80" RuntimeLibrary="rtMultiThreadedDLL"/>
-				<Tool Name="VFLinkerTool" AdditionalOptions="/EXPORT:MEXFUNCTION" OutputFile="$(OutDir)\$(ProjectName).mexw32" SuppressStartupBanner="true" AdditionalLibraryDirectories="$(MATLABDIR)\extern\lib\win32\microsoft" SubSystem="subSystemWindows" LinkDLL="true" AdditionalDependencies="libmx.lib libmex.lib libmat.lib"/>
+				<Tool Name="VFFortranCompilerTool" SuppressStartupBanner="true" Preprocess="preprocessYes" AdditionalIncludeDirectories="$(MATLABDIR)extern\include" FixedFormLineLength="fixedLength80"/>
+				<Tool Name="VFLinkerTool" AdditionalOptions="/EXPORT:MEXFUNCTION" OutputFile="$(OutDir)\$(ProjectName).mexw64" SuppressStartupBanner="true" AdditionalLibraryDirectories="$(MATLABDIR)\extern\lib\win64\microsoft" SubSystem="subSystemWindows" LinkDLL="true" AdditionalDependencies="libmx.lib libmex.lib libmat.lib"/>
 				<Tool Name="VFResourceCompilerTool"/>
 				<Tool Name="VFMidlTool" SuppressStartupBanner="true" TargetEnvironment="midlTargetAMD64"/>
 				<Tool Name="VFCustomBuildTool"/>

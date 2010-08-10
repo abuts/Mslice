@@ -114,14 +114,14 @@ subroutine mexFunction(nlhs, plhs, nrhs, prhs)
       plhs(1)   =mxCreateDoubleMatrix(ndet,ne,0) ! these are matlab pointsrs  
       plhs(2)   =mxCreateDoubleMatrix(ndet,ne,0)
       plhs(3)   =mxCreateDoubleMatrix(ndet,ne,0)
-      call mexWarnMsgTxt("matrices created")			  
+!      call mexWarnMsgTxt("matrices created")			  
 #endif  
     v1_pr     = mxGetPr(plhs(1)) ! these are fortran pointers of the matlab mxArrays created above
     v2_pr     = mxGetPr(plhs(2)) 
     v3_pr     = mxGetPr(plhs(3))
 
   !     Call the computational subroutine spe2proj_df
-  call mexWarnMsgTxt("entering spe2proj_df")		
+!  call mexWarnMsgTxt("entering spe2proj_df")		
   call spe2proj_df(emode,%val(efixed_pr),%val(en_pr),ne,%val(det_theta_pr),%val(det_psi_pr),ndet,%val(psi_samp_pr),%val(U1_pr),&
        %val(U2_pr),%val(U3_pr),%val(v1_pr),%val(v2_pr),%val(v3_pr))
   return
