@@ -1,9 +1,9 @@
 efixed				= 25
 emode				= 1
-DataDir				= $./
+DataDir				= compartibility $./
 DataFile			= HET09779_2M_4.SPE 
-PhxDir				= $./
-PhxFile				= 2M_32d.phx 
+PhxDir				= compartibility $./
+PhxFile				= 2M_32.phx 
 MspDir				= $./
 MspFile				= HET09779_2m_cftd_example.msp
 IntensityLabel			= Intensity (abs. units)
