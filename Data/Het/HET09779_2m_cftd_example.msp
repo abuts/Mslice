@@ -1,8 +1,8 @@
 efixed				= 25
 emode				= 1
-DataDir				= compartibility $./
+DataDir				= $./
 DataFile			= HET09779_2M_4.SPE 
-PhxDir				= compartibility $./
+PhxDir				= $./
 PhxFile				= 2M_32.phx 
 MspDir				= $./
 MspFile				= HET09779_2m_cftd_example.msp
