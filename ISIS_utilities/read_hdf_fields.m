@@ -14,6 +14,9 @@ if ~H5F.is_hdf5(hdf_file)
 end
 
 n_fields=min(numel(fieldnames),nargout);
+if ~iscell(fieldnames)
+    fieldnames={fieldnames};
+end
 for i=1:n_fields
     varargout(i)={hdf5read(hdf_file,fieldnames{i})'};
 end

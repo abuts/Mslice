@@ -21,8 +21,11 @@ global class_names;
 if isempty(configurations)
     config_data = struct(...
        'config_folder_name','libisis_config',...
-       'config_folder','');  % folder where user configurations should reside; it is calculated 
-   % automatically by the config_folder function;
+       'config_folder','', ...  % folder where user configurations should reside; it is calculated automatically by the config_folder function;
+       'is_first_run',1, ... % spefies if it is the first run of the class on the system. (e.g. configuration exist) % If first, DLL-s are copied during the initiation and some version specific functions are moved or renamed   
+       'last_used_matlab_version','' ...
+   ); 
+   
        
   % fields which are not allowed to change using set methods
     config_data.fields_sealed={'nInstances','config_folder'};
@@ -31,7 +34,10 @@ if isempty(configurations)
     
 % save-restore configuration
     config_data.config_folder = config_folder(config_data.config_folder_name);
+    config_data.nInstances=   0;    
+    config_data.last_used_matlab_version=version();
     config_file_name          = mfilename('class');
+    
     config_data=save_restore_data(config_data,config_data.config_folder,config_file_name);
     % class is a singleton, but as it can be inherited by value from other
     % classes, the counter nInstances intended to keep this information

@@ -14,7 +14,7 @@ end
 dir=get(mslice_config,'DataDir');
 h_file=findobj(h_cw,'Tag','ms_DataFile');
 if isempty(dir)||isempty(h_file),
-   disp(['Could not associate objects to .spe directory and filename. No data file could be read.']);
+   disp('Could not associate objects to .spe directory and filename. No data file could be read.');
    return;
 end
 spe_file=get(h_file,'String');
@@ -72,7 +72,16 @@ data=buildspe(spe_filename,phx_filename);
 if ~isempty(data),
    set(h_cw,'UserData',data);
 end
-
+if isfield(data,'Ei')
+    Ei=data.Ei;
+    if ~isnan(Ei)
+        h_en=findobj('Tag','ms_efixed');
+        if ~isempty(h_en)
+            set(h_en,'String',num2str(Ei));
+            %drawnow expose;
+        end
+    end
+end
 % === highlight green button
 if ~isempty(h_status)&&ishandle(h_status),
    green=[0 1 0];

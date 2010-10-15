@@ -65,7 +65,7 @@ if ~isempty(spe_filename2)   % must be a difference that is required
     if isempty(ebars)
         ebars=[1,1];
     end
-    if isempty(data) | isempty(data2)
+    if isempty(data) || isempty(data2)
         data=[];
         return
     end
@@ -95,8 +95,22 @@ hdf_file_str=spe_hdf_filestructure();
 name=[name,ext];
 if strcmpi(ext,hdf_file_str.spe_hdf_file_ext)
     try %try hdf5
-        fields={hdf_file_str.data_field_names{1:3}};
-        [data.en,data.S,data.ERR]=read_hdf_fields(strtrim(spe_filename),fields);
+        
+        version=read_hdf_fields(strtrim(spe_filename),'spe_hdf_version');
+        switch version
+            case (1)
+                 fields={'En_Bin_Bndrs','S(Phi,w)','Err'};
+                 [data.en,data.S,data.ERR]=read_hdf_fields(strtrim(spe_filename),fields);
+                 data.Ei = NaN;
+            case (2)
+                 fields=hdf_file_str.data_field_names(1:4);
+                 [data.Ei,data.en,data.S,data.ERR]=read_hdf_fields(strtrim(spe_filename),fields);
+            otherwise
+                error('MALISE:load_spe','this hdf5 spe file format is not supported');
+        end
+
+        
+
     % the way below is better but ties mslice and libisis;
     %     spe_data=spe(spe_filename);
     %     data.S  = spe_data.S;

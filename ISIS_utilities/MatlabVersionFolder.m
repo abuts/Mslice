@@ -56,7 +56,7 @@ if(version_number<7.04) % should be oldest supported here (7.3?)
             version_string);
     folderName='_R2007a';
 end
-if(version_number>7.10) % should be recent supported here
+if(version_number>7.11) % should be recent supported here
     warning(['This subversion of mex-files has not been tasted with Matlab version %s \n',...
              'Trying to use the files tested with Matlab 7.9 (2009b) but they may not work'],...
             version_string);

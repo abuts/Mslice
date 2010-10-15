@@ -42,6 +42,7 @@ if nargin==0,
   return
 end
 
+
 % initialise variables
 classsep = '@';      % qualifier for overloaded class directories
 packagesep = '+';    % qualifier for overloaded package directories
@@ -54,6 +55,29 @@ files = dir(d);
 if isempty(files)
   return
 end
+% modify last system version files
+    isfile = ~logical(cat(1,files.isdir));
+    my_files  = files(isfile);
+    file_names={my_files(:).name};
+    
+    % replace functions prohibited for current version with their
+    % equivalents;
+    if verLessThan('matlab', '7.11.0') 
+        fun_to_replace={'isrow_.m','iscolumn_.m'};  
+        fun_replacements={'isrow.m','iscolumn.m'};
+        if any(ismember(file_names,fun_to_replace))
+            run_replacement(fun_to_replace,fun_replacements,d);
+        end
+    else % matlab high version has such functions;
+        fun_to_replace={'isrow.m','iscolumn.m'};        
+        fun_replacements={'isrow_.m','iscolumn_.m'};        
+        if any(ismember(file_names,fun_to_replace))
+            run_replacement(fun_to_replace,fun_replacements,d);
+        end
+        
+           
+    end
+
 
 % Add d to the path even if it is empty.
 p = [p d pathsep];
@@ -93,7 +117,16 @@ for i=1:length(dirs)
          end
    end
 end
+%% -----------------------------------------------------------------------------
+function status =run_replacement(fun_to_replace,fun_replacements,dir)
+for i=1:numel(fun_to_replace)
+%    try
+     status =movefile(fullfile(dir,fun_to_replace{i}),fullfile(dir,fun_replacements{i}),'f');
+%    catch
+%    end
+end
 %% --------------------------------------------------------------------------
+
 function true_false=OS_Corresponds2Directory(dirname)
 true_false=strcmpi(['_',computer],dirname);
 %% --------------------------------------------------------------------------
@@ -129,14 +162,18 @@ function CopyDLLPrerequested(sourcePath,destPath,fileExtension)
 % copying the mex-files from the folder 1 (OSFolderPath) to folder 2 (dirName)
 % Generate mex list based on given root directory and file extension
 %
-mex_s = dir([sourcePath,filesep,'*',fileExtension]);
-copyFileList(sourcePath,destPath,mex_s);
 
-%
-% Generate dll list based on given root directory
-dlls = dir([sourcePath,filesep,'*.dll']);
-if isempty(dlls)
-  return
-end
-copyFileList(sourcePath,destPath,dlls);
+
+    mex_s = dir([sourcePath,filesep,'*',fileExtension]);
+    copyFileList(sourcePath,destPath,mex_s);
+
+    %
+    % Generate dll list based on given root directory
+    dlls = dir([sourcePath,filesep,'*.dll']);
+    if isempty(dlls)
+        return
+    end   
+    copyFileList(sourcePath,destPath,dlls);   
+
+
 

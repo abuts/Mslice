@@ -1,5 +1,5 @@
 function rez=spe_hdf_filestructure(field_name)
-% this private function describes the structure of spe-hdf file version 1
+% this private function describes the structure of spe-hdf file version 2
 % it may change if versions increases
 % Usage:
 %>>rez=spe_hdf_filestructure()  -- returns the structure, which describes
@@ -13,13 +13,14 @@ function rez=spe_hdf_filestructure(field_name)
 %
 
 file_structure=struct(...
-    'spe_hdf_version',1,... 
+    'spe_hdf_version',2,... 
     'spe_hdf_file_ext','.spe_h5',...   % what extension to use for spe-hdf files. 
     'data_field_names',[]...               
 );
 % the names of the data fields which are present in a spe hdf5 file
 file_structure.data_field_names=...
-            {'En_Bin_Bndrs','S(Phi,w)','Err','spe_hdf_version'};
+            {'Ei',...    'Ei', 10, ... % input energy identified from homering;
+            'En_Bin_Bndrs','S(Phi,w)','Err','spe_hdf_version'};
 if exist('field_name','var')
     if isfield(file_structure,field_name)
         rez=file_structure.(field_name);

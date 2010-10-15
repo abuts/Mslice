@@ -97,7 +97,7 @@ while (ischar(t))&(~isempty(t(~isspace(t)))),
     
     h=findobj(h_cw,'Tag',['ms_' field]);
     if ~isempty(h),
-        if strcmp(get(h,'Style'),'popupmenu')|strcmp(get(h,'Style'),'checkbox'),
+        if strcmp(get(h,'Style'),'popupmenu')|| strcmp(get(h,'Style'),'checkbox'),
             set(h,'Value',str2num(value));
         else
             set(h,'String',value);

@@ -65,10 +65,17 @@ for i=1:length(dirs)
          ~strcmp( dirname,CVS)           && ...
          ~strncmp( dirname,classsep,1)   && ...
          ~strncmp( dirname,packagesep,1) && ...
-         ~strncmp(dirname,serviceDir,1)  && ...
          ~strcmp( dirname,'private')
-     
-         p = [p genpath_(fullfile(d,dirname))]; % recursive calling of this function.
+         if(~strncmp(dirname,serviceDir,1))
+            p = [p genpath_(fullfile(d,dirname))]; % recursive calling of this function
+          else
+             if(strcmpi(['_',computer],dirname)) % this is the OS corresponding directory
+                p = [p genpath_(fullfile(d,dirname))];
+                VersionFolderName=MatlabVersionFolder(dirname);
+                dirname = fullfile(dirname,VersionFolderName);
+                p = [p genpath_(dirname)];                
+             end
+         end
    end
 end
 
