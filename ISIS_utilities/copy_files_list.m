@@ -284,11 +284,18 @@ function ignore=should_be_ignored(ext,varargin)
 % 
 % the extension ext is ignored if it is in the list with the sigh '-' or it is
 % not in the list
-for i=1:nargin-1
-    tag = varargin{i};
-    tag = tag{1};
+
+if nargin<2
+    ignore= true;
+    return
+end
+ext_list=varargin{1};
+num_extensions=numel(ext_list);
+for i=1:num_extensions
+    tag = ext_list{i};
     if tag == '*' % all extensions are allowed
         ignore= false;
+        break
     else
         if tag(1:1)== '-'
             tag     = tag(2:length(tag));            
@@ -298,11 +305,13 @@ for i=1:nargin-1
                 ignore = false;                        
             end
         else
-            if strcmpi(ext,tag)    
-                ignore= false;                
+            if any(ismember(ext_list,ext))
+                ignore= false; 
+                return;
             else
-                ignore= true;        
-            end            
+                ignore=true;
+                return;
+            end
         end
     end
 end
