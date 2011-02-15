@@ -13,8 +13,8 @@ this folder in Mslice directory will be owerwritten by the contents of
 the correspondent Libisis folder
 
 *before
-Mslice stores the last Libisis versions it met in mslice_config structute,
+Mslice stores the last Libisis versions mslice seen activated in mslice_config structute,
 stored in the configuration folder (see @config class) so, Mslice will try to
-owerwriet the contents of ISIS utilites forlder if the version written there
-is lower than current Libisis version or if the current configuration has been
-deleted.
+owerwrite the contents of ISIS utilites forlder if the version written there
+is lower than current Libisis version or if the current mslice configuration 
+has been deleted.

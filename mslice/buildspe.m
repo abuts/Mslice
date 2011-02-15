@@ -44,11 +44,23 @@ else
    end   
 end
 
-%=== load detector information file
-if ~exist('phx_filename','var')|isempty(phx_filename),
-   return
+%=== load detector information file: either from separate file or from the nxspe
+%  file
+if isfield(data,'phx')  % data have been obtained from nxspe file
+    if exist('phx_filename','var')
+        phx_filename = ' obtained from nxspe file';
+    end
+    phx_filename=check_file_existence(phx_filename,'phx','PhxDir','ms_PhxFile',true);            
+    phx =  data.phx;
+else
+    if ~exist('phx_filename','var')||isempty(phx_filename),
+        return
+    end
+    
+    phx_filename=check_file_existence(phx_filename,'phx','PhxDir','ms_PhxFile');        
+    phx=load_phx(phx_filename);		% [det_num, theta(deg), psi(deg), dtheta(deg), dpsi(deg)] (ndet,5)    
 end
-phx=load_phx(phx_filename);		% [det_num, theta(deg), psi(deg), dtheta(deg), dpsi(deg)] (ndet,5)
+
 if isempty(phx),
    return
 end
@@ -64,9 +76,9 @@ end
 if ~isempty(data)&~isempty(phx),
 % check compatibility of .spe and .phx files against same number of detector groups
    if length(masked)~=size(phx,1),
-	   warning(['.spe file ' spe_filename ' and .phx file ' phx_filename ' not compatible']);
-   	warning(['Number of detector groups is different: ' num2str(size(data.S,1)) ' and ' num2str(size(phx,1))]);
-   	data=[];
+	   warning(['.spe data from file ' spe_filename ' and .phx data from ' phx_filename ' not compatible']);
+       warning(['Number of detector groups is different: ' num2str(size(data.S,1)) ' and ' num2str(size(phx,1))]);
+      data=[];
    	return
 	end
 	% REMOVE MASKED DETECTORS FROM PHX

@@ -67,11 +67,14 @@ end
 %     end
 % end
 spe_filename=check_file_existence(spe_filename,'spe','DataDir','ms_DataFile');
-phx_filename=check_file_existence(phx_filename,'phx','PhxDir','ms_PhxFile');
+% now phx may not be present so check should be in load_spe
+%phx_filename=check_file_existence(phx_filename,'phx','PhxDir','ms_PhxFile');
 data=buildspe(spe_filename,phx_filename);
 if ~isempty(data),
    set(h_cw,'UserData',data);
 end
+
+% set fields which may exist in different file formats
 if isfield(data,'Ei')
     Ei=data.Ei;
     if ~isnan(Ei)
@@ -82,39 +85,21 @@ if isfield(data,'Ei')
         end
     end
 end
+if isfield(data,'psi')
+    psi = data.psi;
+    if ~isnan(psi)
+        h_psi=findobj('Tag','ms_psi_samp');
+        if ~isempty(h_psi)
+            set(h_psi,'String',num2str(psi));
+            %drawnow expose;
+        end
+    end
+    
+end
 % === highlight green button
 if ~isempty(h_status)&&ishandle(h_status),
    green=[0 1 0];
    set(h_status,'BackgroundColor',green);
 %   set(h_status,'Visible','off');   
    drawnow;
-end
-%%
-function rez=check_file_existence(file_name,ext,dir_field,file_field)
-if ~exist(file_name,'file')
-    disp(['can not find file',file_name]);
-    disp(['choose ',ext,' file location']); 
-    path_name = fileparts(file_name);
-    [file_name,path_name] = uigetfile([path_name,filesep,'*.',ext],['Select ',ext,' files to open']);   
-    if(file_name ~=0)
-        h_cw     =findobj('Tag','ms_ControlWindow');        
-        h_file=findobj(h_cw,'Tag',file_field);
-        set(mslice_config,dir_field,path_name);
-        set(h_file,'String',file_name)
-        set(mslice_config,dir_field,path_name);
-        
-        msp_dir=get(mslice_config,'MspDir');
-        msp_file=get(mslice_config,'MspFile');
-
-        full_msp=fullfile(msp_dir,msp_file);
-        perl('set_key_value.pl',full_msp,file_field(4:end),file_name);
-        
-        
-        %h_file
-        rez = fullfile(path_name,file_name);                
-    else        
-        rez = '';        
-    end
-else    
-    rez = file_name;                
 end
