@@ -17,7 +17,7 @@ subroutine mexFunction(nlhs, plhs, nrhs, prhs)
   character*(40) :: PROG_NAME= 'Fortran Cut3D    (cut3d_df.F90)        '
 !123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678
 !         1         2         3         4         5         6         7         8         9         0
-  character*(70) :: PROG_REV = '$Rev::      $ ($Date::                                              $)'
+  character*(70) :: PROG_REV = '$Rev::      $ ($Date::                                              $)'C
   character*(110):: REVISION
 
 
@@ -37,14 +37,15 @@ subroutine mexFunction(nlhs, plhs, nrhs, prhs)
   mwsize :: n, m,ndet, ne, final_npixel,npoints,longOne
   
   real*8 grid(7), vx_min, vx_max, bin_vx,vy_min, vy_max, vz_min, vz_max,eps , vvy(1), vvz(1)
-
+  longOne = 1  
+  
   ! Returns code SVN version
   if(nrhs==0 .AND. nlhs==1)then
 		REVISION =  PROG_NAME//PROG_REV
-        plhs(1) = mxCreateCharMatrixFromStrings(1,REVISION)
+        plhs(1) = mxCreateCharMatrixFromStrings(longOne,REVISION)
        return
    end if
-   longOne = 1
+  
 
 
   ! check inputs

@@ -11,7 +11,7 @@ subroutine mexFunction(nlhs, plhs, nrhs, prhs)
 ! declares the pointer and integer sizes for current os and platform
 #include "fintrf.h"
   character*(40) :: PROG_NAME= 'Fortran spe2proj (spe2proh_df.F90)      '
-  character*(70) :: PROG_REV = '$Rev::      $ ($Date::                                              $)'
+  character*(70) :: PROG_REV = '$Rev::      $ ($Date::                                              $)'C
   character*(110):: REVISION
   
   mwpointer :: plhs(*), prhs(*)
@@ -21,7 +21,7 @@ subroutine mexFunction(nlhs, plhs, nrhs, prhs)
   mwpointer:: U1_pr, U2_pr, U3_pr,v1_pr, v2_pr, v3_pr 
   ! declare calling functions
   mwpointer:: mxGetPr,mxCreateCharMatrixFromStrings,mxCreateDoubleMatrix
-  mwsize ::  mxGetM, mxGetN, mxIsNumeric  
+  mwsize ::  mxGetM, mxGetN, mxIsNumeric,one
 #ifdef  OBSOLETE
   integer mxCreateFull
 #endif  
@@ -31,8 +31,9 @@ subroutine mexFunction(nlhs, plhs, nrhs, prhs)
   !      real*8 efixed, psi_samp 
      ! Returns code SVN version
   if(nrhs==0 .AND. nlhs==1)then
+       one =1 
        REVISION =  PROG_NAME//PROG_REV
-       plhs(1) = mxCreateCharMatrixFromStrings(1,REVISION)
+       plhs(1) = mxCreateCharMatrixFromStrings(one,REVISION)
        return
   end if
   
