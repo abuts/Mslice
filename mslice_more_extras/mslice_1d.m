@@ -93,7 +93,8 @@ end
 % Store current file information, so we can return if ~file
 cut_OutputType_prev=ms_getvalue('cut_OutputType');
 cut_OutputFile_prev=ms_getvalue('cut_OutputFile');
-cut_OutputDir_prev=ms_getvalue('cut_OutputDir');
+%cut_OutputDir_prev=ms_getvalue('cut_OutputDir');
+cut_OutputDir_prev=get(mslice_config,'cut_OutputDir');
 
 itype=strmatch(type,{'none','cut','xye','smh','mfit','hkl'});
 ms_setvalue('cut_OutputType',itype)
@@ -108,10 +109,12 @@ end
 if isempty(cutext), cutext='.cut'; end  % default extension
 
 if ~file
-    ms_setvalue('cut_OutputDir','')
+    %ms_setvalue('cut_OutputDir','')
+    set(mslice_config,'cut_OutputDir','');
     ms_setvalue('cut_OutputFile','$full')
 else
-    ms_setvalue('cut_OutputDir',[cutpath,filesep])
+    set(mslice_config,'cut_OutputDir',cutpath);    
+%    ms_setvalue('cut_OutputDir',[cutpath,filesep])
     ms_setvalue('cut_OutputFile',[cutname,cutext])
 end
 
@@ -137,7 +140,9 @@ end
 if ~file
     ms_setvalue('cut_OutputType',cut_OutputType_prev);
     ms_setvalue('cut_OutputFile',cut_OutputFile_prev);
-    ms_setvalue('cut_OutputDir',cut_OutputDir_prev);
+    %ms_setvalue('cut_OutputDir',cut_OutputDir_prev);
+    set(mslice_config,'cut_OutputDir',cut_OutputDir_prev);    
+    
 end
 
 % Output, if requested

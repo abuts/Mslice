@@ -12,7 +12,7 @@
 !------------------------------------------------------------------------------
       implicit NONE
 #include "fintrf.h"
-     character*(120):: REVISION="Fortran AveragePixels (avpix_df.F90)    $Rev::      $ ($Date::                                              $)"
+     character*(120):: REVISION="Fortran AveragePixels (avpix_df.F90)    $Rev::      $ ($Date::                                              $)"C
 !                                12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890
       mwpointer :: plhs(*), prhs(*)
       integer*4 :: nrhs, nlhs
@@ -23,11 +23,12 @@
 ! declare local variables to deal with pointers to variables passed by/to MATLAB
       mwpointer :: x_pr, perm_pr, number_pix_pr, xx_pr, std_dev_pr
 ! declare local operating variables of the interface funnction
-      mwsize:: Ntotal, Npixels, Nbins
+      mwsize:: Ntotal, Npixels, Nbins,one
       
       ! Returns code SVN version
       if(nrhs==0 .AND. nlhs==1)then
-        plhs(1) = mxCreateCharMatrixFromStrings(1,REVISION);
+        one=1
+        plhs(1) = mxCreateCharMatrixFromStrings(one,REVISION);
         return
       end if
 

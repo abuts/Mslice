@@ -1,5 +1,4 @@
 function data=load_spe(spe_filename)
-
 % function data=load_spe(spe_filename)
 %
 %   >> data = load_spe(file)
@@ -60,12 +59,12 @@ end
 % ----------------------------------------------------------
 [spe_filename1,spe_filename2,ebars]=parse_spe_name(spe_filename);
 if ~isempty(spe_filename2)   % must be a difference that is required
-    data=load_spe(spe_filename1);   % take advantage of recursive function calls in matlab
-    data2=load_spe(spe_filename2);
+    data=load_spe(spe_filename1,phx_filename);   % take advantage of recursive function calls in matlab
+    data2=load_spe(spe_filename2,phx_filename);
     if isempty(ebars)
         ebars=[1,1];
     end
-    if isempty(data) | isempty(data2)
+    if isempty(data) || isempty(data2)
         data=[];
         return
     end
@@ -93,24 +92,53 @@ end
 [pathname,name,ext]=fileparts(spe_filename);  
 hdf_file_str=spe_hdf_filestructure();
 name=[name,ext];
-if strcmpi(ext,hdf_file_str.spe_hdf_file_ext)
-    try %try hdf5
-        fields={hdf_file_str.data_field_names{1:3}};
-        [data.en,data.S,data.ERR]=read_hdf_fields(strtrim(spe_filename),fields);
+libisis_failed = false;
+if strcmpi(ext,hdf_file_str(1).spe_hdf_file_ext)
+     try %try hdf5
+        
+        version=read_hdf_fields(strtrim(spe_filename),'spe_hdf_version');
+        switch version
+            case (1)
+                 fields={'En_Bin_Bndrs','S(Phi,w)','Err'};
+                 [data.en,data.S,data.ERR]=read_hdf_fields(strtrim(spe_filename),fields);
+                 data.Ei = NaN;
+            case (2)
+                 fields=hdf_file_str(1).data_field_names(1:4);
+                 [data.Ei,data.en,data.S,data.ERR]=read_hdf_fields(strtrim(spe_filename),fields);
+            otherwise
+                error('MALISE:load_spe','this hdf5 spe file format is not supported');
+        end
+
+        
+
     % the way below is better but ties mslice and libisis;
     %     spe_data=spe(spe_filename);
     %     data.S  = spe_data.S;
     %     data.ERR= spe_data.ERR;    
     %     data.en = spe_data.en;    
-       [ndet,ne]=size(data.S);    
-       en=data.en';  
+       [ndet,ne]=size(data.S); 
+       % question is what shape of en is correct? it is possible that
+       % opposite to the choosen here. 
+       if size(data.en,1)==1
+            en=data.en;  
+       else
+            en=data.en';             
+       end
        data.en=(en(2:ne+1)+en(1:ne))/2; % take median values, centres of bins
        data.det_theta=ones(ndet,1);
        libisis_failed=false;  
     catch
         libisis_failed=true;    
     end
-else    
+elseif    strcmpi(ext,hdf_file_str(2).spe_hdf_file_ext)
+ 
+     try  %try nxspe
+         data = load_nxspe_fields(strtrim(spe_filename),hdf_file_str(2).data_field_names,hdf_file_str(2).data_attrib_names);
+         [ndet,ne]=size(data.S); 
+     catch
+        libisis_failed=true;            
+     end
+else
   libisis_failed=true;        
 end
 

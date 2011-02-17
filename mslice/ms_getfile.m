@@ -5,45 +5,39 @@ function cancel=ms_getfile(hdir,hfile,filter,titlewindow)
 % starting directory in get(hdir,'String');
 % store final pathname and filename in the 'String' properties of hdir and hfile
 
-% === return if ControlWindow not opened 
-h_cw=findobj('Tag','ms_ControlWindow');
-%if isempty(h_cw),
-%   disp(['No ControlWidow opened, no file can be selected using the uiwindow menu.']);
-%   return;
-%end
 
-pathname=get(hdir,'String');
+pathname=get(mslice_config,hdir);
 
 % === if pathname is empty or could not be located in the current search path
 % === replace with MSlice directory
-if isempty(pathname)|~(exist(pathname,'dir')==7), 
-   if ~isempty(h_cw),
-	   h_mslicedir=findobj(h_cw,'Tag','ms_MSliceDir');
-   	if ~isempty(h_mslicedir),
-      	MSliceDir=get(h_mslicedir,'String');
-      	if ~isempty(MSliceDir),
-         	pathname=MSliceDir;
-      	else   
-      		disp(['MSlice path appears to be empty. Return.']);
-         	cancel=1;
-         	return;
-   		end 
-   	else
-      	disp(['Could not determine MSlice path. Return.']);
-      	cancel=1;
-      	return;
-      end
-   end
+if isempty(pathname)||(~exist(pathname,'dir'))
+    pathname=fileparts(which('mslice.m'));
+    if  isempty(pathname)||(~exist(pathname,'dir'))
+        disp('Could not determine MSlice path. Return.');
+        cancel=1;
+        return;
+    end
 end
 if iscell(filter)
     [filename,pathname]=uigetfile(filter,titlewindow,pathname);        
 else
+    if pathname(end:end)~=filesep
+        pathname=[pathname,filesep];
+    end
     [filename,pathname]=uigetfile([pathname filter],titlewindow);    
 end
 if ischar(filename),
-   set(hdir,'String',pathname);
-   set(hfile,'String',filename);
+   set(mslice_config,hdir,pathname);
+   
+   if ishandle(hfile)
+        set(hfile,'String',filename);
+   elseif ischar(hfile)
+        set(mslice_config,hfile,filename);       
+   else
+       error('ms_getfile:wrong_parameters',' second parameter of ms_getfile has to be graphical handler or character string'); 
+   end
    cancel=0;
+   
 else
    cancel=1;
 end

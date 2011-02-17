@@ -11,7 +11,7 @@ subroutine mexFunction(nlhs, plhs, nrhs, prhs)
 ! declares the pointer and integer sizes for current os and platform
 #include "fintrf.h"
   character*(40) :: PROG_NAME= 'Fortran spe2proj (spe2proh_df.F90)      '
-  character*(70) :: PROG_REV = '$Rev::      $ ($Date::                                              $)'
+  character*(70) :: PROG_REV = '$Rev::      $ ($Date::                                              $)'C
   character*(110):: REVISION
   
   mwpointer :: plhs(*), prhs(*)
@@ -21,7 +21,7 @@ subroutine mexFunction(nlhs, plhs, nrhs, prhs)
   mwpointer:: U1_pr, U2_pr, U3_pr,v1_pr, v2_pr, v3_pr 
   ! declare calling functions
   mwpointer:: mxGetPr,mxCreateCharMatrixFromStrings,mxCreateDoubleMatrix
-  mwsize ::  mxGetM, mxGetN, mxIsNumeric  
+  mwsize ::  mxGetM, mxGetN, mxIsNumeric,one
 #ifdef  OBSOLETE
   integer mxCreateFull
 #endif  
@@ -31,8 +31,9 @@ subroutine mexFunction(nlhs, plhs, nrhs, prhs)
   !      real*8 efixed, psi_samp 
      ! Returns code SVN version
   if(nrhs==0 .AND. nlhs==1)then
+       one =1 
        REVISION =  PROG_NAME//PROG_REV
-       plhs(1) = mxCreateCharMatrixFromStrings(1,REVISION)
+       plhs(1) = mxCreateCharMatrixFromStrings(one,REVISION)
        return
   end if
   
@@ -114,14 +115,14 @@ subroutine mexFunction(nlhs, plhs, nrhs, prhs)
       plhs(1)   =mxCreateDoubleMatrix(ndet,ne,0) ! these are matlab pointsrs  
       plhs(2)   =mxCreateDoubleMatrix(ndet,ne,0)
       plhs(3)   =mxCreateDoubleMatrix(ndet,ne,0)
-      call mexWarnMsgTxt("matrices created")			  
+!      call mexWarnMsgTxt("matrices created")			  
 #endif  
     v1_pr     = mxGetPr(plhs(1)) ! these are fortran pointers of the matlab mxArrays created above
     v2_pr     = mxGetPr(plhs(2)) 
     v3_pr     = mxGetPr(plhs(3))
 
   !     Call the computational subroutine spe2proj_df
-  call mexWarnMsgTxt("entering spe2proj_df")		
+!  call mexWarnMsgTxt("entering spe2proj_df")		
   call spe2proj_df(emode,%val(efixed_pr),%val(en_pr),ne,%val(det_theta_pr),%val(det_psi_pr),ndet,%val(psi_samp_pr),%val(U1_pr),&
        %val(U2_pr),%val(U3_pr),%val(v1_pr),%val(v2_pr),%val(v3_pr))
   return

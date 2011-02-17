@@ -58,7 +58,7 @@ else
         field_nams={field_nams};
    end   
    
-   nf = narg/2;
+   nf = numel(field_nams);
 %   field_nams = cell(1,nf);
 %   field_vals = zeros(1,nf);   
 %   for i=0:nf-1

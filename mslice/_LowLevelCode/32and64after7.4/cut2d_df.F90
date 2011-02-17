@@ -16,8 +16,8 @@ subroutine mexFunction(nlhs, plhs, nrhs, prhs)
    character*(40) :: PROG_NAME= 'Fortran Cut2D    (cut2d_df.F90)        '
 !123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678
 !         1         2         3         4         5         6         7         8         9         0
-   character*(70) :: PROG_REV = '$Rev::      $ ($Date::                                              $)'
-   character*(110):: REVISION
+   character*(71) :: PROG_REV = '$Rev::      $ ($Date::                                              $)'C
+   character*(111):: REVISION
    
   
   !     <temp> will be temporary mxArray in place of plhs(1),plhs(2),...
@@ -30,14 +30,15 @@ subroutine mexFunction(nlhs, plhs, nrhs, prhs)
   mwpointer:: mxGetPr,mxCalloc,mxCreateCharMatrixFromStrings,mxCreatedoublematrix; 
   mwsize   :: mxGetM, mxGetN, mxIsNumeric 
   ! declare local operating variables of the interface funnction
-  mwsize :: n, m,final_npixel
+  mwsize :: n, m,final_npixel,one
   integer ndet, ne
   real*8 grid(5), vx_min, vx_max, bin_vx,vy_min, vy_max, vvy(1), eps
 
   ! Returns code SVN version
   if(nrhs==0 .AND. nlhs==1)then
-	REVISION =  PROG_NAME//PROG_REV
-	plhs(1) = mxCreateCharMatrixFromStrings(1,REVISION)
+    one = 1
+  	REVISION =  PROG_NAME//PROG_REV
+	plhs(1) = mxCreateCharMatrixFromStrings(one,REVISION)
     return
    end if
   

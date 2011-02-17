@@ -34,7 +34,17 @@ function folder_path=config_folder(folder_short_name)
     
     % try to use matlab preferences directory
     location = prefdir();
-    if exist(location,'dir')    
+    if exist(location,'dir')
+        % store configuration in a version-independent location;
+        version_folder=regexp(version() ,'\w*','match');
+        verstr=version_folder{5};
+        if ispc
+            verstr=['\\',verstr];
+        else
+            verstr=[filesep,verstr];            
+        end
+        location=regexprep(location, [verstr,'$'], '');
+        
         [success,folder_path] = try_to_create_folder(location,folder_short_name);
         if success;   return;
         end                

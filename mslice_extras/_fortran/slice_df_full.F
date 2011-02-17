@@ -28,7 +28,7 @@ C declares the pointer and integer sizes for current os and platform
 C                1         2         3         4         5
      1 "Fortran Slice_full (slice_df_full.F)    "//
      2 "$Rev::      $ " //
-     3 "($Date::                                              $)"
+     3 "($Date::                                              $)"C
 C       123456789012345678901234567890123456789012345678901234567890      
 
       mwpointer :: plhs(*), prhs(*)
@@ -47,7 +47,7 @@ C declare calling functions
       mwpointer:: mxGetPr,mxCreateCharMatrixFromStrings,
      C            mxCreateDoubleMatrix
       mwsize :: mxGetM, mxGetN
-      mwsize :: mxIsNumeric
+      mwsize :: mxIsNumeric,one
 
       mwsize :: n,m,number_pts_tot,ndet, ne,longOne;
 
@@ -61,7 +61,8 @@ C declare local operating variables of the interface funnction
 
 C      ! Returns code SVN version
       if(nrhs==0 .AND. nlhs==1)then
-        plhs(1) = mxCreateCharMatrixFromStrings(1,REVISION)
+        one=1
+        plhs(1) = mxCreateCharMatrixFromStrings(one,REVISION)
         return
       end if
 	  longOne = 1;

@@ -22,42 +22,30 @@ if ~exist('file','var')|isempty(file)|~ischar(file)|isempty(file(~isspace(file))
 else 
    % === select file to output parameter list
    
-   % === default name and directory are as for the msp file
-   h_mspdir=findobj(h_cw,'Tag','ms_MspDir');
-   if isempty(h_mspdir),
-      disp(['Could not locate handle to object MspDir']);
-      defaultdir=pwd;
-   else
-      defaultdir=get(h_mspdir,'String');
-      if isempty(defaultdir)|isempty(defaultdir(~isspace(defaultdir))),
-         defaultdir=pwd;
-      end
-   end
+   % === default name and directory are as for the msp file   
+    defaultdir=get(mslice_config,'DataDir');
+ %  if ~exist(defaultdir,'dir')
+ %     defaultdir=get(mslice_config,'SampleDir');
+ %     if ~exist(defaultdir,'dir')
+ %        defaultdir=pwd;
+ %     end
+ %  end
+    current_dir = pwd;
+    cd(defaultdir);
    
-   h_mspfile=findobj(h_cw,'Tag','ms_MspFile');
-   if isempty(h_mspfile),
-      disp(['Could not locate handle to object MspFile']);
-      defaultfile='mslice.txt';
-   else
-      defaultfile=get(h_mspfile,'String');
-      if isempty(defaultfile)|isempty(defaultfile(~isspace(defaultfile))),
-         defaultfile='mslice.txt';
-      end
-   end
+   defaultfile='mslice.txt';
    
-   fpos=findstr(defaultfile,'.');
-   if ~isempty(fpos),	% eliminate extension of msp file
-      filename=[defaultdir defaultfile(1:(fpos(1)-1))];
-   else
-      filename=[defaultdir defaultfile];
-   end
+   % eliminate extension of msp file
+   [f_path,filename]=fileparts(defaultfile);
    
    [filename,pathname]=uiputfile( [filename '.txt'],'Select file to output parameter list');
-	if ischar(filename),
+   cd(current_dir);
+   
+    if ischar(filename),
       file=[pathname filename];
-   	list_only=(1<0);	% FALSE   
+   	  list_only=(1<0);	% FALSE   
    else % === no file selected 
-   	return;
+      return;
    end
 end
 
@@ -76,11 +64,11 @@ fprintf(fid,'%-15s\n','SPECTROMETER');
 fprintf(fid,'%-15s = %-15s    %s-%s\n','efixed(meV)',ms_getstring(h_cw,'ms_efixed'),...
    ms_getstring(h_cw,'ms_emode'),'geometry');
 fprintf(fid,'%-15s = %s\n','DataFile(.spe)',ms_getstring(h_cw,'ms_DataFile'));
-fprintf(fid,'%-15s = %s\n','DataDir',ms_getstring(h_cw,'ms_DataDir'));
+fprintf(fid,'%-15s = %s\n','DataDir',get(mslice_config,'DataDir'));
 fprintf(fid,'%-15s = %s\n','DetFile(.phx)',ms_getstring(h_cw,'ms_PhxFile'));
-fprintf(fid,'%-15s = %s\n','DetectorDir',ms_getstring(h_cw,'ms_PhxDir'));
-fprintf(fid,'%-15s = %s\n','ParamFile(.msp)',ms_getstring(h_cw,'ms_MspFile'));
-fprintf(fid,'%-15s = %s\n','ParameterDir',ms_getstring(h_cw,'ms_MspDir'));
+fprintf(fid,'%-15s = %s\n','DetectorDir',get(mslice_config,'PhxDir'));
+fprintf(fid,'%-15s = %s\n','ParamFile(.msp)',get(mslice_config,'MspFile'));
+fprintf(fid,'%-15s = %s\n','ParameterDir',get(mslice_config,'MspDir'));
 fprintf(fid,'%-15s = %s\n','IntensityLabel',ms_getstring(h_cw,'ms_IntensityLabel'));
 fprintf(fid,'%-15s = %s\n \n','TitleLabel',ms_getstring(h_cw,'ms_TitleLabel'));
 
@@ -215,7 +203,7 @@ fprintf(fid,'%-15s = %-s %-s, %-s\n',...
   ms_getstring(h_cw,'ms_cut_symbol_line'));   
 fprintf(fid,'%-15s = %-10s\n','OutputType',ms_getstring(h_cw,'ms_cut_OutputType'));
 fprintf(fid,'%-15s = %s\n','OutputFile',ms_getstring(h_cw,'ms_cut_OutputFile'));
-fprintf(fid,'%-15s = %s\n \n','OutputDir',ms_getstring(h_cw,'ms_cut_OutputDir'));   
+fprintf(fid,'%-15s = %s\n \n','OutputDir',get(mslice_config,'cut_OutputDir'));   
 
 % === write DETECTOR TRAJECTORIES section
 fprintf(fid,'%-s\n','DETECTOR TRAJECTORIES');

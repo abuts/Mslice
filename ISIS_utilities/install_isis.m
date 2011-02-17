@@ -107,12 +107,14 @@ disp('! deleting existing and placing the path to put new pack there      !')
 end
 %--------------------------------------------------------------------------
 disp('!-------------------------------------------------------------------!')
-disp('!  unpacking package into the destination folder                    !')
+disp('!  Unpacking package into the destination folder                    !')
 if ~id.unpacked
     unzip(fullfile(id.package_orig_folder,id.package_file),id.unpack_folder);
     id.unpacked=true;
     id.unpack_folder=fullfile(id.unpack_folder,'ISIS');
 end
+disp('!  Successfull                                                      !')
+
 
 delete_tmp=false;
 if ~strcmp(id.unpack_folder,id.allPacks_dest_folder)
@@ -145,7 +147,6 @@ disp('! It will be automatically availble after you restart MATLAB        !')
     rehash toolbox;       
     eval(f_name);        
     
-disp('!-------------------------------------------------------------------!')   
 else
     mess = sprintf('! Sucsessfully installed ISIS application: %s',id.package_name);
     disp(mess);
@@ -190,7 +191,23 @@ if ~(package_file||package_dir)
 end
 % identify the package name one of list of availible
 % 
-[path,last_name,ext]=fileparts(package_f_or_dir);
+if package_dir
+    ext='';
+    dir_path=regexprep(package_f_or_dir,'\\','/');
+    dir_tree=regexp(dir_path,'/','split');
+    if isempty(dir_tree{end});
+        dir_tree=dir_tree(1:end-1);
+    end
+    last_name=dir_tree{end};
+    path='';
+    fs=filesep;
+    for i=1:numel(dir_tree)-1
+        path=[path,dir_tree{i},fs];
+    end
+    
+else
+    [path,last_name,ext]=fileparts(package_f_or_dir);
+end
 % idenfify full package path;
 cur_path=pwd;
 if ~isempty(path)

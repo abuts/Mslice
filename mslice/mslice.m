@@ -16,7 +16,7 @@ function mslice(MspFile)
 %      hopefully this list is unnesessary as we define these functions in
 %      -a options of the compiler
 %
-%#function store_data a2spe add2mask add_psd_ns add_slice add_spe add_spe_example avpix_m basis_d basis_hkl basis_r basis_u bin2d_df buildspe calcproj calcprojb calcprojpowder combil cs2cucl4 cut2d_m cut2mfit cut3d_m cut3dxye_m cut_spe det2spec det_view detectorview disp_spe dv_load_file dv_mask dv_plot_msk dv_plot_sum dv_read_int dv_save_msk executemsp firstword firstzone fitcut genie getb int_det interp_cut isinpath load_fit load_hkl load_ipgascm load_msk load_par load_phx load_spe load_sum load_xye mask maskmore mc2spe mctr2spe mff_cu3d miller ms_analysis_mode ms_ax_linear_log ms_bkg ms_calc_proj ms_cut ms_cut_axes ms_disp ms_disp_axes ms_disp_or_slice ms_errorbar ms_filter ms_fitcut ms_fitcut_load_data ms_fitcut_save_data ms_fitcut_update ms_fitcut_updatepar ms_getfile ms_getstring ms_help ms_iris ms_iris_spe ms_list_pars ms_load_data ms_load_msp ms_pick_output ms_plot_traj ms_powder_menu ms_printc ms_putfile ms_sample ms_save_data ms_save_msp ms_simulate ms_simulate_iris ms_slice ms_slice_axes ms_sqw ms_sqw_iris ms_toggle ms_updatelabel ms_updatelabelu mslicepath mult_cut no_overlap order_m par2phx phx2par pick_wv pickvar pickvar_hkl pickvarb planeperp plot_cut plot_de plot_det plot_slice plot_spe plot_sum plot_traj pos2spec put_in_matrix putb q2rlu read_Q read_spe rebin_cut rlu2q rm_mask save_cut save_msk save_phx save_spe sim_cs2cucl4 simulate slice_spe small smooth_curve smooth_slice smooth_spe sort_msk spe2modQ spe2sqe spe2sqeb spec2matrix spurion sqe2proj sqe2samp sqw stripath sub_cut sum2det surf_slice swapEmodQ towindow units updatemsp uv_2dtr waverage wdisp_cs2cucl4 avoidtex color_slider fromwindow keep load_cut make_cur 
+%#function store_data a2spe add2mask add_psd_ns add_slice add_spe add_spe_example avpix_m basis_d basis_hkl basis_r basis_u bin2d_df buildspe calcproj calcprojb calcprojpowder combil cs2cucl4 cut2d_m cut2mfit cut3d_m cut3dxye_m cut_spe det2spec det_view detectorview disp_spe dv_load_file dv_mask dv_plot_msk dv_plot_sum dv_read_int dv_save_msk executemsp firstword firstzone fitcut genie getb int_det interp_cut isinpath load_fit load_hkl load_ipgascm load_msk load_par load_phx load_spe load_sum load_xye mask maskmore mc2spe mctr2spe mff_cu3d miller ms_analysis_mode ms_ax_linear_log ms_bkg ms_calc_proj ms_cut ms_cut_axes ms_disp ms_disp_axes ms_disp_or_slice ms_errorbar ms_filter ms_fitcut ms_fitcut_load_data ms_fitcut_save_data ms_fitcut_update ms_fitcut_updatepar ms_getfile ms_getstring ms_help ms_iris ms_iris_spe ms_list_pars ms_load_data ms_load_msp ms_pick_output ms_plot_traj ms_powder_menu ms_printc ms_putfile ms_sample ms_save_data ms_save_msp ms_simulate ms_simulate_iris ms_slice ms_slice_axes ms_sqw ms_sqw_iris ms_toggle ms_updatelabel ms_updatelabelu mslicepath mult_cut no_overlap order_m par2phx phx2par pick_wv pickvar pickvar_hkl pickvarb planeperp plot_cut plot_de plot_det plot_slice plot_spe plot_sum plot_traj pos2spec put_in_matrix putb q2rlu read_Q read_spe rebin_cut rlu2q rm_mask save_cut save_msk save_phx save_spe sim_cs2cucl4 simulate slice_spe small smooth_curve smooth_slice smooth_spe sort_msk spe2modQ spe2sqe spe2sqeb spec2matrix spurion sqe2proj sqe2samp sqw stripath sub_cut sum2det surf_slice swapEmodQ towindow units updatemsp uv_2dtr waverage wdisp_cs2cucl4 avoidtex color_slider_ms fromwindow keep load_cut make_cur 
 %
 %
 % T.G.Perring, 3 April 2009: No longer put mslice at top of the mslice path
@@ -24,32 +24,21 @@ function mslice(MspFile)
 %  $Revision: 57 $   ($Date: 2010-01-08 17:22:35 +0000 (Fri, 08 Jan 2010) $)
 %
 global MSliceDir;
-[temp,MSliceDir]=stripath(which('mslice.m'));
+MSliceDir = get(mslice_config,'MSliceDir');
 
-if isdeployed
-%     % if in deployed mode, one needs to move upwards by a few levels in order
-%     % to get to the correct path. *** This is an unfortunately "hacky" way to do it
-%     % Dean Whittaker, August 2008
-%     cd(MSliceDir)
-%     cd ..
-%     cd ..
-% *** Verify
-%   January 2010, AB: Modified to do that this is no longer valid but need to verify
-%
-    MSliceDir = [pwd filesep];
-    disp('Current Mslice Dircetory is..'), disp(MSliceDir)
-end
-    
-% === find MSlice directory and place at top of MATLAB search path if not in path already
-% path(MSliceDir,path); %   T.G.Perring, 3 April 2009: Removed
+  
 
-% === start by default in Crystal PSD mode if no MspFile given
-if ~exist('MspFile','var')||isempty(MspFile)||~ischar(MspFile),
-   MspFile=[MSliceDir 'crystal_psd.msp'];
+if ~exist('MspFile','var')||isempty(MspFile)||~ischar(MspFile),        
+% === start by default in Crystal PSD mode if no MspFile given   
+   %MspFile=fullfile(get(mslice_config,'SampleDir'),'crystal_psd.msp');
+% === start by default in the mode of the previous session; at first start
+%     it would be Crystal PSD mode if no MspFile given, all following --
+%     the modes you were working with. 
+    MspFile=fullfile(get(mslice_config,'MspDir'),get(mslice_config,'MspFile'));   
 else
-   if isempty(findstr(MspFile,'.msp')),
+  if isempty(findstr(MspFile,'.msp')),
       MspFile=[MspFile '.msp'];
-   end
+  end
 end
 
 % === define colours in RGB format
@@ -66,7 +55,7 @@ if ~isempty(h),
 end
 
 % === display MSlice version ===
-helpfile=[MSliceDir 'help.txt'];
+helpfile=fullfile(MSliceDir,'help.txt');
 try
     fpos=ffind(helpfile,'%%% version');
     err_ll='';
@@ -78,7 +67,7 @@ if fpos<1,
    disp(['Cannot determine MSlice version date. ' err_ll]);
    lastupdate='(date of last update not available)';   
 else
-	fid=fopen(helpfile,'rt');
+   fid=fopen(helpfile,'rt');
    fseek(fid,fpos+length('%%% version'),'bof');
    lastupdate=fgetl(fid);
    fclose(fid);
@@ -120,12 +109,7 @@ oneline=[0 lineheight+0*interlines 0 0];
 pos=pos-[0 interlines 0 0];
 
 % ============== MSliceDir, MspDir and MspFile 
-h=uicontrol('Parent',fig,'Style','text','String',MSliceDir,...
-   'Position',pos,'Tag','ms_MSliceDir','Visible','off');
-h=uicontrol('Parent',fig,'Style','text','String','',...
-   'Position',pos,'Tag','ms_MspDir','Visible','off');
-h=uicontrol('Parent',fig,'Style','text','String','',...
-   'Position',pos,'Tag','ms_MspFile','Visible','off');
+% are moved to configurations
 green=[0 1 0];
 red  =[1 0 0];
 h=uicontrol('Parent',fig,'Style','frame',...
@@ -147,8 +131,8 @@ h=uicontrol('Parent',fig,'Style','text','String','geometry',...
 
 %========= DataFile ==================
 pos=pos-oneline;
-h=uicontrol('Parent',fig,'Style','text','String',[pwd '\'],...
-   'Position',pos,'Visible','off','Tag','ms_DataDir');
+%h=uicontrol('Parent',fig,'Style','text','String',[pwd '\'],...
+%   'Position',pos,'Visible','off','Tag','ms_DataDir');
 h=uicontrol('Parent',fig,'Style','text','String','DataFile(.spe)',...
    'Position',pos);
 h=uicontrol('Parent',fig,'Style','edit','Enable','on','Tag','ms_DataFile',...
@@ -158,23 +142,23 @@ h=uicontrol('Parent',fig,'Style','edit','Enable','on','Tag','ms_DataFile',...
   
 h=uicontrol('Parent',fig,'Style','pushbutton','String','Browse',...
    'Callback',...
-   'ms_getfile(findobj(''Tag'',''ms_DataDir''),findobj(''Tag'',''ms_DataFile''),spe_ext(1),''Choose Data File'');',...
+   'ms_getfile(''DataDir'',findobj(''Tag'',''ms_DataFile''),spe_ext(1),''Choose Data File'');',...
    'Position',pos+[4*pos(3) interlines/2 0 0]);   
+
 
 %========= DetFile, Save Data As... and Load Data pushbuttons ==================
 pos=pos-oneline;
 h=uicontrol('Parent',fig,'Style','text','String','DetFile(.phx)',...
    'Position',pos);
-h=uicontrol('Parent',fig,'Style','text','String',[pwd '\'],...
-   'Position',pos,'Visible','off','Tag','ms_PhxDir');
 h=uicontrol('Parent',fig,'Style','edit','Enable','on','Tag','ms_PhxFile',...
    'Position',pos+[pos(3) 0 2*pos(3) interlines],...
    'HorizontalAlignment','left',...
 	'BackgroundColor',white);
 h=uicontrol('Parent',fig,'Style','pushbutton','String','Browse',...
    'Callback',...
-   'ms_getfile(findobj(''Tag'',''ms_PhxDir''),findobj(''Tag'',''ms_PhxFile''),''*.phx'',''Choose Detector File'');',...
+   'ms_getfile(''PhxDir'',findobj(''Tag'',''ms_PhxFile''),''*.phx'',''Choose Detector File'');',...
    'Position',pos+[4*pos(3) interlines/2 0 0]);   
+
 h=uicontrol('Parent',fig,'Style','pushbutton','String','Save Data As ...',...
    'Callback','ms_save_data;',...
    'Position',pos+[5.5*pos(3) interlines 0.5*pos(3) 0]);   
@@ -217,6 +201,14 @@ h1=uimenu(h,'Label','Load Parameters','Callback','ms_load_msp;');
 h1=uimenu(h,'Label','Save Parameters','Callback','ms_save_msp;');
 h1=uimenu(h,'Label','List Parameters','Callback','ms_list_pars;');
 h1=uimenu(h,'Label','Save List to File','Callback','ms_list_pars(''file'');');
+h1=uimenu(h,'Label','Set Data Folders','Callback','setup_data_folders','Separator','on');
+h1=uimenu(h,'Label','Reset Folders to defaults','Callback','reset_to_powder0');
+h1=uimenu(h,'Label','Reset Particular folder');
+uimenu(h1,'Label','Reset Data (spe) folder','Callback','setup_data_folders(''spe'')');
+uimenu(h1,'Label','Reset Detector (phx) folder','Callback','setup_data_folders(''phx'')');
+uimenu(h1,'Label','Reset target (cut) folder','Callback','setup_data_folders(''cut'')');
+uimenu(h1,'Label','Reset msp folder','Callback','setup_data_folders(''msp'')');
+
 
 % === construct Background menu
 h=uimenu(fig,'Label','Background');

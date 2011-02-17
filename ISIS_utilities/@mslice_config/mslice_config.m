@@ -33,15 +33,35 @@ function defaults=homer_defaults()
 % fields_sealed
 
 defaults = ...
-     struct('last_copied_libisis',1620 ...
+     struct('last_copied_libisis',1620, ... % by default, this is the lowest Libisis version which supports copying
+            'MSliceDir','',...  % -- sealed: Mslice folder
+            'SampleDir','',...  % -- sealed: folder with msp configuration files 
+            'MspDir','', ...    % folder with msp files which describe mslice configurations
+            'MspFile','crystal_psd.msp',... % default msp file
+            'DataDir','',...    % data files (spe files)
+            'PhxDir','', ...
+            'cut_OutputDir','' ...
             ) ;                        
     
 
 % and the location of the default configuration file
-%defaults.instr_config_file       = ''; % undefined in constructor but will be defined after set(instrument_name
+if isdeployed
+     defaults.MSliceDir=pwd;
+     defaults.SampleDir=fullfile(defaults.MSliceDir,'Data');
+else
+    defaults.MSliceDir    = fullfile(fileparts(which('mslice_init.m')),'mslice');
+    defaults.SampleDir    = fullfile(fileparts(which('mslice_init.m')),'Data');
+end
+defaults.DataDir      = defaults.SampleDir;
+defaults.PhxDir       = defaults.SampleDir;
 
-defaults.user_output=pwd;
-defaults.fields_sealed={'fields_sealed'...
+defaults.MspDir       = defaults.SampleDir;
+ms_path = userpath();
+if isempty(ms_path)
+    ms_path = pwd;
+end
+defaults.cut_OutputDir=ms_path;
+defaults.fields_sealed={'fields_sealed','MSliceDir','SampleDir'...
                         }; % specify the fields which values can not be changed by user;
 
 

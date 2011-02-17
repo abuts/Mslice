@@ -61,13 +61,8 @@ end
 % copy everything except m-files into distributive
 copy_files_list(source_dir,mslice_dist_dir,'-.m');
 
-% remove leftovers
-if exist([mslice_dist_dir,filesep,'DLL'],'dir')  % remove DLL directory (to many bothering to avoid copying it)
-    rmdir([mslice_dist_dir,filesep,'DLL'],'s');
-end
-if exist([mslice_dist_dir,filesep,'ISIS_utilities'],'dir')  % remove ISIS_utilities directory (to many bothering to avoid copying it)
-    rmdir([mslice_dist_dir,filesep,'ISIS_utilities'],'s');
-end
+copyfile(fullfile(source_dir,'mslice_manual.pdf'),mslice_targ_dir,'f');
+%copy_files_list(source_dir,mslice_dist_dir,'-.m');
 
 % create working directory
 if exist(mslice_tmp_dir,'dir')  
@@ -109,11 +104,16 @@ disp('!    Start compiling auxiliary utilites ============================!')
 mcc -o 'mslice_setup_examples' -W 'main' -d './tmp' -T 'link:exe' -v -N 'mslice_setup_examples.m'
 %<-----------------------------
 disp('!    Compilation completed: Copying results to target directory ====!')
-% THE MOST IMPORTANT PART - copy over the mslice exe and ctf files.
-copyfile([mslice_tmp_dir,filesep,'*.exe'],[mslice_dist_dir,filesep,'mslice'],'f');
-try
-    copyfile([mslice_tmp_dir,filesep,'*.cft'],mslice_m1,'f');
-catch
+% THE MOST IMPORTANT PART - copy over the mslice exe files.
+if ispc
+    copyfile([mslice_tmp_dir,filesep,'*.exe'],mslice_targ_dir,'f');
+else
+    copyfile([mslice_tmp_dir,filesep,'mslice'],mslice_targ_dir,'f');    
+end
+
+% remove leftovers 
+if exist(mslice_dll,'dir')  % remove DLL directory (it is no use to standalone source
+    rmdir(mslice_dll,'s');
 end
 
 cd(target_dir);

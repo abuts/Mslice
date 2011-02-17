@@ -5,24 +5,24 @@ function test_mslice
 
 % Get locations of test data:
 % ----------------------------------------
-% this directory has been specified in mslice.n
-global MSliceDir;    
-
 if isdeployed
     % root directory is the directory where the mslice.exe has beem run
     % from. This directory has been specified in mslice.m
-    rootpath = MSliceDir;
+    rootpath = get(mslice_config,'MSliceDir');
 else
     % root directory is assumed to be that in which mslice.m function resides
     rootpath = fileparts(which('mslice.m'));
 end
 
 % Location of example spe and phx files:
-data_dir=fullfile(rootpath,'HET');
+sample_dir = get(mslice_config,'SampleDir');
+data_dir   = fullfile(sample_dir,'Het'); 
+%data_dir=fullfile(rootpath,'Het');
 
 
 % Set values of arguments to pass to functions
 % ------------------------------------------------
+
 spefile=fullfile(data_dir,'SPE250.SPE');
 phxfile=fullfile(data_dir,'PIX_981.PHX');
 
