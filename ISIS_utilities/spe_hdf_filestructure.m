@@ -1,19 +1,41 @@
-function rez=spe_hdf_filestructure(field_name)
+function rez=spe_hdf_filestructure(varargin)
 % this private function describes the structure of spe-hdf file version 2
-% it may change if versions increases
+% and 3
+% it has to be modified when version increases
+%
 % Usage:
 %>>rez=spe_hdf_filestructure()  -- returns the structure, which describes
-%                                  the spe_hdf5 file structure on hdd
+%                                                 all existing structures of  the spe_hdf5 file on hdd
 %>>rez=spe_hdf_filestructure(field_name)
-%                               -- returns the default value of the correspondent
-%                                  spe_hdf5 structure if the field name
+%                               -- returns all known versions of the field supplied
+%                                   in hdf5 file if the field name
 %                                  exist and error othewise
+%>>rez=spe_hdf_filestructure(num_version)
+%                               -- returns all fields corresponding to the vesion supplied
+%                                  If the version is unknown, it works like no argumetns 
+%                                  (warning message will be issued)
+%
+%>>rez=spe_hdf_filestructure(field_name,num_version)
+%                               -- returns the value of the correspondent 
+%                                  hdf5 structure with proper version if the field name
+%                                  exist and error othewise
+%
 % WARNING !!!  All modified fields which may be needed for new modified file formats
 %              should be added to the end of existing file structure as users of the filestructure may refer exsisting structure fields by
 %              their numbers (BAD!!!).
 %
 % $Revision$ ($Date$)
 %
+if nargin==1
+    if ischar(varargin{1})
+        field_name = varargin{1};
+    elseif isnumeric(varargin{1})
+        num_version=varargin{1};
+    end
+elseif nargin >=2
+        field_name = varargin{1};
+        num_version=varargin{2};        
+end
 
 file_structure=struct(...
     'spe_hdf_version',{2,3},...
@@ -49,6 +71,13 @@ if exist('field_name','var')
     end
 else
     rez=file_structure;
+end
+if exist('num_version','var')
+    if num_version<1||num_version>numel(file_structure)
+        warning('SPE:spe_hdf_filestructure',[' non-existing version',num2str(num_verson),' of spe hdf file structure requested. Returning all structure']);
+    else
+        rez=rez(num_version);
+    end    
 end
 
 

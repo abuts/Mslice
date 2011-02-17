@@ -25,7 +25,8 @@ end
 % get the name of the root folder for nxspe
 [filepath,filename]= fileparts(nxspe_filename);
 %
-root = repmat( [upper(filename),'/'],numel(data_field_names),1);
+data_root = find_root_nxspeDir(nxspe_filename);
+root = repmat( [data_root{1},'/'],numel(data_field_names),1);
 root = cellstr(root)';
 data_field_names=strcat(root,data_field_names);
 %
@@ -51,13 +52,17 @@ spe_data.en=(en(2:ne+1)+en(1:ne))/2; % take median values, centres of bins
 %
 try
     spe_data.psi = hdf5read(nxspe_filename,data_field_names{6});
-    
+    psiUnits     = hdf5read(nxspe_filename,data_field_names{6},data_attrib_names{6});   
+    spe_data.nxspe.psiUnits = psiUnits.Data;
+catch
+end
+try    
     EiUnits       = hdf5read(nxspe_filename,data_field_names{1},data_attrib_names{1});
     enUnits      = hdf5read(nxspe_filename,data_field_names{2},data_attrib_names{2});
-    psiUnits     = hdf5read(nxspe_filename,data_field_names{6},data_attrib_names{6});
+
     spe_data.nxspe.EiUnits  =  EiUnits.Data;
     spe_data.nxspe.enUnits  = enUnits.Data;
-    spe_data.nxspe.psiUnits = psiUnits.Data;
+
     spe_data.phx = zeros(ndet,5);
     spe_data.phx(:,1)=1:ndet;
     for i=1:4
