@@ -107,7 +107,7 @@ disp('! deleting existing and placing the path to put new pack there      !')
 end
 %--------------------------------------------------------------------------
 disp('!-------------------------------------------------------------------!')
-disp('!  Unpacking package into the destination folder                    !')
+disp('!  unpacking package into the destination folder                    !')
 if ~id.unpacked
     unzip(fullfile(id.package_orig_folder,id.package_file),id.unpack_folder);
     id.unpacked=true;
@@ -147,6 +147,7 @@ disp('! It will be automatically availble after you restart MATLAB        !')
     rehash toolbox;       
     eval(f_name);        
     
+disp('!-------------------------------------------------------------------!')   
 else
     mess = sprintf('! Sucsessfully installed ISIS application: %s',id.package_name);
     disp(mess);
