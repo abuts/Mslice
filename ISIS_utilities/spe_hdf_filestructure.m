@@ -1,7 +1,7 @@
 function rez=spe_hdf_filestructure(varargin)
 % this private function describes the structure of spe-hdf file version 2
 % and 3
-% it has to be modified when version increases
+% it will be modified  when version increase
 %
 % Usage:
 %>>rez=spe_hdf_filestructure()  -- returns the structure, which describes
