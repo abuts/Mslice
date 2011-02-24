@@ -21,11 +21,8 @@ global class_names;
 if isempty(configurations)
     config_data = struct(...
        'config_folder_name','libisis_config',...
-       'config_folder','', ...  % folder where user configurations should reside; it is calculated automatically by the config_folder function;
-       'is_first_run',1, ... % spefies if it is the first run of the class on the system. (e.g. configuration exist) % If first, DLL-s are copied during the initiation and some version specific functions are moved or renamed   
-       'last_used_matlab_version','' ...
-   ); 
-   
+       'config_folder','');  % folder where user configurations should reside; it is calculated 
+   % automatically by the config_folder function;
        
   % fields which are not allowed to change using set methods
     config_data.fields_sealed={'nInstances','config_folder'};

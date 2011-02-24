@@ -28,7 +28,6 @@ else
 end
 if ischar(filename),
    set(mslice_config,hdir,pathname);
-   
    if ishandle(hfile)
         set(hfile,'String',filename);
    elseif ischar(hfile)
