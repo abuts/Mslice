@@ -44,7 +44,7 @@ addpath_message (rootpath,'mslice_extras');
 addpath_message (rootpath,'mslice_more_extras');
 addpath_message (rootpath,'DLL');
 disp('!==================================================================!')
-disp('!              MSLICE classic (ISIS modifcations from 01/08/2010)  !')
+disp('!              MSLICE classic (ISIS modifcations from 01/02/2011)  !')
 disp('!==================================================================!')
 
 
