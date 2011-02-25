@@ -73,7 +73,17 @@ sub set_values{   #12/24/09 1:25:PM
 # specified in the imput hash, by the values corresponding to the hash values
 ###############################################################################
     my($out_file,$separator,$val_framing,%rep_keys)=@_;
-    my($wk_file)="tmp.dat";
+	$out_file =~ s/\\/\//g;
+	my $ind_loc = rindex($out_file,'/');
+	my $path,"\n";
+	if($ind_loc>0){
+		$path = substr($out_file,0,$ind_loc+1);
+	}else{
+		$path = '';
+	}
+	print $path;
+    my($wk_file)=$path."tmp.dat";
+	print $wk_file,"\n";
     my($data,$rd,$the_key,$the_value,$i);
     my (@kk) = keys(%rep_keys);
     
