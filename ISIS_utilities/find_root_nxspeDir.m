@@ -13,9 +13,10 @@ root_guess =  {data_structure.GroupHierarchy.Groups(:).Name};
 
 for i=1:numel(root_guess)
     try
-        root_attribute = hdf5read(hdf_fileName,root_guess{i},'NX_class');
+        attr_name = data_structure.GroupHierarchy.Groups(i).Attributes(1).Name;
+        root_attribute = hdf5read(hdf_fileName,attr_name);
         if strcmp(root_attribute.Data,'NXentry')
-             n_path = n_path +1;
+            n_path = n_path +1;
             root_nxspe_path{n_path} = root_guess{i};     
         end
     catch
