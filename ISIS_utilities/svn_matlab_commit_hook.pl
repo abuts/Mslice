@@ -2,30 +2,42 @@
 ###############################################################################
 use strict;
 ###############################################################################
+# script takes the text file supplied as input parameter, finds the string 
+# COMMIT_COUNTER :: {num}
+# in this file and increases the number {num} near the COMMIT_COUNTER in this file. 
 #
-# script is used to update the field-value pairs in mslice msp text files and homer instrument settings txt files
-# despite the same name, there is difference in the $val_framing value, which makes mslice msp and homer set-up files different
+# When this script is installed as the precommit hook
+# for TortoseSVN, and the text file supplied as the input parameter for this file 
+# is under version control with correspondent properties enabled, 
+# the modification above lead to the mofification of the file version and revision to 
+# the current subversion value. 
 # 
-# should be run from Matlab but can be used as stand-alone application
 # 
-if ($#ARGV < 2 || $#ARGV % 2){
-  print "\n\n Usage: set_key_value file_to_modify key value [key value ... ]  \n\n";
-  print " Script called with ",$#ARGV+1, " arguments; Number of arguments has to be odd and bigger than 2 \n";  
-  exit 1;
+if ($#ARGV != 0){
+  print "\n\n Usage: commit_hook version_file.m  \n\n";
+  exit 0;
 };
 
-my %rep_keys;
-my $file=$ARGV[0];
-my $i;
-for($i=1; $i<$#ARGV;$i+=2){
-	$rep_keys{$ARGV[$i]} = $ARGV[$i+1];
+my $version_file=$ARGV[0];
+my $pair_separator='::';  # the separator dividing value from the key
+my $val_framing   =' ';   # the framing aroung value (can be empty)
+my $keyC  = 'COMMIT_COUNTER';
+my %rep_keys = ($keyC=>'');
+#print " version $version_file \n";
+#print " enter something to continue \n";
+#my $tt = <STDIN>;
+
+
+%rep_keys=get_values($version_file,$pair_separator,$val_framing,%rep_keys);
+my $val = $rep_keys{$keyC};
+if($val=~/\d/){
+    $val+=1;
+}else{
+    $val =1;
 }
+$rep_keys{$keyC}=$val;
 
-my $pair_separator='=';  # the separator dividing value from the key
-my $val_framing   =' ';  # the framing aroung value (can be empty)
-
-
-set_values($file,$pair_separator,$val_framing,%rep_keys);
+set_values($version_file,$pair_separator,$val_framing,%rep_keys);
 
 exit(0);
 #------------------------------------------------------------------------------
@@ -73,17 +85,7 @@ sub set_values{   #12/24/09 1:25:PM
 # specified in the imput hash, by the values corresponding to the hash values
 ###############################################################################
     my($out_file,$separator,$val_framing,%rep_keys)=@_;
-	$out_file =~ s/\\/\//g;
-	my $ind_loc = rindex($out_file,'/');
-	my $path,"\n";
-	if($ind_loc>0){
-		$path = substr($out_file,0,$ind_loc+1);
-	}else{
-		$path = '';
-	}
-	print $path;
-    my($wk_file)=$path."tmp.dat";
-	print $wk_file,"\n";
+    my($wk_file)="tmp.dat";
     my($data,$rd,$the_key,$the_value,$i);
     my (@kk) = keys(%rep_keys);
     
@@ -104,4 +106,44 @@ sub set_values{   #12/24/09 1:25:PM
     close(INDATA);
     unlink($out_file) || die " can not delete $out_file, the resulting file $wk_file exists and you should rename it manually\n";
     rename($wk_file,$out_file) || die " can not rename temporary file $wk_file to a target file $out_file";
+}
+
+###############################################################################
+sub get_values{   #12/24/09 1:25:PM
+#    get the list of values corresponding to the list of keys from the file
+#    the pairs are identified by $key_val_separator; the value can be surrounded by
+#   $value_framing parameter
+###############################################################################
+    my($data_file,$key_val_separator,$value_framing,%rep_keys)=@_;
+    my(@row,@buf,$ic,$jc,$data,$the_key,$the_value);
+    my @kk = keys(%rep_keys);  # the keys, which values we try to identify from the file
+    
+    open(INDATA,$data_file) || die(" can not open Template file $data_file");    
+    while($data=<INDATA>){
+
+        @row = split(/$key_val_separator/,$data); # we detect prospective "key->value" pairs following the appearence of the $key_val_separator
+        if($#row==0){           next;  # have to be pairs, othrewise the key is empty 
+        }
+        
+        for($ic=0;$ic<$#row;$ic++){   # value can be empty, so need to go by one rather then by 2
+            for($jc=0;$jc<=$#kk;$jc++){
+                $the_key = $kk[$jc];                
+                if($row[$ic]=~m/$the_key/){
+                    
+                    chomp($row[$ic+1]);
+                    if($value_framing eq ''){                       
+                        $the_value= $row[$ic+1];                        
+                    }else{
+                        @buf = split($value_framing,$row[$ic+1]);
+                        $the_value= $buf[1];                        
+                    }
+
+                    $rep_keys{$the_key}=$the_value;
+                }
+                
+            }
+        }
+    }
+    close(INDATA);
+    return %rep_keys;
 }
