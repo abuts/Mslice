@@ -55,6 +55,7 @@ try % fortran optimised routine
       U1/dot(U1,U1),U2/dot(U2,U2),U3/dot(U3,U3));
    %disp('Using fortran spe2proj_df routine for calcproj');   
 catch   
+    warning('mslice:calcproj',['fortran optimised routine failed with error: ',lasterr()]);
 	% === transform data points (angles(detector position),energy) 
    % === into (Qx,Qy,Qz,E) points Q[Å^{-1}],E[meV] in the spectrometer reference frame
 	Q=spe2sqe(data_in); % Q(ndet,ne,3) [Å^{-1}]
