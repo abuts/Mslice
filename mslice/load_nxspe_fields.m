@@ -33,7 +33,7 @@ data_field_names=strcat(root,data_field_names);
 % Load principal data part;
 %
 spe_data.Ei         = hdf5read(nxspe_filename,data_field_names{1});
-spe_data.en         = hdf5read(nxspe_filename,data_field_names{2});
+spe_data.en         = hdf5read(nxspe_filename,data_field_names{2})';
 
 spe_data.S          = hdf5read(nxspe_filename,data_field_names{3})';
 spe_data.ERR     = hdf5read(nxspe_filename,data_field_names{4})';
