@@ -62,12 +62,20 @@ try
 
     spe_data.nxspe.EiUnits  =  EiUnits.Data;
     spe_data.nxspe.enUnits  = enUnits.Data;
-
-    spe_data.phx = zeros(ndet,5);
-    spe_data.phx(:,1)=1:ndet;
-    for i=1:4
-        spe_data.phx(:,i+1)= hdf5read(nxspe_filename,data_field_names{6+i});
-    end 
+ 
+    % obtain the state 'phx from nxspe' switch fron GUI and if it is true,
+    % load data from nxspe
+    h_cw     =findobj('Tag','ms_ControlWindow');        
+    h_file=findobj(h_cw,'Tag','ms_usePhxFromNXSPE');
+    Value=get(h_file,'Value');
+    if Value == true
+  
+        spe_data.phx = zeros(ndet,5);
+        spe_data.phx(:,1)=1:ndet;
+        for i=1:4
+            spe_data.phx(:,i+1)= hdf5read(nxspe_filename,data_field_names{6+i});
+        end 
+    end
     
 catch
     warning('ReadNXSPE:format_error',['error reading addirional fields from nxspe file:',nxspe_filename],lasterr());
