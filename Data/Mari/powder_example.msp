@@ -1,7 +1,7 @@
 efixed				= 82.5283
 emode				= 1
 DataDir				= C:\Users\wkc26243\Documents\work\svn\mslice\Data\MAPS\ 
-DataFile			= MAR15537.spe
+DataFile			= MAP10266.spe_h5 
 PhxDir				= C:\Users\wkc26243\Documents\work\svn\mslice\Data\MAPS\ 
 PhxFile				=  obtained from nxspe file 
 MspDir				= C:\mprogs\Mslice\Data\MAPS\
