@@ -11,7 +11,7 @@ h_checkbox=findobj(h_cw,'Tag','ms_usePhxFromNXSPE');
 Value=get(h_checkbox,'Value');
 
 if Value
-warning('Mslice:gettingPhxFromNxspe','  Getting phx from nxspe currently works correctly for 1:1 maps only');
+warning('Mslice:gettingPhxFromNxspe','  Getting phx from nxspe currently works correctly for 1:1 maps and for equidistant rings only ');
 end
 
 % set(h_checkbox,'Value',false);

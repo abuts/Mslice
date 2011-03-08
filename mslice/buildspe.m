@@ -101,12 +101,12 @@ if Value==2
     phx(:,3)=0;
     phx(:,5)=0;    
     if  isfield(data,'phx') 
-        warning('Mslice:buildspe',' angular width of the detector rings have been estimated from the angles itself as ??????? nxspe does not contains correct informtion on this');
+        warning('Mslice:buildspe',' angular width of the detector rings have been estimated from the angles itself as current nxspe does not contain correct informtion on this');
         ndat = size(phx,1);
       %  dthet = zeros(ndat,1);
         %dthet=phx(2:end,2)-phx(1:end-1,2);
         %dthet(ndat)=dthet(ndat-1);
-        dthet = (phx(end,2)-phx(1,2))/ndat;
+        dthet =abs(phx(end,2)-phx(1,2))/ndat;
         phx(:,4)=dthet;
     end
 end
