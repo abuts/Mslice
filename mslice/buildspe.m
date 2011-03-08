@@ -90,6 +90,28 @@ if isempty(data),
    data.filename='simulation';
    data.det_group=(1:size(phx,1))';
 end
+
+% if in powder mode, set psi equal to 0; (done this way as some nxspe files
+% do not keep correct values for (polar?) angle
+h_cw     =findobj('Tag','ms_ControlWindow');        
+h_mode=findobj(h_cw,'Tag','ms_sample');
+Value=get(h_mode,'Value');
+if Value==2
+    phx(:,1)=0;    
+    phx(:,3)=0;
+    phx(:,5)=0;    
+    if  isfield(data,'phx') 
+        warning('Mslice:buildspe',' angular width of the detector rings have been estimated from the angles itself as ??????? nxspe does not contains correct informtion on this');
+        ndat = size(phx,1);
+      %  dthet = zeros(ndat,1);
+        %dthet=phx(2:end,2)-phx(1:end-1,2);
+        %dthet(ndat)=dthet(ndat-1);
+        dthet = (phx(end,2)-phx(1,2))/ndat;
+        phx(:,4)=dthet;
+    end
+end
+
+
 %data.det_num=phx(:,1);
 %data.spec_num=det2spec(data.det_num);
 data.det_theta=phx(:,2)*pi/180;

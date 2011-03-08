@@ -50,19 +50,24 @@ spe_data.en=(en(2:ne+1)+en(1:ne))/2; % take median values, centres of bins
 %
 % load detector information
 %
+
 try
-    spe_data.psi = hdf5read(nxspe_filename,data_field_names{6});
+    warning('OFF','Warning:DeprecatedSyntax');    
+    spe_data.psi = hdf5read(nxspe_filename,data_field_names{6});    
     psiUnits     = hdf5read(nxspe_filename,[data_field_names{6},'/',data_attrib_names{6}]);   
     spe_data.nxspe.psiUnits = psiUnits.Data;
+    %warning(state,'Warning:DeprecatedSyntax');
 catch
 end
 try    
+    warning('OFF','Warning:DeprecatedSyntax');       
     EiUnits       = hdf5read(nxspe_filename,[data_field_names{1},'/',data_attrib_names{1}]);
     enUnits      = hdf5read(nxspe_filename,[data_field_names{2},'/',data_attrib_names{2}]);
 
     spe_data.nxspe.EiUnits  =  EiUnits.Data;
     spe_data.nxspe.enUnits  = enUnits.Data;
- 
+    
+   %  warning(state,'Warning:DeprecatedSyntax');
     % obtain the state 'phx from nxspe' switch fron GUI and if it is true,
     % load data from nxspe
     h_cw     =findobj('Tag','ms_ControlWindow');        
