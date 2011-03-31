@@ -9,9 +9,49 @@ function output_args = ms_selectPhxFromNxSpe( )
 h_cw     =findobj('Tag','ms_ControlWindow');        
 h_checkbox=findobj(h_cw,'Tag','ms_usePhxFromNXSPE');
 Value=get(h_checkbox,'Value');
-
+%
+h_file=findobj(h_cw,'Tag','ms_PhxFile');
+if isempty(h_file),
+         disp('Could not associate objects to .phx filename. No data file could be read.');
+        return; 
+end
+%
 if Value
-warning('Mslice:gettingPhxFromNxspe','  Getting phx from nxspe currently works correctly for 1:1 maps and for equidistant rings only ');
+   warning('Mslice:gettingPhxFromNxspe','  Getting phx from nxspe currently works correctly for 1:1 maps and for equidistant rings only ');
+   set(h_file,'String','phx data stored in nxspe file will be used')    
+else
+      
+    phx_file=get(h_file,'String');
+    phx_file=phx_file(~isspace(phx_file));    
+    if strcmpi(phx_file,'obtainedfromnxspefile')||strcmpi(phx_file,'phxdatastoredinnxspefilewillbeused')
+        path_name=get(mslice_config,'PhxDir');
+        if strncmp(' ',path_name,1)
+            path_name = get(mslice_config,'DataDir');
+        end
+        if strncmp(' ',path_name,1)
+            path_name = get(mslice_config,'MSliceDir');
+        end
+        [file_name,path_name] = uigetfile([path_name,filesep,'*.','phx'],['Select phx file to use with this spe file']); 
+        set(mslice_config,'PhxDir',path_name);
+        if ~isempty(file_name)
+            set(h_file,'String',file_name)
+        else
+            set(h_file,'String',' ')            
+        end
+
+         msp_dir=get(mslice_config,'MspDir');
+         msp_file=get(mslice_config,'MspFile');
+
+         full_msp=fullfile(msp_dir,msp_file);
+      if ~isempty(file_name)        
+         perl('set_key_value.pl',full_msp,'PhxFile',file_name) 
+      end
+         perl('set_key_value.pl',full_msp,'PhxDir', path_name)          
+          
+    end
+
+
+ 
 end
 
 % set(h_checkbox,'Value',false);

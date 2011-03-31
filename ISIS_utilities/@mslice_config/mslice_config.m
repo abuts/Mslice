@@ -39,8 +39,8 @@ defaults = ...
             'MspDir','', ...    % folder with msp files which describe mslice configurations
             'MspFile','crystal_psd.msp',... % default msp file
             'DataDir','',...    % data files (spe files)
-            'PhxDir','', ...
-            'cut_OutputDir','' ...
+            'PhxDir','', ...    % phx files (detector angular positions)
+            'cut_OutputDir','' ...  % defauld folder to save cuts. 
             ) ;                        
     
 

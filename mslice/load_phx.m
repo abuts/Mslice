@@ -26,7 +26,7 @@ function data=load_phx(phx_filename)
 % data=rows of [detector_number twotheta(deg) psi(deg) dtwotheta(deg) dpsi(deg)]
 
 % === return if error opening phx_filename
-if ~exist('phx_filename','var')|isempty(phx_filename),
+if ~exist('phx_filename','var')||isempty(phx_filename),
    data=[];
    return;
 end

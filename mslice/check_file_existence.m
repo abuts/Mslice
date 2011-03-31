@@ -23,12 +23,12 @@ if ~exist(file_name,'file')
         h_file=findobj(h_cw,'Tag',file_field);
         set(mslice_config,dir_field,path_name);
         set(h_file,'String',file_name)
-        set(mslice_config,dir_field,path_name);
-        
+
         msp_dir=get(mslice_config,'MspDir');
         msp_file=get(mslice_config,'MspFile');
 
         full_msp=fullfile(msp_dir,msp_file);
+        
         perl('set_key_value.pl',full_msp,file_field(4:end),file_name);
         
         

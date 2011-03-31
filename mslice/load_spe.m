@@ -92,7 +92,7 @@ end
 [pathname,name,ext]=fileparts(spe_filename);  
 hdf_file_str=spe_hdf_filestructure();
 name=[name,ext];
-libisis_failed = false;
+hdf_failed = false;
 if strcmpi(ext,hdf_file_str(1).spe_hdf_file_ext)
      try %try hdf5
         
@@ -126,9 +126,9 @@ if strcmpi(ext,hdf_file_str(1).spe_hdf_file_ext)
        end
        data.en=(en(2:ne+1)+en(1:ne))/2; % take median values, centres of bins
        data.det_theta=ones(ndet,1);
-       libisis_failed=false;  
+       hdf_failed=false;  
     catch
-        libisis_failed=true;    
+        hdf_failed=true;    
     end
 elseif    strcmpi(ext,hdf_file_str(2).spe_hdf_file_ext)
  
@@ -136,17 +136,23 @@ elseif    strcmpi(ext,hdf_file_str(2).spe_hdf_file_ext)
          data = load_nxspe_fields(strtrim(spe_filename),hdf_file_str(2).data_field_names,hdf_file_str(2).data_attrib_names);
          [ndet,ne]=size(data.S); 
      catch
-        libisis_failed=true;            
+        hdf_failed=true;            
      end
 else
-  libisis_failed=true;        
+  hdf_failed=true;        
 end
 
-if libisis_failed
+if hdf_failed
+    filename=deblank(spe_filename); % remove blancs from beginning and end of spe_filename
+    filename=fliplr(deblank(fliplr(filename)));
+    
+    try
+        hdf5info(filename);
+        error('load_spe: attempting to read binary file %s as ascii file',filename);
+    catch
+    end
 % Single file only; leave load_spe untouched from this point onwards
 % -------------------------------------------------------------------
-filename=deblank(spe_filename); % remove blancs from beginning and end of spe_filename
-filename=fliplr(deblank(fliplr(filename)));
 % === if error opening file, return
 fid=fopen(filename,'rt');
 if fid==-1,

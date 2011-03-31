@@ -170,6 +170,7 @@ if (samp==1)&(analmode==1), % single crystal data analysed in single crystal mod
    	data.axis_unitlabel=str2mat('','','',IntensityLabel);
    	data.title_label=TitleLabel;
 		data.u=[u11 u12 u13 u14; u21 u22 u23 u24; u31 u32 u33 u34];      
+        % calculate projections for crystall
       data=calcproj(data);
       ms_updatelabel(3);   
       % === clear stored slice data 
@@ -179,6 +180,7 @@ if (samp==1)&(analmode==1), % single crystal data analysed in single crystal mod
    	data.axis_unitlabel=str2mat('','',IntensityLabel);
    	data.title_label=TitleLabel;
    	data.u=[u11 u12 u13 u14; u21 u22 u23 u24];  
+    % calculate projections for reduced crystall
    	data=calcprojb(data);
    end
 else	% sample is powder or analysed as powder
@@ -186,6 +188,7 @@ else	% sample is powder or analysed as powder
    data.axis_unitlabel=str2mat('','',IntensityLabel);
    data.title_label=TitleLabel;
    data.u=[u1;u2];
+   % projections for powder
    data=calcprojpowder(data);  
 end
 ms_updatelabel(1);
