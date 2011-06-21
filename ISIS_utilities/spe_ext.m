@@ -15,7 +15,13 @@ function ext=spe_ext(varargin)
 % $Revision$ ($Date$)
 %
 spe_hdf_ext=spe_hdf_filestructure('spe_hdf_file_ext');
-spe_hdf_ext = strcat({'*'},spe_hdf_ext);
+%if ~ispc
+    spe_hdf_ext0 = strcat({'*'},lower(spe_hdf_ext));    
+    spe_hdf_ext1 = strcat({'*'},upper(spe_hdf_ext));
+    spe_hdf_ext = [spe_hdf_ext0,spe_hdf_ext1];
+%else
+ %   spe_hdf_ext = strcat({'*'},lower(spe_hdf_ext));        
+%end
 if nargin>0
     ext_base = strcat(spe_hdf_ext,{';'});
     ext={['*.spe;' ext_base{:}],['ASCII, HDF and nexus spe files (*.spe, ' ext_base{:} ')'];...
@@ -24,5 +30,9 @@ if nargin>0
         spe_hdf_ext{2},['nexus spe files (produced by MANTID): (' spe_hdf_ext{2},')']...        
         };    
 else
-    ext={'*.spe',spe_hdf_ext{:}}';
+    if ispc
+        ext={'*.spe',spe_hdf_ext{:}}';
+    else
+        ext={'*.spe','*.SPE',spe_hdf_ext{:}}';        
+    end
 end

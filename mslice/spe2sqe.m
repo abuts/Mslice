@@ -11,6 +11,7 @@ function Q=spe2sqe(spe_data)
 % 11-sep-98 modify const E=2.07k^2 to compare results with PHOENIX, exact match
 % restore E/k^2=2.072
 
+E_to_wawelengh = 2.07;
 if spe_data.emode==1,
    
    % ======================================================================
@@ -18,8 +19,8 @@ if spe_data.emode==1,
 	% efixed = monochromatic incident energy ei(meV) 
 	% ======================================================================
 
-   ki=sqrt(spe_data.efixed/2.07);	% scalar
-	kf=sqrt((spe_data.efixed-spe_data.en)/2.07); % line-vector (1,ne)
+   ki=sqrt(spe_data.efixed/E_to_wawelengh);	% scalar
+	kf=sqrt((spe_data.efixed-spe_data.en)/E_to_wawelengh); % line-vector (1,ne)
    Qx=ki*ones(size(spe_data.det_theta,1),size(spe_data.en,2))...
       -cos(spe_data.det_theta)*kf; % matrix (ndet,ne)
    if ~isfield(spe_data,'det_psi'),
@@ -39,8 +40,8 @@ elseif spe_data.emode==2,
    % scattering geometry diagram in notebook computing 2, page 2-14
    % ========================================================================
    
-   ki=sqrt((spe_data.efixed+spe_data.en)/2.07); % line-vector (1,ne)
-   kf=sqrt(spe_data.efixed/2.07);	% scalar
+    ki=sqrt((spe_data.efixed+spe_data.en)/E_to_wawelengh); % line-vector (1,ne)
+    kf=sqrt(spe_data.efixed/E_to_wawelengh);	% scalar
 	Qx=ones(size(spe_data.det_theta))*ki-kf*cos(spe_data.det_theta)*ones(size(spe_data.en)); % matrix (ndet,ne)
 	Qy=-kf*(sin(spe_data.det_theta))*ones(size(spe_data.en));	% (ndet,1)*(1,ne)
 	Qz=zeros(size(Qx));

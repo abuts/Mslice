@@ -38,6 +38,15 @@ if ischar(filename),
    end
    cancel=0;
    
+   [dir,fname,fext]=fileparts(filename);
+   % set the default behaviour of the "par from nxpse checkbox
+    h_cw     =findobj('Tag','ms_ControlWindow');        
+    h_checkbox=findobj(h_cw,'Tag','ms_usePhxFromNXSPE'); 
+   if strcmpi(fext,'.nxspe')
+       set(h_checkbox,'Value',true);
+   else
+       set(h_checkbox,'Value',false);
+   end
 else
    cancel=1;
 end

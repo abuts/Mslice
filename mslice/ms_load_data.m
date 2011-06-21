@@ -50,22 +50,6 @@ if ~isempty(h_status)&&ishandle(h_status),
 end
 
 % === construct .spe data structure 
-% if ~exist(spe_filename,'file')
-%     disp(['can not find file',spe_filename]);
-%     disp('choose spe file location'); 
-%     spe_pathname = fileparts(spe_filename);
-%     [spe_filename,spe_pathname] = uigetfile([spe_pathname,filesep,'*.spe'],'Select SPE files to open');   
-%     if(spe_filename ~=0)
-%         hMsp_dir=findobj(h_cw,'Tag','ms_MspDir');
-%         hMsp_file=findobj(h_cw,'Tag','ms_MspFile');
-%         Msp_dir = get(hMsp_dir,'String');
-%         Msp_file = get(hMsp_file,'String');        
-%         fileName = [Msp_dir,Msp_file];
-%         perl('set_key_value.pl',fileName,'DataDir',spe_pathname,'DataFile',spe_filename,'cut_OutputDir',spe_pathname);
-%         ms_load_msp(fileName);
-%         %h_file
-%     end
-% end
 spe_filename=check_file_existence(spe_filename,'spe','DataDir','ms_DataFile');
 % now phx may not be present so check should be in load_spe
 %phx_filename=check_file_existence(phx_filename,'phx','PhxDir','ms_PhxFile');

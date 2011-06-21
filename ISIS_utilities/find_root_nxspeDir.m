@@ -14,6 +14,7 @@ root_guess =  {data_structure.GroupHierarchy.Groups(:).Name};
 for i=1:numel(root_guess)
     try
         attr_name = data_structure.GroupHierarchy.Groups(i).Attributes(1).Name;
+        warning('OFF','MATLAB:hdf5readc:deprecatedAttributeSyntax');    
         root_attribute = hdf5read(hdf_fileName,attr_name);
         if strcmp(root_attribute.Data,'NXentry')
             n_path = n_path +1;

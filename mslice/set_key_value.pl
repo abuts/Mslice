@@ -75,7 +75,7 @@ sub set_values{   #12/24/09 1:25:PM
     my($out_file,$separator,$val_framing,%rep_keys)=@_;
 	$out_file =~ s/\\/\//g;
 	my $ind_loc = rindex($out_file,'/');
-	my $path,"\n";
+	my $path;
 	if($ind_loc>0){
 		$path = substr($out_file,0,$ind_loc+1);
 	}else{
@@ -102,6 +102,6 @@ sub set_values{   #12/24/09 1:25:PM
     }
     close(OUTDATA);
     close(INDATA);
-    unlink($out_file) || die " can not delete $out_file, the resulting file $wk_file exists and you should rename it manually\n";
+    unlink($out_file) || die " can not delete $out_file, The replacement file $wk_file created successfully and you should rename it to ",$out_file," manually\n";
     rename($wk_file,$out_file) || die " can not rename temporary file $wk_file to a target file $out_file";
 }

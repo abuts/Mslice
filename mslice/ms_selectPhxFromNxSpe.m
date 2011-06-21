@@ -12,18 +12,29 @@ Value=get(h_checkbox,'Value');
 %
 h_file=findobj(h_cw,'Tag','ms_PhxFile');
 if isempty(h_file),
-         disp('Could not associate objects to .phx filename. No data file could be read.');
+        disp('Could not associate objects to .phx filename. No data file could be read.');
         return; 
 end
 %
+phx_file=get(h_file,'String');
+phx_file=phx_file(~isspace(phx_file));    
+phx_nxspe_tag = false;
+if strcmpi(phx_file,'obtainedfromnxspefile')||strcmpi(phx_file,'phxdatastoredinnxspefilewillbeused')
+    phx_nxspe_tag =true;
+end
 if Value
-   warning('Mslice:gettingPhxFromNxspe','  Getting phx from nxspe currently works correctly for 1:1 maps and for equidistant rings only ');
-   set(h_file,'String','phx data stored in nxspe file will be used')    
+    if phx_nxspe_tag 
+            set(h_file,'String','phx data stored in nxspe file will be used') ;
+    else
+        [dir,fname,fext] = fileparts(phx_file);
+        if ~strcmpi(fext,'.nxspe')
+             warning('ms_select_from_nxspe:not_nxspe',' the file %s does not have nxspe extension, so probably is not nxspe file; can not load par data from it',phx_file);    
+             set(h_checkbox,'Value',0);             
+        end
+    end
 else
       
-    phx_file=get(h_file,'String');
-    phx_file=phx_file(~isspace(phx_file));    
-    if strcmpi(phx_file,'obtainedfromnxspefile')||strcmpi(phx_file,'phxdatastoredinnxspefilewillbeused')
+    if phx_nxspe_tag  % not a file, but nxspe identifier;
         path_name=get(mslice_config,'PhxDir');
         if strncmp(' ',path_name,1)
             path_name = get(mslice_config,'DataDir');
@@ -46,8 +57,7 @@ else
       if ~isempty(file_name)        
          perl('set_key_value.pl',full_msp,'PhxFile',file_name) 
       end
-         perl('set_key_value.pl',full_msp,'PhxDir', path_name)          
-          
+      perl('set_key_value.pl',full_msp,'PhxDir', path_name)          
     end
 
 

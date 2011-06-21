@@ -52,7 +52,7 @@ spe_data.en=(en(2:ne+1)+en(1:ne))/2; % take median values, centres of bins
 %
 
 try
-    warning('OFF','Warning:DeprecatedSyntax');    
+    warning('OFF','MATLAB:hdf5readc:deprecatedAttributeSyntax');    
     spe_data.psi = hdf5read(nxspe_filename,data_field_names{6});    
     psiUnits     = hdf5read(nxspe_filename,[data_field_names{6},'/',data_attrib_names{6}]);   
     spe_data.nxspe.psiUnits = psiUnits.Data;
@@ -60,7 +60,7 @@ try
 catch
 end
 try    
-    warning('OFF','Warning:DeprecatedSyntax');       
+   warning('OFF','MATLAB:hdf5readc:deprecatedAttributeSyntax');        
     EiUnits       = hdf5read(nxspe_filename,[data_field_names{1},'/',data_attrib_names{1}]);
     enUnits      = hdf5read(nxspe_filename,[data_field_names{2},'/',data_attrib_names{2}]);
 

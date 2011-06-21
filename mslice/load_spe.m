@@ -69,8 +69,7 @@ if ~isempty(spe_filename2)   % must be a difference that is required
         return
     end
     try
-        nulldata=-1e+30;
-        index=(data.S(:,1)<=nulldata)|(data2.S(:,1)<=nulldata);   % find masked detectors in one or both .spe files
+        index=(isnan(data.S(:,1))|isnan(data2.S(:,1)));   % find masked detectors in one or both .spe files
         data.S=data.S-data2.S;
         if all(ebars==[0,0])
             data.ERR=zeros(size(data.ERR));
@@ -80,7 +79,7 @@ if ~isempty(spe_filename2)   % must be a difference that is required
             data.ERR=sqrt(data.ERR.^2+data2.ERR.^2);
         end
         % Put nulldata with 0 error bar in output data set for detectors masked in either of the datasets
-        data.S(index,:)=nulldata;
+        data.S(index,:)=NaN;
         data.ERR(index,:)=0;
         return
     catch
@@ -89,6 +88,9 @@ if ~isempty(spe_filename2)   % must be a difference that is required
         return
     end
 end
+%
+%% Load single SPE file in any format supported
+% 
 [pathname,name,ext]=fileparts(spe_filename);  
 hdf_file_str=spe_hdf_filestructure();
 name=[name,ext];
@@ -137,11 +139,12 @@ elseif    strcmpi(ext,hdf_file_str(2).spe_hdf_file_ext)
          [ndet,ne]=size(data.S); 
      catch
         hdf_failed=true;            
-     end
+     end    
 else
   hdf_failed=true;        
 end
 
+% Go for ASCII
 if hdf_failed
     filename=deblank(spe_filename); % remove blancs from beginning and end of spe_filename
     filename=fliplr(deblank(fliplr(filename)));
@@ -151,25 +154,53 @@ if hdf_failed
         error('load_spe: attempting to read binary file %s as ascii file',filename);
     catch
     end
-% Single file only; leave load_spe untouched from this point onwards
+    
+% Single ASCII spe file only; leave load_spe untouched from this point onwards
 % -------------------------------------------------------------------
-% === if error opening file, return
-fid=fopen(filename,'rt');
-if fid==-1,
-   disp(['Error opening file ' filename ' . Data not read.']);
-   data=[];
-   return
-end
-fclose(fid);
+% === if error finding  file, return
+    if(~exist(filename,'file'))
+        disp(['Error opening file ' filename ' . Data not read.']);
+        data=[];
+        return
+    end
 
-try % fortran algorithm
-   [data.S,data.ERR,data.en]=load_spe_df(filename);
-   disp(['Fortran loading of .spe file : ' filename]);      
-   [ndet,ne]=size(data.S);
-   disp([num2str(ndet) ' detector(s) and ' num2str(ne) ' energy bin(s)']);   
-   data.det_theta=ones(ndet,1);
-catch % matlab algorithm  
-   disp([' fortran can not read spe data, error: ',lasterr]);    
+    try % fortran algorithm
+        [data.S,data.ERR,data.en]=load_spe_df(filename);
+        disp(['Fortran loading of .spe file : ' filename]);      
+        [ndet,ne]=size(data.S);
+        disp([num2str(ndet) ' detector(s) and ' num2str(ne) ' energy bin(s)']);   
+        data.det_theta=ones(ndet,1);
+    catch % matlab algorithm  
+        disp([' fortran can not read spe data, error: ',lasterr]);    
+        [data.S,data.ERR,en,det_theta]=matlab_read_spe(filename);
+        % BUILD UP DATA STRUCTURE 
+        data.en=en';
+        data.det_theta=det_theta(:);
+        if exist('det_dtheta','var'),
+          data.det_dtheta=det_dtheta;
+        end
+
+    end
+   % mark ASCII null-data as NaN-s
+   nulldata=-1e+30;   
+   ind  = (data.S<=nulldata);   
+   data.S(ind)=NaN;
+   data.ERR(ind)=0;
+else  % hdv have not failed
+ % if hdf successfull, replace possible inf with NaN-s to simplify further
+% logic
+    ind = isinf(data.S);
+    data.S(ind)  =NaN;
+    data.ERR(ind)=0;
+end
+
+data.det_group=(1:ndet)';
+data.filename=name;
+data.filedir=pathname;
+data.total_ndet=ndet;
+
+%% MATLAB read spe
+function [S,ERR,en,det_theta]=matlab_read_spe(filename)
    disp(['Matlab loading of .spe file : ' filename]);         
    fid=fopen(filename,'rt');
    % === read number of detectors and energy bins
@@ -206,22 +237,6 @@ catch % matlab algorithm
       ERR(i,:)=transpose(temp);   
    end
    fclose(fid);
-
-   % BUILD UP DATA STRUCTURE 
-   data.en=en';
-   data.det_theta=det_theta(:);
-   if exist('det_dtheta','var'),
-      data.det_dtheta=det_dtheta;
-   end
-   data.S=S;
-   data.ERR=ERR;
-end
-end
-
-data.det_group=(1:ndet)';
-data.filename=name;
-data.filedir=pathname;
-data.total_ndet=ndet;
 
 
 %==========================================================================================

@@ -74,6 +74,8 @@ if ~isempty(h_status)&ishandle(h_status),
 end
 nmodific    = 0;
 modificators='';
+is_nxspe_file=false;       % usually not;
+
 %=== READ .MSP FILE LINE BY LINE
 disp(['Proceed reading parameter file ' fullname]);
 t=fgetl(fid);
@@ -120,6 +122,23 @@ while (ischar(t))&(~isempty(t(~isspace(t)))),
             case{'det_type'}
                 set(h,'Value',str2num(value))
                 ms_disp_or_slice
+            case{'DataFile'}
+                [dir,fname,fext]=fileparts(value);
+                if strcmpi(fext,'.nxspe')
+                    is_nxspe_file = true;
+                end
+            case{'PhxFile'}  
+                  h=findobj(h_cw,'Tag','ms_usePhxFromNXSPE');     
+                  phx_file=value(~isspace(value));                      
+                  if strcmpi(phx_file,'obtainedfromnxspefile')
+                      if is_nxspe_file % file is nxspe file and no par file is defined;
+                         set(h,'Value',1);
+                      else                % file is nxpse file but par file is present; use par file
+                         set(h,'Value',0);                          
+                      end
+                  else  % not obtained from nxspe and not nxspe file;
+                    set(h,'Value',0);                                              
+                  end
             otherwise
         end
         drawnow;

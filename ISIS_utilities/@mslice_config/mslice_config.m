@@ -40,8 +40,8 @@ defaults = ...
             'MspFile','crystal_psd.msp',... % default msp file
             'DataDir','',...    % data files (spe files)
             'PhxDir','', ...    % phx files (detector angular positions)
-            'cut_OutputDir','' ...  % defauld folder to save cuts. 
-            ) ;                        
+            'cut_OutputDir','' ...  % defauld folder to save cuts.              % 'use_par_from_nxspe', 1 ... % if an nxspe file is selected as a source, use par, stored in nxspe file
+             ) ;                        
     
 
 % and the location of the default configuration file
