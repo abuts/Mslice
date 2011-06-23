@@ -172,7 +172,7 @@ if hdf_failed
         data.det_theta=ones(ndet,1);
     catch % matlab algorithm  
         disp([' fortran can not read spe data, error: ',lasterr]);    
-        [data.S,data.ERR,en,det_theta]=matlab_read_spe(filename);
+        [data.S,data.ERR,en,det_theta,ndet,ne]=matlab_read_spe(filename);
         % BUILD UP DATA STRUCTURE 
         data.en=en';
         data.det_theta=det_theta(:);
@@ -200,7 +200,7 @@ data.filedir=pathname;
 data.total_ndet=ndet;
 
 %% MATLAB read spe
-function [S,ERR,en,det_theta]=matlab_read_spe(filename)
+function [S,ERR,en,det_theta,ndet,ne]=matlab_read_spe(filename)
    disp(['Matlab loading of .spe file : ' filename]);         
    fid=fopen(filename,'rt');
    % === read number of detectors and energy bins

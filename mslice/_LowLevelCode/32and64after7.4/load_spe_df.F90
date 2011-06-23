@@ -129,12 +129,13 @@ end subroutine load_spe_header
 !=========================================================
 ! Read spe data 
 subroutine load_spe(ndet,ne,data_S,data_ERR, data_en,filename)
-  implicit NONE      
+  implicit NONE           
   mwsize :: ndet, ne
   mwsize :: idet,ien
-  !     Define pointers to arrays
-  real*8 data_S(*),data_ERR(*),en(ne+1), data_en(*),dum(ndet+1)
+  !     Define pointers to arrays  
+  real*8 data_S(*),data_ERR(*),data_en(*),en(ne+9),dum(ndet+1)
   character filename*(*)
+  character data_buffer(81);
   ! Skip over the first two lines with ndet, ne and some text ###        
   open(unit=1,file=filename)
   read(1,*) dum(1),dum(2)
@@ -143,14 +144,14 @@ subroutine load_spe(ndet,ne,data_S,data_ERR, data_en,filename)
   ! angles (not used)
   read(1,'(8F10.0)') (dum(idet),idet=1,ndet+1)
   read(1,*)
-  ! energy bins
-  read(1,'(8F10.0)') (en(ien),ien=1,ne+1)    
+  ! energy bins  
+  read(1,'(8F10.0)',ERR=666) (en(ien),ien=1,ne+1)    
   ! read intensities + errors
   do idet=1,ndet
      read(1,*)
-     read(1,'(8F10.0)') (data_S(idet+ndet*(ien-1)),ien=1,ne)
+     read(1,'(8F10.0)',ERR=667) (data_S(idet+ndet*(ien-1)),ien=1,ne)
      read(1,*)
-     read(1,'(8F10.0)')(data_ERR(idet+ndet*(ien-1)),ien=1,ne)
+     read(1,'(8F10.0)',ERR=668)(data_ERR(idet+ndet*(ien-1)),ien=1,ne)
   enddo
   ! calculate centres of energy bins      
   do ien=1,ne
@@ -161,5 +162,15 @@ subroutine load_spe(ndet,ne,data_S,data_ERR, data_en,filename)
   ! 999  ndet=0    ! convention for error reading file
   close(unit=1)
   return
+666 continue
+   close(unit=1)
+   call mexErrMsgTxt ('Error reading energy information')     
+   return
+667 continue
+    close(unit=1)
+    call mexErrMsgTxt ('Error reading signal data block')     
+668 continue
+    close(unit=1)
+    call mexErrMsgTxt ('Error reading error data block')        
 end subroutine load_spe
 
