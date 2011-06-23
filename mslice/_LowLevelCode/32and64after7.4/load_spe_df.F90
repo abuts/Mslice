@@ -133,18 +133,17 @@ subroutine load_spe(ndet,ne,data_S,data_ERR, data_en,filename)
   mwsize :: ndet, ne
   mwsize :: idet,ien
   !     Define pointers to arrays  
-  real*8 data_S(*),data_ERR(*),data_en(*),en(ne+9),dum(ndet+1)
+  real*8 data_S(*),data_ERR(*),data_en(*),en(ne+1),dum(ndet+1)
   character filename*(*)
   character data_buffer(81);
   ! Skip over the first two lines with ndet, ne and some text ###        
-  open(unit=1,file=filename)
-  read(1,*) dum(1),dum(2)
-  !     print*, dum(1),dum(2)
-  read(1,*)
+  open(unit=1,file=filename,ERR=663)
+  read(1,*,ERR=664) dum(1),dum(2)
   ! angles (not used)
-  read(1,'(8F10.0)') (dum(idet),idet=1,ndet+1)
-  read(1,*)
+  read(1,*,ERR=665)    
+  read(1,'(8A10)',ERR=665) (dum(idet),idet=1,ndet+1)
   ! energy bins  
+  read(1,*,ERR=666)
   read(1,'(8F10.0)',ERR=666) (en(ien),ien=1,ne+1)    
   ! read intensities + errors
   do idet=1,ndet
@@ -162,15 +161,22 @@ subroutine load_spe(ndet,ne,data_S,data_ERR, data_en,filename)
   ! 999  ndet=0    ! convention for error reading file
   close(unit=1)
   return
-666 continue
-   close(unit=1)
-   call mexErrMsgTxt ('Error reading energy information')     
-   return
-667 continue
-    close(unit=1)
+663 close(unit=1)
+    call mexErrMsgTxt ('Error opening spe file')     
+    return  
+664 close(unit=1)
+    call mexErrMsgTxt ('Error reading spe file header')     
+    return 
+665 close(unit=1)
+    call mexErrMsgTxt ('Error reading angles ')     
+    return 
+666 close(unit=1)
+    call mexErrMsgTxt ('Error reading energy information')     
+    return
+667 close(unit=1)
     call mexErrMsgTxt ('Error reading signal data block')     
-668 continue
-    close(unit=1)
+    return
+668 close(unit=1)
     call mexErrMsgTxt ('Error reading error data block')        
 end subroutine load_spe
 
