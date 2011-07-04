@@ -39,9 +39,9 @@ if isempty(raw_value)
 end
 
 % Return value
-if exist('opt','var') & strcmp(lower(opt),'raw')
+if exist('opt','var') && strcmpi(opt,'raw')
     value=raw_value;
-elseif (exist('opt','var') & strcmp('noeval',lower(opt))) | isnumeric(raw_value)
+elseif (exist('opt','var') && strcmpi('noeval',opt)) || isnumeric(raw_value)
     value=str;
 else
     % Convert string into a value, else return the string as the value

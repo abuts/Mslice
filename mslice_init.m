@@ -25,26 +25,27 @@ if exist('libisis_init.m','file')   % if libisis is on the path we populate ISIS
         filelist=copy_files_list(source_path,[rootpath,'/ISIS_utilities/']);
         sucsess=numel(filelist);
         if ~sucsess
-            warning(messageID,' Error copying libisis-dependant mslice function, Reason: ',message);
+            warning(messageID,' Error copying libisis-dependant mslice function, Reason: %s',message);
         else
             disp(' New Libisis version has been found on the machine and Libisis-defined functions from ISIS_utilites folder have been copied to Mslice');
             set(mslice_config,'last_copied_libisis',libisis_ver);            
         end
      end
     catch
-        warning('Mslice::OldEnvironmnet',...
-                 [' You have very old Luibisis initiated on your computer;',...
+        warning('MSLICE:OldEnvironmnet',...
+                 [' You have very old Libisis initiated on your computer;',...
                  ' It may prevent this program from working properly',...
                  ' You adwised to update your Libisis version to more recent version']);
     end
 end
 % Other directories
 addpath_message (rootpath,'mslice');
+addpath_message (rootpath,'mslice/GUI');
 addpath_message (rootpath,'mslice_extras');
 addpath_message (rootpath,'mslice_more_extras');
 addpath_message (rootpath,'DLL');
 disp('!==================================================================!')
-disp('!              MSLICE classic (ISIS modifcations from 01/02/2011)  !')
+disp('!        MSLICE transitional  (ISIS modifcations from 01/07/2011)  !')
 disp('!==================================================================!')
 
 

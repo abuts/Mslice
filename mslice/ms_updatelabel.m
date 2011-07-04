@@ -30,6 +30,8 @@ if samp==1,	% === if single crystal sample
       	return;
    	end
       psd=get(detobj,'Value');	% 1 psd 2 conventional detectors
+   elseif analmode==3 % powder remap; hm, what we would do in this case; PSD is not defined
+       psd=1; % we do usually psd, but who knows
    end
 end
    
@@ -39,7 +41,7 @@ if ~exist('n','var')|~isnumeric(n)|(prod(size(n))~=1),
 end
 
 % === check consistency of calling syntax for powder and single crystal +psd/conventional detectors
-if (samp~=2)&~((samp==1)&(analmode==2))&~((samp==1)&(analmode==1)&((psd==1)|(psd==2))),
+if (samp~=2)&&~((samp==1)&&(analmode==2))&&~((samp==1)&&(analmode==1)&&((psd==1)||(psd==2)))&&(analmode~=3),
 	disp(sprintf('Unknown operational mode in Mslice with sample=%g',samp));
    if exist('analmode','var'),
       disp(sprintf('analmode=%g',analmode));

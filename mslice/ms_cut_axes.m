@@ -31,6 +31,9 @@ if samp==1,	% === if single crystal sample
       	return;
    	end
       psd=get(detobj,'Value');	% detector type = 1 if psd, =2 if conventional detectors
+   elseif analmode==3 % let's make it look like powder mode with psd
+       psd = 1;
+       analmode =2;
    end
 elseif samp~=2,
    % === if sample is noeither single crystal nor powder, give error message and return 

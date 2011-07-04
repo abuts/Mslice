@@ -10,12 +10,12 @@ function [str,value]=ms_getstring(h_cw,tag)
 %           if pulldown menu: raw_value = index of string (1,2,3...) in pull down list
 
 % === return if handle to COntrol Window is invalid or if error reading tag 
-if ~exist('h_cw','var')|isempty(h_cw)|~ishandle(h_cw),
+if ~exist('h_cw','var')||isempty(h_cw)||~ishandle(h_cw),
    disp('Could not locate ControlWindow. Return.');
    str=[]; value=[];
    return;   
 end
-if ~exist('tag','var')|isempty(tag)|~ischar(tag),
+if ~exist('tag','var')||isempty(tag)||~ischar(tag),
    disp('Error reading handle Tag. Return.');
    str=[]; value=[];
    return;
@@ -31,8 +31,8 @@ if isempty(h),
    return;
 end
 if length(h)>1,
-   disp(['Have located more instances of an object with the same handle.']);
-   disp(['Cannot extract string property uniquely. Return.']);
+   disp('Have located more instances of an object with the same handle.');
+   disp('Cannot extract string property uniquely. Return.');
    str=[]; value=[];
    return;
 end
@@ -50,9 +50,13 @@ elseif strcmp(get(h,'Style'),'checkbox'),
    else
       str='on';
    end
-elseif strcmp(get(h,'Style'),'text')|strcmp(get(h,'Style'),'edit'),
+elseif strcmp(get(h,'Style'),'text')||strcmp(get(h,'Style'),'edit'),
    value=get(h,'string');
-   str=get(h,'string');
+   str   =get(h,'string');
+   color=get(h,'ForegroundColor');
+   if any(color~=[0,0,0]) % this is black
+       set(h,'String',str,'ForegroundColor',[0,0,0]);
+   end
 else
    disp(['Have not defined string property of an object of style ' get(h,'Style')]);
    str=[]; value=[];

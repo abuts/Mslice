@@ -64,7 +64,7 @@ if isfield(data,'Ei')
     if ~isnan(Ei)
         h_en=findobj('Tag','ms_efixed');
         if ~isempty(h_en)
-            set(h_en,'String',num2str(Ei));
+            set(h_en,'String',num2str(Ei),'ForegroundColor','g');
             %drawnow expose;
         end
     end
@@ -74,7 +74,7 @@ if isfield(data,'psi')
     if ~isnan(psi)
         h_psi=findobj('Tag','ms_psi_samp');
         if ~isempty(h_psi)
-            set(h_psi,'String',num2str(psi));
+            set(h_psi,'String',num2str(psi),'ForegroundColor','g');
             %drawnow expose;
         end
     end

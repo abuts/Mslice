@@ -1,4 +1,4 @@
-function rez=spe_hdf_filestructure(varargin)
+function [rez,spe_hdf_filestructure_version]=spe_hdf_filestructure(varargin)
 % this private function describes the structure of spe-hdf file version 2
 % and 3
 % it will be modified  when version increase
@@ -26,6 +26,8 @@ function rez=spe_hdf_filestructure(varargin)
 %
 % $Revision$ ($Date$)
 %
+% This is the version of the subprogram itself
+spe_hdf_filestructure_version=1;
 if nargin==1
     if ischar(varargin{1})
         field_name = varargin{1};
@@ -59,7 +61,7 @@ file_structure(2).data_field_names=...
             'data/error',...
             'definition',...   % these fields are fixed for compartibility; Others are expected from nxspe file;
             'NXSPE_info/psi',... 
-            'data/polar','data/azimuthal','data/polar_width','data/azimuthal_width',...
+            'data/polar','data/azimuthal','data/polar_width','data/azimuthal_width','data/distance'...
             };
 file_structure(2).data_attrib_names={'units',...
     'units','','','version','units','','','','',...

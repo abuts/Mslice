@@ -19,16 +19,19 @@ if spe_data.emode==1,
 	% efixed = monochromatic incident energy ei(meV) 
 	% ======================================================================
 
-   ki=sqrt(spe_data.efixed/E_to_wawelengh);	% scalar
-	kf=sqrt((spe_data.efixed-spe_data.en)/E_to_wawelengh); % line-vector (1,ne)
-   Qx=ki*ones(size(spe_data.det_theta,1),size(spe_data.en,2))...
-      -cos(spe_data.det_theta)*kf; % matrix (ndet,ne)
+  ki=sqrt(spe_data.efixed/E_to_wawelengh);	% scalar
+  kf=sqrt((spe_data.efixed-spe_data.en)/E_to_wawelengh); % line-vector (1,ne)
+  Qx=ki*ones(size(spe_data.det_theta,1),size(spe_data.en,2))...
+        -cos(spe_data.det_theta)*kf; % matrix (ndet,ne)
    if ~isfield(spe_data,'det_psi'),
-      data.det_psi=zeros(size(spe_data.det_theta));
-      disp(['Assume psi=0 for all detectors']);
-   end
-   Qy=-(sin(spe_data.det_theta).*cos(spe_data.det_psi))*kf;
-	Qz=-(sin(spe_data.det_theta).*sin(spe_data.det_psi))*kf;
+      %data.det_psi=zeros(size(spe_data.det_theta));
+     disp('Assume psi=0 for all detectors');
+     Qy=-(sin(spe_data.det_theta).*ones(size(spe_data.det_theta)))*kf;
+     Qz=zeros(size(Qy));
+   else
+     Qy=-(sin(spe_data.det_theta).*cos(spe_data.det_psi))*kf;
+     Qz=-(sin(spe_data.det_theta).*sin(spe_data.det_psi))*kf;
+   end   
 	Q=cat(3,Qx,Qy,Qz);
    
 elseif spe_data.emode==2,

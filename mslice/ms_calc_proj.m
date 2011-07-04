@@ -34,7 +34,7 @@ elseif samp==1, % sample is single crystal
    if analmode==2,	% analysed as powder
       vars=[vars,{'u1','u1label','u2','u2label'}];	   	  
       psd=(1<0);	% FALSE
-   else	% analysed as single crystal
+   elseif analmode==1	% analysed as single crystal
       vars=[vars,{'u1label','u2label','u11','u12','u13','u14','u21','u22','u23','u24'}];
 		dettype=findobj('Tag','ms_det_type');
 		% === read flag for detector type and identify if PSD
@@ -46,7 +46,13 @@ elseif samp==1, % sample is single crystal
 		if psd,	% for PSD detectors add one more viewing vector 
   			vars=[vars,{'u3label','u31','u32','u33','u34'}];
         end   
-    end
+   elseif analmode==3 % powder remap
+       % tempoerary, treat as powder;
+      vars=[vars,{'u1','u1label','u2','u2label','polar_min','polar_max','polar_delta'}];	   	  
+      psd=false;	% FALSE      
+   else
+       error('MSLICE:ms_calc_proj','unknown analysis mode %d',analmode);
+   end
 end
 
 % ===== read relevant parameters from ControlWindow
@@ -122,6 +128,8 @@ for i=1:size(vars,2)
             u33=ms_getvalue(name);
         case{'u34'}
             u34=ms_getvalue(name);
+        otherwise
+            range.(vars{i})=ms_getvalue(name);
     end
 end
 
@@ -158,13 +166,13 @@ if samp==1,	% single crystal sample
 
 	% === Update crystal orientation in the data set 
 	data.ar=ar;
-	data.br=br;
-	data.cr=cr;
+   data.br=br;
+   data.cr=cr;
    data.psi_samp=psi_samp*pi/180;
    data.uv=[ux uy uz; vx vy vz]; % crystal orientation, 2 axes in the principal scattering plane
 end   
 
-if (samp==1)&(analmode==1), % single crystal data analysed in single crystal mode
+if (samp==1)&&(analmode==1), % single crystal data analysed in single crystal mode
     if psd, % PSD detectors
 		data.axis_label=str2mat(u1label,u2label,u3label);
    	data.axis_unitlabel=str2mat('','','',IntensityLabel);
@@ -182,7 +190,15 @@ if (samp==1)&(analmode==1), % single crystal data analysed in single crystal mod
    	data.u=[u11 u12 u13 u14; u21 u22 u23 u24];  
     % calculate projections for reduced crystall
    	data=calcprojb(data);
-   end
+    end
+elseif(samp==1)&&(analmode==3) % powder remap
+   data.axis_label=str2mat(u1label,u2label);
+   data.axis_unitlabel=str2mat('','',IntensityLabel);
+   data.title_label=TitleLabel;
+   data.u=[u1;u2];
+   data.range = range;
+   data=rebin_cryst_img_to_rings(data);
+   data=calcprojpowder(data);      
 else	% sample is powder or analysed as powder
    data.axis_label=str2mat(u1label,u2label);
    data.axis_unitlabel=str2mat('','',IntensityLabel);
@@ -198,7 +214,7 @@ if ~isempty(data),
 end               
 
 % === highlight green button indicating 'not busy' 
-if ~isempty(h_status)&ishandle(h_status),
+if ~isempty(h_status)&&ishandle(h_status),
    green=[0 1 0];
    set(h_status,'BackgroundColor',green);
    drawnow;

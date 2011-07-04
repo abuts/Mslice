@@ -91,7 +91,8 @@ else
         'NumberTitle','off',...
         'Tag','ms_ControlWindow');
 end
-    
+
+
 h=uicontrol('Parent',fig,'Style','text','String','Spectrometer',...
    'BackgroundColor',white);
 pos=get(h,'Extent');
@@ -99,10 +100,16 @@ lineheight=pos(4);
 interlines=ceil(lineheight/4);
 nlines= 33.2+0.15; 
 width=8*pos(3);
-bottomx=5;
-bottomy=33;
+height= lineheight*nlines+interlines*(nlines-1);
 
-set(fig,'Position',[bottomx bottomy width lineheight*nlines+interlines*(nlines-1)]);
+scr=get(0,'ScreenSize');
+bottomx=5;
+bottomy=66;
+bottomy=scr(4)-height-bottomy; % move to top
+if bottomy<=0
+    bottomy=33;
+end
+set(fig,'Position',[bottomx bottomy width height]);
 pos=[0 lineheight*(nlines-1)+interlines*(nlines-1) pos(3) pos(4)];
 set(h,'Position',pos); 
 oneline=[0 lineheight+0*interlines 0 0];
@@ -112,6 +119,7 @@ pos=pos-[0 interlines 0 0];
 % are moved to configurations
 green=[0 1 0];
 red  =[1 0 0];
+
 h=uicontrol('Parent',fig,'Style','frame',...
    'Position',pos+[7.5*pos(3) 0 -pos(3)/2 interlines],'Tag','ms_status',...
    'Visible','on','BackgroundColor',green,'UserData',[green; red]);
@@ -192,7 +200,7 @@ h=uicontrol('Parent',fig,'Style','text','String','Sample',...
    'Position',pos,'BackgroundColor',white);
 h=uicontrol('Parent',fig,'Style','popupmenu','String',{'single crystal','powder'},...
    'Tag','ms_sample','BackgroundColor',white,...
-   'Position',pos+[pos(3) 0 0.5*pos(3) interlines],...
+   'Position',pos+[pos(3), -0.5*interlines, 0.5*pos(3), interlines],...
    'Callback','ms_sample','Value',1);
 
 %========== Top Figure Menu ===========================
@@ -396,6 +404,7 @@ hmenu1=uimenu(hmenu,'Label','           email : r.coldea@rl.ac.uk');
 hmenu1=uimenu(hmenu,'Label','Self Test Mslice','Callback','test_mslice','Separator','on');
 hmenu1=uimenu(hmenu,'Label','Quich check Mex-files correctness','Callback','check_mex_version');
 
+msui_collection(fig,'mslice_gui');
 % =========== Draw sample and viewing parameters menu options ===========
 % =========== different for powder and single crystal samples ===
 ms_sample;

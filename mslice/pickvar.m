@@ -1,5 +1,4 @@
 function [v,axislabel,unitname,unitlength,shortlabel,Q]=pickvar(data,x,Q)
-
 % function [v,axislabel,unitname,unitlength,shortlabel,Q]=pickvar(data,x,Q)
 
 % === return if errors in calling syntax
@@ -27,6 +26,7 @@ if isempty(fig),
    Q=[];
    return;
 end
+
 samp=get(findobj(fig,'Tag','ms_sample'),'Value'); % =1 single crystal, =2 powder
 if samp==2, % powder
 	wavevectors=[];   

@@ -17,32 +17,38 @@ if isempty(sampobj),
    return;
 end
 sample=get(sampobj,'Value');	% =1 if single crystal sample, = 2 if powder sample
-if (sample==1),
+if (sample==1)
 	analobj=findobj(fig,'Tag','ms_analysis_mode');
 	if isempty(analobj),
    	disp('Could not identify analysis mode for single crystal sample. Return.');
    	return;
    end
    analmode=get(analobj,'Value');	% =1 if single crystal sample in single crystal analysis mode,=2 if sc sample in powder mode
-   if (analmode==1),
+   if (analmode==1)||(analmode==3),
       disp('Single crystal sample in single crystal analysis mode. Cannot use functions in powder mode. Return.');
       return;
    end   
 end
 
+
 % === get position parameters for items displayed on the Control Window
-pos=get(findobj(fig,'String','Sample'),'Position');
+pos=get(findobj(fig,'String','AnalysisMode'),'Position');
 lineheight=pos(4);
 oneline=[0 lineheight 0 0];
-pos1=get(sampobj,'Position');
+pos1=get(analobj,'Position');
 interlines=pos1(4)-lineheight;
-if (sample==1)&(analmode==2),
+white=get(analobj,'BackgroundColor');
+
+
+if (sample==1)&&(analmode==2),
    % single crystal sample analysed in powder mode delete viewing axes, slice/display and cut sections
    pos1=get(findobj(fig,'Style','text','String','Orthogonal'),'Position');
+   if isempty(pos1) % prevous mode was powder remap mode 
+   end
 else % powder sample, delete Lattice parameters, viewing axes, slice/display and cut sections
    pos1=get(findobj(fig,'Style','text','String','Unit cell lattice parameters'),'Position');
 end
-white=get(sampobj,'BackgroundColor');
+
 
 % === find position of the 'Detector Trajectories' menu option
 hend=findobj(fig,'Style','text','String','Detector Trajectories');
@@ -57,7 +63,7 @@ end
 h=findobj(fig,'Type','uicontrol');
 for i=1:length(h),
 	cpos=get(h(i),'Position');
-   if (cpos(2)<=pos1(2))&(isempty(hend)|cpos(2)>ylow),
+   if (cpos(2)<=pos1(2))&&(isempty(hend)||cpos(2)>ylow),
      	delete(h(i));
    end
 end  
@@ -71,7 +77,7 @@ if sample==2,
 end
 
 %========= Viewing Axes + Label ==================
-pos=pos-11*oneline;
+pos=pos-1.5*oneline;
 h=uicontrol('Parent',fig,'Style','text','String','Viewing Axes',...
    'Position',pos+[0 0 0*pos(3) 0],'BackgroundColor',white);
 h=uicontrol('Parent',fig,'Style','text','String','Label',...

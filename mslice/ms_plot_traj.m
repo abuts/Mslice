@@ -15,6 +15,9 @@ if isempty(data),
    disp('Load in data first, then plot detector trajectories');
    return;
 end
+if ~isfield(data,'psi_samp')
+    data.psi_samp=ms_getvalue('psi_samp');
+end
 
 % ===== read plot parameters from ControlWindow
 vars={'x','vx_min','vx_max','y','vy_min','vy_max','z','vz_min','vz_max',...
