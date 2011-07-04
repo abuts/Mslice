@@ -72,7 +72,7 @@ for i=1:length(dirs)
              if(strcmpi(['_',computer],dirname)) % this is the OS corresponding directory
                 p = [p genpath_(fullfile(d,dirname))];
                 VersionFolderName=MatlabVersionFolder(dirname);
-                dirname = fullfile(dirname,VersionFolderName);
+                dirname = fullfile(d,dirname,VersionFolderName);
                 p = [p genpath_(dirname)];                
              end
          end

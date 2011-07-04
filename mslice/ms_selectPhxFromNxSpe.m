@@ -25,10 +25,19 @@ end
 if Value
     if phx_nxspe_tag 
             set(h_file,'String','phx data stored in nxspe file will be used') ;
-    else
-        [dir,fname,fext] = fileparts(phx_file);
+    else 
+        h_data_file=findobj(h_cw,'Tag','ms_DataFile');
+        if isempty(h_data_file),
+            disp('Could not associate objects to data filename. It can not be nxspe file');
+            return; 
+        end   
+        data_file = get(h_data_file,'String');
+        if isempty(data_file)
+            warning('ms_select_from_nxspe:not_nxspe',' can not get data file name from gui');
+        end
+        [dir,fname,fext] = fileparts(data_file);
         if ~strcmpi(fext,'.nxspe')
-             warning('ms_select_from_nxspe:not_nxspe',' the file %s does not have nxspe extension, so probably is not nxspe file; can not load par data from it',phx_file);    
+             warning('ms_select_from_nxspe:not_nxspe',' the file %s does not have nxspe extension, so probably is not nxspe file; can not load par data from it',data_file);    
              set(h_checkbox,'Value',0);             
         end
     end

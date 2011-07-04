@@ -1,7 +1,7 @@
 function data=read_spe_mslice(spe_filename,phx_filename,sum_filename,data_plot_symbol)
 
 % function data=read_spe_mslice(spe_filename,phx_filename,sum_filename,data_plot_symbol)
-% reads a .spe file   
+% reads a .spe file
 % R.C. 20-July-1998
 %
 % T.G.Perring  8 Sep 2009
@@ -21,14 +21,14 @@ if size(data.S,1)~=size(phx,1),
 end
 
 % REMOVE DATA IN MASKED DETECTORS
-masked=(data.S(:,1)<=-1e+30);
+masked=((data.S(:,1)<=-1e+30)|isnan(data.S(:,1))|isinf(data.S(:,1)));
 disp(['Total number of masked detectors is ' num2str(sum(masked))]);
 %disp(['Masked detectors in file have numbers : ' sprintf(' %d ',phx(masked,1))]);
 data.S(masked,:)=[];
 data.ERR(masked,:)=[];
 phx=phx(~masked,:);
 
-% BUILD UP DATA STRUCTURE 
+% BUILD UP DATA STRUCTURE
 data.det_num=phx(:,1);
 data.spec_num=det2spec(data.det_num);
 data.det_theta=phx(:,2)*pi/180;
@@ -41,4 +41,4 @@ if exist('data_plot_symbol','var'),
 else
    data.symbol='ro';
 end
-   
+
