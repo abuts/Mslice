@@ -1,7 +1,7 @@
 function pos = msui_det_hkl_points(fig,pos,oneline,lineoffset,interlines,white)
 
 this_name='det_hkl_points'; 
-mslice_gui = get(findobj('Tag','mslice_gui'),'UserData');
+mslice_gui = msui_collection(fig,'mslice_gui');
 if exist(mslice_gui,this_name)
     pos = get_line_pos(get(mslice_gui,this_name));
     return

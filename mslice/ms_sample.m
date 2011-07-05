@@ -59,7 +59,7 @@ if sample==1, % === sample is crystal, build menu options in ControlWindow
     end      
   
 elseif sample==2,      % === sample is powder, draw menu options in ControlWindow   
-    msui_analysis_mode(fig,pos,oneline,interlines,white,{'powder'});   
+    msui_analysis_mode(fig,pos,oneline,interlines,white,{'powder','powder'});   
     % for powder, analysis mode can be only powder (2)
     msui_powder_menu(fig,pos,white,2,sample) ;
     
@@ -92,7 +92,7 @@ end
 function pos=ui_crystal_description(fig,pos,oneline,interlines,white)
 
 this_name = 'single_crystal_gui';
-mslice_gui = get(findobj('Tag','mslice_gui'),'UserData');
+mslice_gui = msui_collection(fig,'mslice_gui');
 if exist(mslice_gui,this_name)
     pos = get_line_pos(get(mslice_gui,this_name));
     return

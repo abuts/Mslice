@@ -62,7 +62,7 @@ lineoffset=2;
  % === update detector trajectories axes lists
 strings={'Q_x','Q_y','Q_z','H','K','L','Energy','|Q|','2Theta','Azimuth','Det Group Number'};
 %  
-msui_detector_tragectories(fig,oneline,lineoffset,interlines,white,strings,sample) 
+msui_detector_tragectories(fig,oneline,lineoffset,interlines,white,strings,sample) ;
 %   set(findobj(fig,'Tag','ms_plot_traj_x'),'Value',2,'String',strings);
 %   set(findobj(fig,'Tag','ms_plot_traj_y'),'Value',1,'String',strings);
 %   strings{length(strings)+1}='none';

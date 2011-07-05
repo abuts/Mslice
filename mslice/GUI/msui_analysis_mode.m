@@ -1,7 +1,7 @@
 function pos=msui_analysis_mode(fig,pos,oneline,interlines,white,modes)
 
 this_name = 'analysis_mode';
-mslice_gui = get(findobj('Tag','mslice_gui'),'UserData');
+mslice_gui = msui_collection(fig,'mslice_gui');
 if exist(mslice_gui,this_name)
     control = get(mslice_gui,this_name);
     pos = get_line_pos(control);

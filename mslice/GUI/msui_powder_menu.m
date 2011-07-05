@@ -1,7 +1,7 @@
 function  msui_powder_menu(h_root,position,white,analmode,sample)
 %
 % remove the part of ui responsible for crystal analysis
-mslice_gui = get(findobj('Tag','mslice_gui'),'UserData'); 
+mslice_gui = msui_collection(h_root,'mslice_gui');
 mslice_gui = delete(mslice_gui,{'cryst_analysis_psd','cryst_analysis_nonpsd','detector_type_psd'});
 if sample==2
     delete(mslice_gui,{'single_crystal_gui'});
@@ -51,7 +51,7 @@ end
 function pos     = ui_select_axis(h_root,pos,white)
 
 this_name = 'powder_axis';
-mslice_gui = get(findobj('Tag','mslice_gui'),'UserData');
+mslice_gui = msui_collection(h_root,'mslice_gui');
 if exist(mslice_gui,this_name)
      pos = get_line_pos(get(mslice_gui,this_name)); 
     return;
@@ -127,7 +127,7 @@ pos(1:2) = axis_cel.r_min;
 function pos = ui_powder_slice(pos,h_root,oneline,interlines,white,coltab)
 
 this_name = 'powder_slice';
-mslice_gui = get(findobj('Tag','mslice_gui'),'UserData');
+mslice_gui = msui_collection(h_root,'mslice_gui');
 if exist(mslice_gui,this_name)
      pos = get_line_pos(get(mslice_gui,this_name)); 
     return;
@@ -233,7 +233,7 @@ add(mslice_gui,add_handles(powder_slice,hb));
 function pos =ui_powder_cut(pos,h_root,oneline,interlines,white,sample)
 
 this_name = 'powder_cut';
-mslice_gui = get(findobj('Tag','mslice_gui'),'UserData');
+mslice_gui = msui_collection(h_root,'mslice_gui');
 if exist(mslice_gui,this_name)
      pos = get_line_pos(get(mslice_gui,this_name)); 
     return;

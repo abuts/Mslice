@@ -1,7 +1,7 @@
 function pos =  msui_cut_output(h_root,pos,oneline,interlines,white,sample)
 % function defines cut output interface for mslice menu
 this_name='cut_output';
-mslice_gui = get(findobj('Tag','mslice_gui'),'UserData');
+mslice_gui = msui_collection(h_root,'mslice_gui');
 if exist(mslice_gui,this_name)
      pos = get_line_pos(get(mslice_gui,this_name)); 
     return;

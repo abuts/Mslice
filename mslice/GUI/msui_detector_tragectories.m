@@ -1,7 +1,7 @@
 function pos = msui_detector_tragectories(fig,oneline,lineoffset,interlines,white,strings,sample)
 
 this_name='detector_tragectories';
-mslice_gui = get(findobj('Tag','mslice_gui'),'UserData');
+mslice_gui = msui_collection(fig,'mslice_gui');
 if exist(mslice_gui,this_name)
     pos = get_line_pos(get(mslice_gui,this_name));
     
@@ -9,7 +9,7 @@ if exist(mslice_gui,this_name)
 	set(findobj(fig,'Tag','ms_plot_traj_y'),'Value',1,'String',strings);
 	strings{length(strings)+1}='none';
 	set(findobj(fig,'Tag','ms_plot_traj_z'),'String',strings,'Value',length(strings));
-	drawnow;
+%	drawnow;
 % === if sample is single crystal then make sure the (khl) check boxes are present
       if (sample==1)
              msui_det_hkl_points(fig,pos,oneline,lineoffset,interlines,white);

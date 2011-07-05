@@ -404,7 +404,6 @@ hmenu1=uimenu(hmenu,'Label','           email : r.coldea@rl.ac.uk');
 hmenu1=uimenu(hmenu,'Label','Self Test Mslice','Callback','test_mslice','Separator','on');
 hmenu1=uimenu(hmenu,'Label','Quich check Mex-files correctness','Callback','check_mex_version');
 
-msui_collection(fig,'mslice_gui');
 % =========== Draw sample and viewing parameters menu options ===========
 % =========== different for powder and single crystal samples ===
 ms_sample;

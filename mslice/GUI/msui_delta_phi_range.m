@@ -2,7 +2,7 @@ function msui_delta_phi_range(h_root,position, white)
 % function defines block of three test controls for phi range and places it
 % in specified location wrt the root object
 this_name='delta_phi_range';
-mslice_gui = get(findobj('Tag','mslice_gui'),'UserData'); 
+mslice_gui = msui_collection(h_root,'mslice_gui');
 if exist(mslice_gui,this_name)
     return
 end

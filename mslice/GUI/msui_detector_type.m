@@ -1,7 +1,7 @@
 function pos=msui_detector_type(fig,pos,interlines,white)
 
 this_name = 'detector_type_psd';
-mslice_gui = get(findobj('Tag','mslice_gui'),'UserData');
+mslice_gui = msui_collection(fig,'mslice_gui');
 if exist(mslice_gui,this_name)
     pos = get_line_pos(get(mslice_gui,this_name));
     return
