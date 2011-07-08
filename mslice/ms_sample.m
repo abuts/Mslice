@@ -39,11 +39,11 @@ if sample==1, % === sample is crystal, build menu options in ControlWindow
     ms_analysis_mode;
    
   % === update detector trajectories axes  
-   detobj=findobj(fig,'Tag','ms_det_type');
-    if isempty(detobj),
-       disp('Could not identify detector type for the single crystal sample in single crystal analysis mode. Return.');
-       return;
-    end
+    detobj=findobj(fig,'Tag','ms_det_type');
+     if isempty(detobj),
+        disp('Could not identify detector type for the single crystal sample in single crystal analysis mode. Return.');
+        return;
+     end
    
    % === by default in single crystal analysis mode
       psd=get(detobj,'Value');	%=1 psd , =2 conventional
@@ -59,7 +59,7 @@ if sample==1, % === sample is crystal, build menu options in ControlWindow
     end      
   
 elseif sample==2,      % === sample is powder, draw menu options in ControlWindow   
-    msui_analysis_mode(fig,pos,oneline,interlines,white,{'powder','powder'});   
+ %   msui_analysis_mode(fig,pos,oneline,interlines,white,{'powder'});   
     % for powder, analysis mode can be only powder (2)
     msui_powder_menu(fig,pos,white,2,sample) ;
     

@@ -4,7 +4,7 @@ function  msui_powder_menu(h_root,position,white,analmode,sample)
 mslice_gui = msui_collection(h_root,'mslice_gui');
 mslice_gui = delete(mslice_gui,{'cryst_analysis_psd','cryst_analysis_nonpsd','detector_type_psd'});
 if sample==2
-    delete(mslice_gui,{'single_crystal_gui'});
+    mslice_gui=delete(mslice_gui,{'single_crystal_gui','analysis_mode'});
 end
 
 width      = position(3);
