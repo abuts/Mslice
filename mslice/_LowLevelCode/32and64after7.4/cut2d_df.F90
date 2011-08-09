@@ -13,11 +13,12 @@ subroutine mexFunction(nlhs, plhs, nrhs, prhs)
 #include "fintrf.h"
    mwpointer :: plhs(*), prhs(*)
    integer*4 :: nrhs, nlhs
-   character*(40) :: PROG_NAME= 'Fortran Cut2D    (cut2d_df.F90)        '
+   character*(40) :: PROG_NAME= "Fortran Cut2D    (cut2d_df.F90)        "
 !123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678
 !         1         2         3         4         5         6         7         8         9         0
-   character*(71) :: PROG_REV = '$Rev::      $ ($Date::                                              $)'C
+   character*(71) :: PROG_REV 
    character*(111):: REVISION
+   DATA PROG_REV/"$Rev::      $ ($Date::                                              $)"/
    
   
   !     <temp> will be temporary mxArray in place of plhs(1),plhs(2),...

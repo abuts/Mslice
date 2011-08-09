@@ -17,7 +17,8 @@ subroutine mexFunction(nlhs, plhs, nrhs, prhs)
   character*(40) :: PROG_NAME= 'Fortran Cut3D    (cut3d_df.F90)        '
 !123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678
 !         1         2         3         4         5         6         7         8         9         0
-  character*(70) :: PROG_REV = '$Rev::      $ ($Date::                                              $)'C
+  character*(70) :: PROG_REV
+  DATA PROG_REV /"$Rev::      $ ($Date::                                              $)"/
   character*(110):: REVISION
 
 

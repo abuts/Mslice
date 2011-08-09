@@ -11,8 +11,9 @@ subroutine mexFunction(nlhs, plhs, nrhs, prhs)
 ! declares the pointer and integer sizes for current os and platform
 #include "fintrf.h"
   character*(40) :: PROG_NAME= 'Fortran spe2proj (spe2proh_df.F90)      '
-  character*(70) :: PROG_REV = '$Rev::      $ ($Date::                                              $)'C
+  character*(70) :: PROG_REV 
   character*(110):: REVISION
+  DATA PROG_REV/'$Rev::      $ ($Date::                                              $)'/
   
   mwpointer :: plhs(*), prhs(*)
   integer*4 :: nrhs, nlhs 
