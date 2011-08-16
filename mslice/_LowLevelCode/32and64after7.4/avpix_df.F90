@@ -19,7 +19,7 @@
 !                    1234567890123456789012345678901234567890123456789012345678901234567890
 !                    1         2         3         4         5         6         7         8   
       mwpointer :: plhs(*), prhs(*)
-      integer*4 :: nrhs, nlhs
+      integer*4 :: nrhs, nlhs,complex_flag
  ! declare calling functions
       mwpointer :: mxGetPr,mxCreateCharMatrixFromStrings,mxCreateDoubleMatrix,mxCreateFull;
       mwsize    :: mxGetM, mxGetN, mxIsNumeric;      
@@ -68,13 +68,14 @@
 
       Nbins  =mxGetN(prhs(3))*mxGetM(prhs(3)) ! total number of bins
 
+      complex_flag = 0
 !     Create matrices for the return arguments
 #ifdef OBSOLETE
       plhs(1)=mxCreateFull(mxGetM(prhs(3)),mxGetN(prhs(3)),0)
       plhs(2)=mxCreateFull(mxGetM(prhs(3)),mxGetN(prhs(3)),0)
 #else
-      plhs(1)=mxCreateDoubleMatrix(mxGetM(prhs(3)),mxGetN(prhs(3)),0)
-      plhs(2)=mxCreateDoubleMatrix(mxGetM(prhs(3)),mxGetN(prhs(3)),0)
+      plhs(1)=mxCreateDoubleMatrix(mxGetM(prhs(3)),mxGetN(prhs(3)),complex_flag )
+      plhs(2)=mxCreateDoubleMatrix(mxGetM(prhs(3)),mxGetN(prhs(3)),complex_flag )
 #endif      
       xx_pr     = mxGetPr(plhs(1))
       std_dev_pr= mxGetPr(plhs(2))

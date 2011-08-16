@@ -12,7 +12,7 @@ subroutine mexFunction(nlhs, plhs, nrhs, prhs)
   implicit NONE
 #include "fintrf.h"
    mwpointer :: plhs(*), prhs(*)
-   integer*4 :: nrhs, nlhs
+   integer*4 :: nrhs, nlhs,complex_flag
    character*(40) :: PROG_NAME= "Fortran Cut2D    (cut2d_df.F90)        "
 !123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678
 !         1         2         3         4         5         6         7         8         9         0
@@ -31,7 +31,7 @@ subroutine mexFunction(nlhs, plhs, nrhs, prhs)
   mwpointer:: mxGetPr,mxCalloc,mxCreateCharMatrixFromStrings,mxCreatedoublematrix; 
   mwsize   :: mxGetM, mxGetN, mxIsNumeric 
   ! declare local operating variables of the interface funnction
-  mwsize :: n, m,final_npixel,one
+  mwsize :: n, m,final_npixel,one,four
   integer ndet, ne
   real*8 grid(5), vx_min, vx_max, bin_vx,vy_min, vy_max, vvy(1), eps
 
@@ -103,11 +103,12 @@ subroutine mexFunction(nlhs, plhs, nrhs, prhs)
   end if
 
   !     Create matrices for the return arguments (operating workspace for the subroutine cut2d_df)
-  plhs(1)	    =mxCreatedoublematrix(1,n,0)
-  plhs(2)	    =mxCreatedoublematrix(1,n,0)
-  plhs(3)       =mxCreatedoublematrix(1,n,0)
-  plhs(4)       =mxCreatedoublematrix(ndet*ne,1,0)
-  plhs(5)       =mxCreatedoublematrix(1,n,0)
+  complex_flag  = 0
+  plhs(1)	    =mxCreatedoublematrix(1,n,complex_flag)
+  plhs(2)	    =mxCreatedoublematrix(1,n,complex_flag)
+  plhs(3)       =mxCreatedoublematrix(1,n,complex_flag)
+  plhs(4)       =mxCreatedoublematrix(ndet*ne,1,complex_flag)
+  plhs(5)       =mxCreatedoublematrix(1,n,complex_flag)
   x_pr          =mxGetPr(plhs(1))
   intensity_pr  =mxGetPr(plhs(2))
   error_int_pr  =mxGetPr(plhs(3))
@@ -115,9 +116,10 @@ subroutine mexFunction(nlhs, plhs, nrhs, prhs)
   number_pix_pr =mxGetPr(plhs(5))
 
   !     Allocate space for temporary arrays, temp1 are fortran pointers
-  temp1=mxCalloc(ndet*ne,4) ! integer*4
-  temp2=mxCalloc(ndet*ne,4) ! integer*4
-  temp3=mxCalloc(ndet*ne,4) ! integer*4
+  four = 4
+  temp1=mxCalloc(ndet*ne,four) ! elements of mwsize length
+  temp2=mxCalloc(ndet*ne,four) ! integer*4
+  temp3=mxCalloc(ndet*ne,four) ! integer*4
 
   !     Call the computational subroutine cut2d_df
   call cut2d_df(%val(vx_pr),%val(vy_pr),%val(pixel_int_pr),%val(pixel_err_pr), ndet, ne, ndet*ne,&

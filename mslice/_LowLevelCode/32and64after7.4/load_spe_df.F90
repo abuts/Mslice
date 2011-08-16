@@ -18,7 +18,7 @@ subroutine mexFunction(nlhs, plhs, nrhs, prhs)
   DATA PROG_REV/'$Rev::      $ ($Date::                                              $)'/
   
   mwpointer :: plhs(*), prhs(*)
-  integer*4 :: nrhs, nlhs
+  integer*4 :: nrhs, nlhs,complex_flag
   
   ! declare pointers to output variables  
   mwpointer:: data_S_pr, data_ERR_pr, data_en_pr,mfp
@@ -75,15 +75,16 @@ subroutine mexFunction(nlhs, plhs, nrhs, prhs)
      call mexErrMsgTxt  ('File not found or error encountered during reading.')
   end if
 
+    complex_flag=0
   !     Create matrices for the return arguments, double precision real*8
 #ifdef OBSOLETE
       plhs(1)=mxCreateFull(ndet,ne,0)
       plhs(2)=mxCreateFull(ndet,ne,0)
       plhs(3)=mxCreateFull(1,ne,0)            
 #else
-      plhs(1)=mxCreateDoubleMatrix(ndet,ne,0)
-      plhs(2)=mxCreateDoubleMatrix(ndet,ne,0)
-      plhs(3)=mxCreateDoubleMatrix(longOne,ne,0)                  
+      plhs(1)=mxCreateDoubleMatrix(ndet,ne,complex_flag)
+      plhs(2)=mxCreateDoubleMatrix(ndet,ne,complex_flag)
+      plhs(3)=mxCreateDoubleMatrix(longOne,ne,complex_flag)                  
 #endif      
   
   data_S_pr  =mxGetPr(plhs(1))

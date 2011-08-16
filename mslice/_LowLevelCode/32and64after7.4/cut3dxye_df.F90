@@ -21,14 +21,14 @@ subroutine mexFunction(nlhs, plhs, nrhs, prhs)
   DATA PROG_REV /'$Rev::      $ ($Date::                                              $)'/
   
   mwpointer :: plhs(*), prhs(*)
-  integer*4 :: nrhs, nlhs
+  integer*4 :: nrhs, nlhs,complex_flag
   !     <temp> will be temporary mxArray in place of plhs(1),plhs(2),...
   ! declare local variables to deal with pointers to variables passed by/to MATLAB
   mwpointer :: vx_pr, vy_pr, vz_pr, pixel_int_pr, pixel_err_pr, grid_pr,temp_pr
   mwpointer :: x_pr, intensity_pr, error_int_pr
   ! declare calling functions
   mwpointer :: mxGetPr,mxCalloc,mxCreateCharMatrixFromStrings,mxCreatedoublematrix
-  mwsize    :: mxGetM, mxGetN, mxIsNumeric 
+  mwsize    :: mxGetM, mxGetN, mxIsNumeric,longOne 
   mwpointer ::  temp1, temp2, temp3,temp  
  
   ! declare local operating variables of the interface funnction
@@ -42,7 +42,7 @@ subroutine mexFunction(nlhs, plhs, nrhs, prhs)
         plhs(1) = mxCreateCharMatrixFromStrings(one,REVISION)
         return
   end if
-
+  longOne = 1;
   
   
   !     Check for proper number of MATLAB input and output arguments 
@@ -118,9 +118,10 @@ subroutine mexFunction(nlhs, plhs, nrhs, prhs)
   end if
 
   !     Create matrices for the return arguments (operating workspace for the subroutine cut3dxye_df)
-  plhs(1)	    =mxCreatedoublematrix(1,n,0) ! these are matlab pointers
-  plhs(2)	    =mxCreatedoublematrix(1,n,0)
-  plhs(3)       =mxCreatedoublematrix(1,n,0)
+  complex_flag  = 0
+  plhs(1)	    =mxCreatedoublematrix(1,n,complex_flag) ! these are matlab pointers
+  plhs(2)	    =mxCreatedoublematrix(1,n,complex_flag)
+  plhs(3)       =mxCreatedoublematrix(1,n,complex_flag)
   x_pr          = mxGetPr(plhs(1)) ! these are fortran pointers of the matlab mxArrays created above
   intensity_pr  = mxGetPr(plhs(2)) 
   error_int_pr  = mxGetPr(plhs(3))
@@ -150,11 +151,12 @@ subroutine mexFunction(nlhs, plhs, nrhs, prhs)
      plhs(3)=temp
   end if
 
-  plhs(4)       =mxCreatedoublematrix(1,1,0)
-  plhs(5)       =mxCreatedoublematrix(1,1,0)
 
-  call mxCopyReal8ToPtr(vvy,mxGetPr(plhs(4)),1)
-  call mxCopyReal8ToPtr(vvz,mxGetPr(plhs(5)),1)
+  plhs(4)       =mxCreatedoublematrix(longOne,longOne,complex_flag)
+  plhs(5)       =mxCreatedoublematrix(longOne,longOne,complex_flag)
+
+  call mxCopyReal8ToPtr(vvy,mxGetPr(plhs(4)),longOne)
+  call mxCopyReal8ToPtr(vvz,mxGetPr(plhs(5)),longOne)
   return
 end subroutine mexFunction
 

@@ -16,7 +16,7 @@ subroutine mexFunction(nlhs, plhs, nrhs, prhs)
   DATA PROG_REV/'$Rev::      $ ($Date::                                              $)'/
   
   mwpointer :: plhs(*), prhs(*)
-  integer*4 :: nrhs, nlhs 
+  integer*4 :: nrhs, nlhs,complex_flag 
   ! declare local variables to deal with pointers to variables passed by/to MATLAB
   mwpointer:: emode_pr, efixed_pr, en_pr, det_theta_pr, det_psi_pr,psi_samp_pr
   mwpointer:: U1_pr, U2_pr, U3_pr,v1_pr, v2_pr, v3_pr 
@@ -108,14 +108,15 @@ subroutine mexFunction(nlhs, plhs, nrhs, prhs)
 		longOne = 1;
         call mxCopyPtrToReal8(emode_pr,emode,longOne)
   !     Create matrices for the return arguments 
+     complex_flag =0
 #ifdef OBSOLETE
       plhs(1)=mxCreateFull(ndet,ne,0)
       plhs(2)=mxCreateFull(ndet,ne,0)
       plhs(3)=mxCreateFull(longOne,ne,0)            
 #else
-      plhs(1)   =mxCreateDoubleMatrix(ndet,ne,0) ! these are matlab pointsrs  
-      plhs(2)   =mxCreateDoubleMatrix(ndet,ne,0)
-      plhs(3)   =mxCreateDoubleMatrix(ndet,ne,0)
+      plhs(1)   =mxCreateDoubleMatrix(ndet,ne,complex_flag) ! these are matlab pointsrs  
+      plhs(2)   =mxCreateDoubleMatrix(ndet,ne,complex_flag)
+      plhs(3)   =mxCreateDoubleMatrix(ndet,ne,complex_flag)
 !      call mexWarnMsgTxt("matrices created")			  
 #endif  
     v1_pr     = mxGetPr(plhs(1)) ! these are fortran pointers of the matlab mxArrays created above

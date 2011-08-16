@@ -193,8 +193,9 @@ h=uicontrol('Parent',fig,'Style','edit','Enable','on','Tag','ms_TitleLabel',...
    'HorizontalAlignment','left',...
    'BackgroundColor',white);
 
-%========= Sample :Single Crystal/Powder ==================
 
+%========= Sample :Single Crystal/Powder ==================
+%ui_sample_crystal_ornot(fig,
 pos=pos-1.5*oneline;
 h=uicontrol('Parent',fig,'Style','text','String','Sample',...
    'Position',pos,'BackgroundColor',white);
