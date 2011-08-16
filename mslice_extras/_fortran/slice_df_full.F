@@ -32,7 +32,7 @@ C                1         2         3         4         5
 C       123456789012345678901234567890123456789012345678901234567890      
 
       mwpointer :: plhs(*), prhs(*)
-	  integer*4 :: nrhs, nlhs,cmplx_flg
+	  integer*4 :: nrhs, nlhs,cpfg
       mwsize    :: nGridPoints
 
 C declare local variables to deal with pointers to variables passed by/to MATLAB
@@ -135,7 +135,7 @@ C
       n=int((vx_max+bin_vx-(vx_min-bin_vx/2.0d0))/bin_vx)
       m=int((vy_max+bin_vy-(vy_min-bin_vy/2.0d0))/bin_vy)
       
-	cmplx_flg=0
+	cpfg=0
 C
 C     Create matrices for the return arguments
 #ifdef OBSOLETE
@@ -145,11 +145,11 @@ C     Create matrices for the return arguments
       plhs(4)	= mxCreateFull(m,n,0)
       plhs(5)	= mxCreateFull(m,n,0)
 #else
-      plhs(1)   = mxCreateDoubleMatrix(m,n,cmplx_flg)
-      plhs(2)   = mxCreateDoubleMatrix(m,n,cmplx_flg)
-      plhs(3)   = mxCreateDoubleMatrix(m,n,cmplx_flg)
-      plhs(4)   = mxCreateDoubleMatrix(m,n,cmplx_flg)
-      plhs(5)   = mxCreateDoubleMatrix(m,n,cmplx_flg)
+      plhs(1)   = mxCreateDoubleMatrix(m,n,cpfg)
+      plhs(2)   = mxCreateDoubleMatrix(m,n,cpfg)
+      plhs(3)   = mxCreateDoubleMatrix(m,n,cpfg)
+      plhs(4)   = mxCreateDoubleMatrix(m,n,cpfg)
+      plhs(5)   = mxCreateDoubleMatrix(m,n,cpfg)
 #endif
       xav_pr        = mxGetPr(plhs(1))
       yav_pr        = mxGetPr(plhs(2))
@@ -178,12 +178,12 @@ C	First time: fill the bins and get no. pixels for each bin
       plhs(10)= mxCreateFull(number_pts_tot,1,0)
       plhs(11)= mxCreateFull(number_pts_tot,1,0)
 #else
-      plhs(6) = mxCreateDoubleMatrix(number_pts_tot,longOne,cmplx_flg)
-      plhs(7) = mxCreateDoubleMatrix(number_pts_tot,longOne,cmplx_flg)
-      plhs(8) = mxCreateDoubleMatrix(number_pts_tot,longOne,cmplx_flg)
-      plhs(9) = mxCreateDoubleMatrix(number_pts_tot,longOne,cmplx_flg)
-      plhs(10)= mxCreateDoubleMatrix(number_pts_tot,longOne,cmplx_flg)
-      plhs(11)= mxCreateDoubleMatrix(number_pts_tot,longOne,cmplx_flg)
+      plhs(6) = mxCreateDoubleMatrix(number_pts_tot,longOne,cpfg)
+      plhs(7) = mxCreateDoubleMatrix(number_pts_tot,longOne,cpfg)
+      plhs(8) = mxCreateDoubleMatrix(number_pts_tot,longOne,cpfg)
+      plhs(9) = mxCreateDoubleMatrix(number_pts_tot,longOne,cpfg)
+      plhs(10)= mxCreateDoubleMatrix(number_pts_tot,longOne,cpfg)
+      plhs(11)= mxCreateDoubleMatrix(number_pts_tot,longOne,cpfg)
 #endif
       detno_pr     = mxGetPr(plhs(6))
       eps_binno_pr = mxGetPr(plhs(7))
