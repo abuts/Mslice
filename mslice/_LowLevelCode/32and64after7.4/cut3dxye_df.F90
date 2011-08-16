@@ -13,12 +13,12 @@ subroutine mexFunction(nlhs, plhs, nrhs, prhs)
   implicit NONE
 ! declares the pointer and integer sizes for current os and platform
 #include "fintrf.h"
-  character*(40) :: PROG_NAME= 'Fortran Cut3D xye (cut3dxye_dv.F90)    '
+  character*(40) :: PROG_NAME= "Fortran Cut3D xye (cut3dxye_dv.F90)    "
 !123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678
 !         1         2         3         4         5         6         7         8         9         0
   character*(70) :: PROG_REV
   character*(110):: REVISION
-  DATA PROG_REV /'$Rev::      $ ($Date::                                              $)'/
+  DATA PROG_REV /"$Rev::      $ ($Date::                                              $)"/
   
   mwpointer :: plhs(*), prhs(*)
   integer*4 :: nrhs, nlhs,complex_flag
@@ -32,17 +32,16 @@ subroutine mexFunction(nlhs, plhs, nrhs, prhs)
   mwpointer ::  temp1, temp2, temp3,temp  
  
   ! declare local operating variables of the interface funnction
-  mwsize :: ndet, ne, n, m,npoints,one
+  mwsize :: ndet, ne, n, m,npoints
   real*8 grid(7), vx_min, vx_max, bin_vx, vy_min, vy_max, vz_min, vz_max, vvy(1), vvz(1), eps
 
+  longOne = 1
   ! Returns code SVN version
   if(nrhs==0 .AND. nlhs==1)then
-        one =1
 		REVISION =  PROG_NAME//PROG_REV
-        plhs(1) = mxCreateCharMatrixFromStrings(one,REVISION)
+        plhs(1) = mxCreateCharMatrixFromStrings(longOne,REVISION)
         return
   end if
-  longOne = 1;
   
   
   !     Check for proper number of MATLAB input and output arguments 
@@ -119,9 +118,9 @@ subroutine mexFunction(nlhs, plhs, nrhs, prhs)
 
   !     Create matrices for the return arguments (operating workspace for the subroutine cut3dxye_df)
   complex_flag  = 0
-  plhs(1)	    =mxCreatedoublematrix(1,n,complex_flag) ! these are matlab pointers
-  plhs(2)	    =mxCreatedoublematrix(1,n,complex_flag)
-  plhs(3)       =mxCreatedoublematrix(1,n,complex_flag)
+  plhs(1)	    =mxCreatedoublematrix(longOne,n,complex_flag) ! these are matlab pointers
+  plhs(2)	    =mxCreatedoublematrix(longOne,n,complex_flag)
+  plhs(3)       =mxCreatedoublematrix(longOne,n,complex_flag)
   x_pr          = mxGetPr(plhs(1)) ! these are fortran pointers of the matlab mxArrays created above
   intensity_pr  = mxGetPr(plhs(2)) 
   error_int_pr  = mxGetPr(plhs(3))

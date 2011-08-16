@@ -32,7 +32,7 @@ subroutine mexFunction(nlhs, plhs, nrhs, prhs)
   mwsize   :: mxGetM, mxGetN, mxIsNumeric 
   ! declare local operating variables of the interface funnction
   mwsize :: n, m,final_npixel,one,four
-  integer ndet, ne
+  mwsize :: ndet, ne
   real*8 grid(5), vx_min, vx_max, bin_vx,vy_min, vy_max, vvy(1), eps
 
   ! Returns code SVN version
@@ -104,11 +104,11 @@ subroutine mexFunction(nlhs, plhs, nrhs, prhs)
 
   !     Create matrices for the return arguments (operating workspace for the subroutine cut2d_df)
   complex_flag  = 0
-  plhs(1)	    =mxCreatedoublematrix(1,n,complex_flag)
-  plhs(2)	    =mxCreatedoublematrix(1,n,complex_flag)
-  plhs(3)       =mxCreatedoublematrix(1,n,complex_flag)
-  plhs(4)       =mxCreatedoublematrix(ndet*ne,1,complex_flag)
-  plhs(5)       =mxCreatedoublematrix(1,n,complex_flag)
+  plhs(1)	    =mxCreatedoublematrix(one,n,complex_flag)
+  plhs(2)	    =mxCreatedoublematrix(one,n,complex_flag)
+  plhs(3)       =mxCreatedoublematrix(one,n,complex_flag)
+  plhs(4)       =mxCreatedoublematrix(ndet*ne,one,complex_flag)
+  plhs(5)       =mxCreatedoublematrix(one,n,complex_flag)
   x_pr          =mxGetPr(plhs(1))
   intensity_pr  =mxGetPr(plhs(2))
   error_int_pr  =mxGetPr(plhs(3))
