@@ -32,7 +32,7 @@ C                1         2         3         4         5
 C       123456789012345678901234567890123456789012345678901234567890      
 
       mwpointer :: plhs(*), prhs(*)
-	  integer*4 :: nrhs, nlhs,cpfg
+	integer*4 :: nrhs, nlhs,cpfg
       mwsize    :: nGridPoints
 
 C declare local variables to deal with pointers to variables passed by/to MATLAB
@@ -47,7 +47,7 @@ C declare calling functions
       mwpointer:: mxGetPr,mxCreateCharMatrixFromStrings,
      C            mxCreateDoubleMatrix
       mwsize :: mxGetM, mxGetN
-      mwsize :: mxIsNumeric,one
+      mwsize :: mxIsNumeric
 
       mwsize :: n,m,number_pts_tot,ndet, ne,longOne;
 
@@ -60,12 +60,12 @@ C declare local operating variables of the interface funnction
      c    pix_int_dum, pix_err_dum
 
 C      ! Returns code SVN version
+	longOne = 1
       if(nrhs==0 .AND. nlhs==1)then
-        one=1
-        plhs(1) = mxCreateCharMatrixFromStrings(one,REVISION)
+        plhs(1) = mxCreateCharMatrixFromStrings(longOne,REVISION)
         return
       end if
-	  longOne = 1;
+
 
 C     Check for proper number of MATLAB input and output arguments
       if (nrhs .ne. 6) then

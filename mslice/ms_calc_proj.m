@@ -18,7 +18,7 @@ set(fig,'UserData',data);
 
 % === highlight red button indicating 'busy'
 h_status=findobj(fig,'Tag','ms_status');
-if ~isempty(h_status)&ishandle(h_status),
+if ~isempty(h_status)&&ishandle(h_status),
    red=[1 0 0];
    set(h_status,'BackgroundColor',red);
    drawnow;
@@ -129,7 +129,9 @@ for i=1:size(vars,2)
         case{'u34'}
             u34=ms_getvalue(name);
         otherwise
-            range.(vars{i})=ms_getvalue(name);
+            % this has to be one of psi ranges -- psi_min, psi_max, delta_psi;
+            % And it has to be transformed from degrees to radians. 
+            range.(vars{i})=ms_getvalue(name)*pi/180;
     end
 end
 
@@ -140,7 +142,7 @@ end
 
 data.emode=emode;
 data.efixed=efixed;
-if samp==1,	% single crystal sample 
+if (samp==1) && (analmode<3),	% single crystal sample 
 	% === Determine reciprocal basis
 	[ar,br,cr]=basis_r(as,bs,cs,aa*pi/180,bb*pi/180,cc*pi/180);
 
@@ -156,7 +158,7 @@ if samp==1,	% single crystal sample
 	u=u/norm(u);
 	v=v-dot(v,u)*u;
 	v=v/norm(v);	% (u,v) define the principal scattering plane of the spectrometer (Horiz HET&IRIS, Vert MARI)
-   w=cross(u,v);	% w is vertically up on the (u,v) plane 
+    w=cross(u,v);	% w is vertically up on the (u,v) plane 
    % now (u,v,w) is a right-handed cooordinate system with all vectors orthogonal to each other and of unit length
    
 	% === Determine components of the reciprical basis in terms of the (u,v,w) frame
@@ -175,12 +177,12 @@ end
 if (samp==1)&&(analmode==1), % single crystal data analysed in single crystal mode
     if psd, % PSD detectors
 		data.axis_label=str2mat(u1label,u2label,u3label);
-   	data.axis_unitlabel=str2mat('','','',IntensityLabel);
-   	data.title_label=TitleLabel;
+        data.axis_unitlabel=str2mat('','','',IntensityLabel);
+   	    data.title_label=TitleLabel;
 		data.u=[u11 u12 u13 u14; u21 u22 u23 u24; u31 u32 u33 u34];      
         % calculate projections for crystall
-      data=calcproj(data);
-      ms_updatelabel(3);   
+        data=calcproj(data);
+        ms_updatelabel(3);   
       % === clear stored slice data 
       ms_slice('clear');
    else % non-PDS detectors
@@ -207,8 +209,9 @@ else	% sample is powder or analysed as powder
    % projections for powder
    data=calcprojpowder(data);  
 end
-ms_updatelabel(1);
-ms_updatelabel(2);
+% no label should change when projections are calculated;
+%ms_updatelabel(1);
+%ms_updatelabel(2);
 if ~isempty(data),
    set(fig,'UserData',data);
 end               

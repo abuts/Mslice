@@ -64,8 +64,7 @@ if isfield(data,'Ei')
     if ~isnan(Ei)
         h_en=findobj('Tag','ms_efixed');
         if ~isempty(h_en)
-            set(h_en,'String',num2str(Ei),'ForegroundColor','g');
-            %drawnow expose;
+            set(h_en,'String',num2str(Ei),'ForegroundColor','g');         
         end
     end
 end

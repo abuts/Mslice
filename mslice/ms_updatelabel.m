@@ -1,6 +1,6 @@
 function ms_updatelabel(n)
 
-% function ms_updatelabel(n)
+
 
 % === return if ControlWindow not present
 fig=findobj('Tag','ms_ControlWindow');
@@ -110,7 +110,14 @@ if (samp==1)&(analmode==1),	% single crystal sample in single crystal analysis m
 	strings{size(strings,1)+1}='none';
 	set(findobj('Tag','ms_plot_traj_z'),'String',strings);
 else	% sample is powder or is single crystal in powder analysis mode
-   ms_disp_axes;
+%    error('UPDATELABEL:',' should not be invoked in powder mode');
+   %ms_disp_axes;
+   labelx=get(findobj('Tag',['ms_u1label']),'String');
+   set(findobj('Tag','ms_disp_x_axis'),'String',['horizontal range* ' labelx ]);
+
+   labely=get(findobj('Tag',['ms_u2label']),'String');
+   set(findobj('Tag','ms_disp_y_axis'),'String',['vertical range* ' labely ]);
+
 	% update cut along axis selection list
   	h=findobj('Tag','ms_cut_x');
 	strings=get(h,'String');

@@ -73,7 +73,7 @@ else
 end
 
 %=== if both data and phx files have been read successfully, check their compatibility
-if ~isempty(data)&~isempty(phx),
+if ~isempty(data)&&~isempty(phx),
 % check compatibility of .spe and .phx files against same number of detector groups
    if length(masked)~=size(phx,1),
 	   warning(['.spe data from file ' spe_filename ' and .phx data from ' phx_filename ' not compatible']);

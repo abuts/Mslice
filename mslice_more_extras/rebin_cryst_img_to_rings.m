@@ -30,16 +30,21 @@ end
 min_pol  = min(data.det_theta);
 max_pol = max(data.det_theta);
 pol_step = min(data.det_dtheta);
-if isempty(range.polar_min);   range.polar_min = min_pol;
+if isempty(range.polar_min)||range.polar_min<min_pol   % if limits changed, the GUI values have to change too.
+    range.polar_min = min_pol;
+    ms_setvalue('polar_min',min_pol*180/pi,'highlight');    
 else
-                                           min_pol = range.polar_min;
+    min_pol = range.polar_min;
 end
-if isempty(range.polar_max);  range.polar_max = max_pol;
+if isempty(range.polar_max)||range.polar_max>max_pol;   % if limits changed, the GUI values have to change too.
+      range.polar_max = max_pol;
+      ms_setvalue('polar_max',max_pol*180/pi,'highlight');
 else
-                                            max_pol   = range.polar_max;
+      max_pol   = range.polar_max;
 end
-if isempty(range.polar_delta)||range.polar_delta<pol_step
+if isempty(range.polar_delta)||range.polar_delta<pol_step % if limits changed, the GUI values have to change too.
     range.polar_delta = pol_step;
+    ms_setvalue('polar_delta',pol_step*180/pi,'highlight');    
 else    
     pol_step = range.polar_delta;    
 end
@@ -52,7 +57,7 @@ data.range = range;
 % Rebin: despite dtheta is different, here we ignore this fact for the time
 % being; (which can be deeply right)
 %
-
+% calculate indexes of old psi-s wrt the new bins
 psi_ind   = floor((data.det_theta-min_pol)/pol_step)+1;
 ind_max = floor((max_pol-min_pol)/pol_step)+1; % 
 %
@@ -81,7 +86,7 @@ n_det_ex=   reshape(repmat(n_det,1,rez_size(2)),ind_max*rez_size(2),1);
 %
 SS         = (accumarray(psi_ext,S)./n_det_ex);
 SE         = sqrt(accumarray(psi_ext,ERR.*ERR)./n_det_ex);
-nans       =isnan(S);
+nans       =isnan(SS); % make NaN sticky i.e any nan contrubuting to a cell invalidates cell. 
 SS(nans)=NaN;
 SE(nans)=0;
 

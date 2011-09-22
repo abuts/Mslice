@@ -1,7 +1,7 @@
 function ms_cut_axes
 
 % function ms_cut_axes
-% update Cut menu axis labels on the Control Window 
+% update Cut menu axis labels on the Control Window for crystal?
 
 % === return if ControlWindow not present
 fig=findobj('Tag','ms_ControlWindow');
