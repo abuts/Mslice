@@ -16,57 +16,11 @@ function conf=set(this,varargin)
 %
 global configurations;
 global class_names;
+
 % Parse arguments;
-narg = length(varargin);
-if narg==1
-    svar = varargin{1};
-    if ischar(svar)&&strcmpi(svar,'defaults')
-        class_name = class(this);
-        set_defaults(config,class_name);
-        return;
-    end
-    is_struct = isa(svar,'struct');
-    is_cell   = iscell(svar);
-    if ~is_struct ||(~is_cell)
-        mess='second parameter has to be a structure or a cell array';
-        error('HORACE:config',mess);
-        
-    end
-    if is_struct
-        field_nams = fieldnames(svar);
-        field_vals = zeros(1,numel(field_nams));
-        for i=1:numel(field_nams)
-            field_vals(i)=svar.(field_nams{i});
-        end        
-    end
-    if is_cell
-        field_nams  = svar{1:2:end};
-        field_vals  = svar{2:2:end};        
-    end
- 
-else
-   if (rem(narg,2) ~= 0)
-        mess='incomplete set of (field,value) pairs given';
-        error('HORACE:config',mess);        
-   end
-   field_nams = varargin{1:2:narg};
-   field_vals  =varargin{2:2:narg};
-   if ~iscell(field_vals)
-       field_vals={field_vals};
-   end
-   if ~iscell(field_nams)
-        field_nams={field_nams};
-   end   
-   
-   nf = numel(field_nams);
-%   field_nams = cell(1,nf);
-%   field_vals = zeros(1,nf);   
-%   for i=0:nf-1
-%       field_nams{i+1}=varargin{2*i+1};
-%       field_vals(i+1)=varargin{2*i+2};       
-%   end
-        
-end
+[field_nams,field_vals] = parse_config_arg(varargin{:});
+
+nf = numel(field_nams);
 
 % check argumemts
 non_char = ~cellfun(@is_data_char,field_nams);
