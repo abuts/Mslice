@@ -25,8 +25,8 @@ end
 % get the name of the root folder for nxspe
 [filepath,filename]= fileparts(nxspe_filename);
 %
-data_root = find_root_nxspeDir(nxspe_filename);
-root = repmat( [data_root{1},'/'],numel(data_field_names),1);
+data_root = find_root_nexus_dir(nxspe_filename,'NXSPE');
+root = repmat( [data_root,'/'],numel(data_field_names),1);
 root = cellstr(root)';
 data_field_names=strcat(root,data_field_names);
 %
