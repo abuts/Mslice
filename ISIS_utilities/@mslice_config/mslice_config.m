@@ -6,24 +6,26 @@ function conf=mslice_config()
 % Inherit from the basic class 'config' instead
 %
 %
-% $Revision: 1676 $ ($Date: 2010-05-17 18:08:06 +0100 (Mon, 17 May 2010) $)
+% $Revision: 1835 $ ($Date: 2011-10-22 22:49:44 +0100 (Sat, 22 Oct 2011) $)
 %
-global configurations;
+%--------------------------------------------------------------------------------------------------
+%  ***  Alter only the contents of the subfunction at the bottom of this file called     ***
+%  ***  default_config, and the help section above, which describes the contents of the  ***
+%  ***  configuration structure.                                                         ***
+%--------------------------------------------------------------------------------------------------
+% This block contains generic code. Do not alter. Alter only the sub-function default_config below
+persistent this_local;
 
-%this_class_name=mfilename('class');
-this_class_name='mslice_config';
+if isempty(this_local)
+    config_name=mfilename('class');
 
-% this is generig code which has to be copied to any consrucor, inheriting
-% from the class "config"
-[is_in_memory,n_this_class,child_structure] = build_child(config,@homer_defaults,this_class_name);
-if is_in_memory
-    conf=configurations{n_this_class};
-else
-    conf = class(child_structure,this_class_name,configurations{1});   
-    configurations{n_this_class}=conf;
+    build_configuration(config,@mslice_defaults,config_name);    
+    this_local=class(struct([]),config_name,config);
 end
+conf = this_local;
 
-function defaults=homer_defaults()
+
+function defaults=mslice_defaults()
 % functuion builds the structure, which describes default parameters used
 % by mslice;
 % This structure is used if no previous configuration has been defined on
@@ -61,7 +63,7 @@ if isempty(ms_path)
     ms_path = pwd;
 end
 defaults.cut_OutputDir=ms_path;
-defaults.fields_sealed={'fields_sealed','MSliceDir','SampleDir'...
+defaults.sealed_fields={'sealed_fields','MSliceDir','SampleDir'...
                         }; % specify the fields which values can not be changed by user;
 
 

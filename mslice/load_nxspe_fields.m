@@ -9,7 +9,7 @@ function spe_data = load_nxspe_fields(nxspe_filename,data_field_names,data_attri
 %   Arguments:
 %  Input:
 %  nxspe_filename   -- full name of the file with nxspe data
-% data_field_names -- generic names of the fields with the data of
+%  data_field_names -- generic names of the fields with the data of
 %                               interest. 
 % Output:
 % 

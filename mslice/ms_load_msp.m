@@ -56,8 +56,8 @@ set(mslice_config,'MspDir',file_path);
 set(mslice_config,'MspFile',file_name);      
 
 % get data defined in mslice configurations.
-msl_conf = get(mslice_config,'all');
-msl_conf = msl_conf.mslice_config;
+msl_conf  = get(mslice_config);
+%msl_conf = msl_conf.mslice_config;
 % === open .msp parameter file for reading as an ASCII text file
 fid=fopen(fullname,'rt');
 if fid==-1,
@@ -67,7 +67,7 @@ end
 
 % === highlight red button indicating 'busy'
 h_status=findobj(h_cw,'Tag','ms_status');
-if ~isempty(h_status)&ishandle(h_status),
+if ~isempty(h_status)&& ishandle(h_status),
    red=[1 0 0];
    set(h_status,'BackgroundColor',red);
    drawnow;

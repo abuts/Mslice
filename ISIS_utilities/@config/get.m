@@ -1,89 +1,78 @@
-function [val,varargout]= get(self,varargin)
+function varargout= get(this,varargin)
+% Get values of one or more fields from a cponfiguration class
 %
-%>>[val1,val2]=get(config,'field1','field2'); % returns fields
-%>>val        = get(class_name)   % returns the structure with the current
-%                                   configuration for the class requested
-%>>val        = get(config,'all') % returns structure with all configurations currently
-%                                   loaded in memeory
+%   >> val= get(config_name)       % returns the structure with the current
+%                                    configuration for the requested configuration name
 %
+%   >> [val1,val2,...] = get(config_name,'field1','field2',...); % returns named fields
 %
-% $Revision$ ($Date$)
-%
-class_struct = struct(self);
-if (nargin == 1)
-    val=class_struct;
+% Recursively searches the sub-structures and classes of the configuration class
+% until field(s) with the given name(s) is/are found.
+
+
+% Fetch the current configuration
+config_name = class(this);
+fetch_default=false;
+config_data = config_store(config_name,fetch_default);
+
+% Return if full structure is required
+if nargin == 1
+    varargout{1}=config_data;
     return
 end
-
-% check argumemts
-non_char = ~ischarar(varargin{:});
-if (any(non_char))
-    mess='all field_names has to be strings (existing configurations field names)';    
-    error('CONFIG:get',mess);
-end
-if strcmp(varargin{1},'all')
-    val=get_all(config);
+if nargin == 2 && strcmpi(varargin{1},'all')
+    varargout{1} = config_store(config_name,'getall');
     return;
 end
 
-% process usual arguments;
-n_par  = min(length(varargin),nargout);
-
-data_field=get_field_in_hirachy(class_struct,varargin{1});
-if isempty(data_field)
-    class_name = class(self);
-    error('CONFIG:get','get->The field %s does not exist in configuration %s and its parents',varargin{1},class_name);    
+% Check arguments are character strings
+if ~all_strings(varargin)
+    error('All field names have to be strings'); 
 end
 
-val  = data_field.(varargin{1});
-if n_par>1
-    varargout=cell(1,n_par-1);
-end
-for i=2:n_par 
-    data_field=get_field_in_hirachy(class_struct,varargin{i});
-    if isempty(data_field)
-        class_name = class(self);        
-        error('CONFIG:get','the field %s does not exist in configuration %s and its parents',varargin{i},class_name);    
-    end
-    
-    varargout{i-1} = data_field.(varargin{i});
-end
-%
-function isit=ischarar(varargin)
-isit=false(1,nargin);
-for i=1:nargin
-    isit(i)=ischar(varargin{i});
+% Get values
+varargout=cell(1,min(max(1,nargout),numel(varargin)));  % return at least one value
+for i=1:numel(varargout)
+    [data_field,found]=get_field_in_hierachy(config_data,varargin{i});
+    if found
+        varargout{i}=data_field;
+    else
+        error('The field %s does not exist in configuration %s and its parents',varargin{i},config_name);    
+    end    
 end
 
-function data_structure=get_field_in_hirachy(structure,field_name)
-% recursively seaches through the hierarchy of structures and classes looking
-% for the field_name specified;
-% returns after finding the first class or structure with the name
-% requested or empty field after unsuccessfull seach through the whole structure;
+%--------------------------------------------------------------------------------------------------
+function ok=all_strings(c)
+% Check elements of a cell array are 1xn non-empty character strings
+ok=true;
+for i=1:numel(c)
+    ok=ischar(c{i}) && ~isempty(c{i}) && size(c{i},1)==1;
+end
 
+%--------------------------------------------------------------------------------------------------
+function [val,found]=get_field_in_hierachy(structure,field_name)
+% Recursively searches through the hierarchy of structures and classes looking
+% for the field name specified.
+% Returns after finding the first field that is not a class or structure with the name
+% requested, or empty field after unsuccessful search through the whole structure;
+
+found = false;
 if isfield(structure,field_name)
-    data_structure=structure;
-    return;
-end
-names = fields(structure);
-for i=numel(names):-1:1
-    if ~isfield(structure,names{i})
-        continue;
-    end
-    if isstruct(structure.(names{i}))
-        data_structure=get_field_in_hirachy(structure.(names{i}),field_name);
-        if ~isempty(data_structure)
+    % If field name, get data and return
+    val   =structure.(field_name);
+    found = true;
+else
+    % Search for the field in classes or structures (if n array of structures or objects, use first element)
+    names = fields(structure);
+    val=[];
+    for i=1:numel(names)
+        if isstruct(structure.(names{i}))
+            val=get_field_in_hierachy(structure.(names{i})(1),field_name);
+        elseif isobject(structure.(names{i}))
+            val=get_field_in_hierachy(struct(structure.(names{i})(1)),field_name);
+        end
+        if ~isempty(val)
             return;
         end
     end
-    
-    if isobject(structure.(names{i}))
-        structure=struct(structure.(names{i}));
-        data_structure=get_field_in_hirachy(structure,field_name);
-        
-        if ~isempty(data_structure)
-            return;
-        end        
-    end
 end
-data_structure=[];

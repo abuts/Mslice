@@ -113,12 +113,11 @@ for i=1:length(dirs)
                         % And move libisis executive, if found in the upper
                         % folder directory, into the version specifie
                         % directory
-                        libisis_name = fillfile(dirName,['libisisexec.' mexext()]);
+                        libisis_name = fullfile(dirName,['libisisexc.' versionDLLextention]);
+                        dirName      = fullfile(dirName,VersionFolderName);                        
                         if exist(libisis_name ,'file')
-                            movefile(libisis_name,fillfile(dirName,VersionFolderName,['libisisexec.' mexext()]),'-f');
-                        end
-                            
-                        dirName = fullfile(dirName,VersionFolderName);
+                            movefile(libisis_name,fullfile(dirName,['libisisexc.' versionDLLextention]),'f');
+                        end                                                   
                         p = [p dirName pathsep];
                     end
              end
