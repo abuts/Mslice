@@ -104,7 +104,7 @@ for i=1:length(dirs)
              if(OS_Corresponds2Directory(dirname))
                       dirName = fullfile(d,dirname);
                     %addpath(dirName);
-                    [VersionFolderName,versionDLLextention]=MatlabVersionFolder(dirname);
+                    [VersionFolderName,versionDLLextention]=matlab_version_folder(dirname);
                     if(strncmpi(dirname,'_PCWIN',6)) % under windows copy the contents of the VersionFolderName to the current folder
                         p = [p dirName pathsep];                      
                         sourceName=fullfile(dirName,VersionFolderName);

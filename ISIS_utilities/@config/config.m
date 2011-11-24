@@ -2,6 +2,10 @@ function this=config(varargin)
 % Base configuration class inherited by user-modifiable application configurations
 %
 %   >> this = config
+%
+% $Revision$ ($Date$)
+%
+
 
 persistent this_local;
 

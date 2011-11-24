@@ -5,6 +5,10 @@ function mslice_off
 %   >> mslice_off
 
 % T.G.Perring
+%
+% $Revision$ ($Date$)
+%
+
 
 % root directory is assumed to be that in which this function resides
 rootpath = fileparts(which('mslice_off'));

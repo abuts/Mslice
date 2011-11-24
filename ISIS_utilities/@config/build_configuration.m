@@ -23,6 +23,10 @@ function build_configuration(this, default_config_fun, config_name)
 %
 % In either case, the current configuration and default configuration are saved in
 % memory.
+%
+% $Revision$ ($Date$)
+%
+
 
 root_config_name=mfilename('class');
 

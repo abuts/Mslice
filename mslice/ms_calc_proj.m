@@ -5,12 +5,12 @@ function ms_calc_proj
 % === if no Control Window opened or data not loaded, return 
 fig=findobj('Tag','ms_ControlWindow');
 if isempty(fig),
-   disp(['Control Window not present. Return']);
+   disp('Control Window not present. Return');
    return;
 end
 data=get(fig,'UserData');
 if isempty(data),
-   disp(['No data set in the Control Window. Load data first.']);
+   disp('No data set in the Control Window. Load data first.');
    return;
 end
 data.v=[]; % reset previous projections
@@ -167,7 +167,7 @@ if (samp==1) && (analmode<3),	% single crystal sample
 	cr=[dot(cr,u) dot(cr,v) dot(cr,w)];
 
 	% === Update crystal orientation in the data set 
-	data.ar=ar;
+   data.ar=ar;
    data.br=br;
    data.cr=cr;
    data.psi_samp=psi_samp*pi/180;

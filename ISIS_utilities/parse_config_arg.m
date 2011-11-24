@@ -1,7 +1,7 @@
 function [ field_nams,field_vals] = parse_config_arg(varargin)
 % function processes arguments, which are present in varargin as
 % number of 'key','value' pairs or as a structure 
-% and two ouptupt cell arrays of fields and values
+% 
 % 
 % usage:
 %>> [field_nams,field_vals] = parse_config_arg('a',10,'b','something')
@@ -39,7 +39,7 @@ else
          error('PARSE_ARG:wrong_arguments','incomplete set of (field,value) pairs given');        
     end
     field_nams = {varargin{1:2:narg}};
-    field_vals ={varargin{2:2:narg}};
+    field_vals = {varargin{2:2:narg}};
         
 end
 

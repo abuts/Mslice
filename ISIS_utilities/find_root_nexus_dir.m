@@ -18,7 +18,7 @@ function [root_nxspe_path,data_version,data_structure] = find_root_nexus_dir(hdf
 %                                        array of processed signals 
 % $Author: Alex Buts; 20/10/2011
 %
-% $Revision: 1 $ ($Date:  $)
+% $Revision$ ($Date$)
 %
 data_structure =  hdf5info(hdf_fileName,'ReadAttributes',true);
 groups = data_structure.GroupHierarchy.Groups(:);

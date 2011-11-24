@@ -6,6 +6,10 @@ function config=get_all(this,opt)
 %
 % Each field in the structure corresponds to a configuration thatis currently
 % in memory.
+%
+% $Revision$ ($Date$)
+%
+
 
 if nargin==1
     config=config_store(false);

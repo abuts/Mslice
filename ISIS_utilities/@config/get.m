@@ -8,6 +8,9 @@ function varargout= get(this,varargin)
 %
 % Recursively searches the sub-structures and classes of the configuration class
 % until field(s) with the given name(s) is/are found.
+%
+% $Revision$ ($Date$)
+%
 
 
 % Fetch the current configuration

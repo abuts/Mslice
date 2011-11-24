@@ -1,5 +1,4 @@
 function [ar,br,cr]=basis_r(as,bs,cs,aa,bb,cc)
-
 % returns reciprocal basis vectors, 2 possible calling syntaxes
 % (1) function [ar,br,cr]=basis_r(a,b,c)
 %     assumes a,b,c are 3-component vectors of the direct lattice in some coordinate system

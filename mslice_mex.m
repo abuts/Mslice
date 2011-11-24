@@ -13,7 +13,7 @@ function mslice_mex(option)
 %   If the default options do not work, then the original_32 option may compile
 %  correctly and be a quick-fix solution to the problem. 
 %
-%   $Rev: 87 $ ($Date: 2010-01-22 13:16:49 +0000 (Fri, 22 Jan 2010) $)
+%   $Rev$ ($Date$)
 %
 start_dir=pwd;
 % root directory is assumed to be that in which mslice_init resides

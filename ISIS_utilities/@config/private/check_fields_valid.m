@@ -2,6 +2,10 @@ function [valid,mess]=check_fields_valid (structure, root_config_name)
 % Check that the fields of a structure are valid as a configuration object
 % - cannot contain the root config class at any depth of nesting
 % - must contain a top-level field called 'sealed_fields' that is a cellstr of valid field names
+%
+% $Revision$ ($Date$)
+%
+
 
 if isfield(structure,'sealed_fields') && iscellstr(structure.sealed_fields) && ...
         (isempty(structure.sealed_fields) || all(ismember(structure.sealed_fields,fields(structure))))

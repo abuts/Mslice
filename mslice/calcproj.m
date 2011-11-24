@@ -28,12 +28,12 @@ if any(abs(cosang)>=cos(pi/2*(1-1/90))),	% if angles between U1,U2,U3 are more t
    disp(['Warning: Chosen viewing axes are not orthogonal to each other. The angles are']);
    form='%5.2f';
    disp([ '(u1,u2)=' num2str(acos(cosang(1))*180/pi,form) ' deg, (u2,u3)=' num2str(acos(cosang(2))*180/pi,form) ' deg, (u3,u1)=' num2str(acos(cosang(3))*180/pi,form) ' deg']);
-   disp(['Projections are not calculated.']);
-   disp(['Redefine orthogonal viewing axes.']);
+   disp('Projections are not calculated.');
+   disp('Redefine orthogonal viewing axes.');
    disp('Possible suggestions are : ');
    planeperp(data_in.u(1,:),data_in.ar,data_in.br,data_in.cr);
    planeperp(data_in.u(2,:),data_in.ar,data_in.br,data_in.cr);
-	planeperp(data_in.u(3,:),data_in.ar,data_in.br,data_in.cr);
+   planeperp(data_in.u(3,:),data_in.ar,data_in.br,data_in.cr);
    data_out.v=[];
    data_out.axis_unitlabel=[];
    data_out.axis_unitlength=[];
