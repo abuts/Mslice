@@ -1,7 +1,6 @@
 function ms_updatelabel(n)
 
 
-
 % === return if ControlWindow not present
 fig=findobj('Tag','ms_ControlWindow');
 if isempty(fig),

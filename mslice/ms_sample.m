@@ -68,7 +68,7 @@ elseif sample==2,      % === sample is powder, draw menu options in ControlWindo
    lineoffset=2;
    strings={'Energy','|Q|','2Theta','Azimuth','Det Group Number'};    
 else  % unknown sample
-  disp(sprintf('Unknown sample type (=1 single crystal, =2 powder), not %g',sample)); 
+  fprintf('Unknown sample type (=1 single crystal, =2 powder), not %g',sample); 
 end
 
 % === update detector trajectories axes
@@ -208,6 +208,6 @@ hc{29}=uicontrol('Parent',fig,'Style','text',...
 	   'HorizontalAlignment','left','Position',pos+[2*pos(3) 0 6*pos(3) 0],'Visible','off');
 	%extent=get(h,'Extent');
 	%set(h,'Position',pos+[2*pos(3) 0 extent(3) 0])
-   cryst = graph_objects_collection(this_name); 
-   add(mslice_gui,add_handles(cryst,hc));
+cryst = graph_objects_collection(this_name); 
+add(mslice_gui,add_handles(cryst,hc));
    

@@ -1,5 +1,4 @@
 function data_out=calcproj(data_in)
-
 % data_in.a, b, c (1,3)[Å] = direct criystal lattice
 %        .psi_samp [rad] = rotation angle of (a,b) axes in the horizontal scattering plane of the spectrometer
 %        .det_theta (ndet,1)[rad] = total scattering angles of the detectors 
