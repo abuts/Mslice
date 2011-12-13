@@ -10,7 +10,7 @@ properties
   h_menu; % pointer? to itself
   collection_name; % name for this collection
   element_list;    % list of its graphical elements (handles)
-  elements_names; % 
+  elements_names;  % Names of the handles
 end
     
     methods

@@ -1,4 +1,4 @@
-function pos =  msui_cut_output(h_root,pos,oneline,interlines,white,sample)
+function [pos,mslice_gui] =  msui_cut_output(h_root,pos,oneline,interlines,white,sample)
 % function defines cut output interface for mslice menu
 this_name='cut_output';
 mslice_gui = msui_collection(h_root,'mslice_gui');
@@ -66,5 +66,5 @@ ho{10}=uicontrol('Parent',h_root,'Style','pushbutton','String','Plot Cut Over',.
  % create graphic elements colllection
 cut_output =graph_objects_collection(this_name);
 % add the handles to the collection and add it to the mslice_gui;
-add(mslice_gui,add_handles(cut_output,ho));
+mslice_gui=add(mslice_gui,add_handles(cut_output,ho));
 

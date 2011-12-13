@@ -1,16 +1,30 @@
-function pos = msui_powder_display_slice(pos,h_root,oneline,interlines,white,coltab)
-
-this_name = 'powder_slice';
-mslice_gui = msui_collection(h_root,'mslice_gui');
-if exist(mslice_gui,this_name)
-     pos = get_line_pos(get(mslice_gui,this_name)); 
-    return;
-end
+function [pos,pos_u1step,pos_u2step] = msui_powder_cut(pos,h_root,oneline,interlines,white,coltab)
+% Interface to Powder: Cut display
+% Outputs:
+% pos        -- position of the last row of this menu
+% pos_u1step -- the starting position of the step for rebinning in x-direction
+% pos_u2step -- the starting position of the step for rebinning in y-direction
 
 
 width = pos(3);
 height= pos(4);
 pos(2)=pos(2)-height;
+
+
+this_name = 'powder_slice';
+mslice_gui = msui_collection(h_root,'mslice_gui');
+if exist(mslice_gui,this_name)
+    pos = get_line_pos(get(mslice_gui,this_name)); 
+    
+    % positions of the binning controls
+    pos(3)=width;
+    pos=pos-oneline;
+    pos_u1step=pos+[6*pos(3) 0 0 interlines];
+    pos=pos-oneline;
+    pos_u2step=pos+[6*pos(3) 0 0 interlines];       
+    return;
+end
+
 
 hb = cell(20,1);
 %========= Slice plane/Display  ==================
@@ -35,6 +49,8 @@ hb{5}=uicontrol('Parent',h_root,'Style','edit','Tag','ms_disp_vx_max',...
   	'Position',pos+[5*pos(3) 0 0 interlines],...
   	'HorizontalAlignment','left',...
   	'BackgroundColor',white,'Visible','off');
+    % provisional position of the step tab:
+     pos_u1step=pos+[6*pos(3) 0 0 interlines];
 
 %========= Display vy_min, vy_max, bin_vy ==================
 pos=pos-oneline;
@@ -51,6 +67,8 @@ hb{9}=uicontrol('Parent',h_root,'Style','edit','Tag','ms_disp_vy_max',...
   	'Position',pos+[5*pos(3) 0 0 interlines],...
   	'HorizontalAlignment','left',...
   	'BackgroundColor',white,'Visible','off');
+    % provisional position of the step tab:
+     pos_u2step=pos+[6*pos(3) 0 0 interlines];
    
 %========= Display Intensity range ==================
 pos=pos-oneline;

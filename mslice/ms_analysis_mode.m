@@ -45,7 +45,7 @@ white=get(sampobj,'BackgroundColor');
 if (analmode==1),	% === change analysis from powder to single crystal mode   
      msui_detector_type(fig,pos,interlines,white);
     
-    ms_disp_or_slice;
+     ms_disp_or_slice;
 else 	% powder analysis mode
   
  position  = pos;

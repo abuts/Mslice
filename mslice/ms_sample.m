@@ -34,7 +34,7 @@ if sample==1, % === sample is crystal, build menu options in ControlWindow
     pos = ui_crystal_description(fig,pos,oneline,interlines,white);
     
 	%========= Analysis mode  ==================
-    msui_analysis_mode(fig,pos,oneline,interlines,white,{'single crystal','powder','powder_remap'});
+    msui_analysis_mode(fig,pos,oneline,interlines,white,{'single crystal','powder','powder_remap','powder2Drebin'});
     % start analysis mode selection; 	
     ms_analysis_mode;
    

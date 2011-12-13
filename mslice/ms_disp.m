@@ -1,4 +1,4 @@
-function ms_disp;
+function ms_disp
 
 % function ms_disp;
 % callback function for the 'Display' button on the MSlice Control Window
@@ -10,7 +10,7 @@ if isempty(fig),
    return;
 end
 data=get(fig,'UserData');
-if isempty(data)|~isfield(data,'S'),
+if isempty(data)||~isfield(data,'S'),
    disp('Load data first, then do display.');
    return;
 elseif ~isfield(data,'v'),
@@ -69,7 +69,7 @@ end
 colordef none;
 
 % === call disp_spe function
-if isempty(nsmooth)|~isnumeric(nsmooth)|(nsmooth<1),
+if isempty(nsmooth)||~isnumeric(nsmooth)||(nsmooth<1),
 	disp_spe(data,vx_min,vx_max,vy_min,vy_max,i_min,i_max,shad,map,linearlog);
 else
    disp_spe(smooth_spe(data,nsmooth),vx_min,vx_max,vy_min,vy_max,i_min,i_max,shad,map,linearlog);

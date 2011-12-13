@@ -12,7 +12,7 @@ end
 
  % get gui and clear powder menu if present;
 mslice_gui = msui_collection(fig,'mslice_gui');
-delete(mslice_gui,{'powder_axis','powder_slice','powder_cut','delta_phi_range'});
+delete(mslice_gui,{'powder_axis','powder_slice','powder_cut','delta_phi_range','powder_rebin_step'});
 
 % === if no analysis mode defined , return
 analobj=findobj(fig,'Tag','ms_analysis_mode');

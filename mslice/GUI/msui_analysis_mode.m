@@ -5,7 +5,7 @@ this_name = 'analysis_mode';
 mslice_gui = msui_collection(fig,'mslice_gui');
 if exist(mslice_gui,this_name)
     control = get(mslice_gui,this_name);
-    pos      = get_line_pos(control);
+    pos     = get_line_pos(control);
     
     set(control.handles{2},'String',modes);
     return

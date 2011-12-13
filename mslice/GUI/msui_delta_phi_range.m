@@ -1,4 +1,4 @@
-function msui_delta_phi_range(h_root,position, white)
+function mslice_gui=msui_delta_phi_range(h_root,position, white)
 % function defines block of three test controls for phi range and places it
 % in specified location wrt the root object
 this_name='delta_phi_range';
@@ -37,5 +37,5 @@ delta_phi_block=add_right(delta_phi_block,...
                           'Position',pos,'HorizontalAlignment','left','BackgroundColor',white,'HorizontalAlignment','left','Visible','off'));
                         
            
-add(mslice_gui,delta_phi_block);
+mslice_gui=add(mslice_gui,delta_phi_block);
 
