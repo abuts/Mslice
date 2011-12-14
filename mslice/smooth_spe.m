@@ -16,9 +16,9 @@ A=[0.1 0.2 0.1; 0.2 0.8 0.2; 0.1 0.2 0.1];
 %A=[0.01 0.2 0.01; 0.01 1 0.01; 0.01 0.2 0.01];
 %A=[0 0.1 0; 0 0.4 0; 0 0.1 0]';
 disp(['Smoothing by repeated normalised convolution (' num2str(nsmooth) ' time(s))']);
-disp(['with the 3x3 matrix :']);
+disp( 'with the 3x3 matrix :');
 for i=1:3,
-	disp(sprintf('%g  %g  %g',A(i,:)));   
+	fprintf('%g  %g  %g\n',A(i,:));   
 end
 %A=A/sum(A(:));	% normalise convolution matrix
 

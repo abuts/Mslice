@@ -1,5 +1,15 @@
 function [pos,mslice_gui] =  msui_cut_output(h_root,pos,oneline,interlines,white,sample)
 % function defines cut output interface for mslice menu
+%
+%
+%Callbacks:
+% ms_pick_output
+% ms_cut(''tomfit'')
+% ms_cut(''store_bkg_E'')
+% ms_cut;
+% ms_cut(''over'');
+%Variables:
+% ms_cut_OutputFile
 this_name='cut_output';
 mslice_gui = msui_collection(h_root,'mslice_gui');
 if exist(mslice_gui,this_name)
@@ -17,12 +27,12 @@ ho{1}=uicontrol('Parent',h_root,'Style','text','String','OutputFile*',...
                     
 pos(3)=width;%
 
-strings={'none','.cut','.xye','.smh','Mfit .cut'};
+CutFileFormat={'none','.cut','.xye','.smh','Mfit .cut'};
 if (sample==1), % single crystal sample analysed as powder
-   strings={'none','.cut','.xye','.smh','Mfit .cut', '.hkl'};
+   CutFileFormat={'none','.cut','.xye','.smh','Mfit .cut', '.hkl'};
 end
 %========= OutputFile + To Mfit pushbutton + Generate bkg(E) button ==================
-ho{2}=uicontrol('Parent',h_root,'Style','popupmenu','String',strings,...
+ho{2}=uicontrol('Parent',h_root,'Style','popupmenu','String',CutFileFormat,...
                         'Value',1,'BackgroundColor',white,'Tag','ms_cut_OutputType',...
                         'Position',pos+[1*pos(3) 0 pos(3)*1/4 interlines],'Visible','off');
 ho{3}=uicontrol('Parent',h_root,'Style','edit','Enable','on','Tag','ms_cut_OutputFile',...

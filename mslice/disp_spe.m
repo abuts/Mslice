@@ -1,4 +1,4 @@
-function disp_spe(data,vx_min,vx_max,vy_min,vy_max,i_min,i_max,shad,map,linearlog);
+function disp_spe(data,img_range,map,linearlog)
 
 % function disp_spe(data,vx_min,vx_max,vy_min,vy_max,i_min,i_max,shad,map);
 % puts intenity as colour on the surface of trajectories described by an array of detectors
@@ -54,50 +54,74 @@ if isempty(h),
 end   
    
 % ==== establish plot limits along the u1 and u2 axes
-if ~exist('vx_min','var')|isempty(vx_min)|~isnumeric(vx_min),
-   vx_min=min([min(min(data.vb(:,:,1))) min(min(data.vb(:,:,3)))]);
+if isempty(img_range.vx_min)||~isnumeric(img_range.vx_min),
+   img_range.vx_min=min([min(min(data.vb(:,:,1))) min(min(data.vb(:,:,3)))]);
+   ms_setvalue('disp_vx_min',img_range.vx_min,'highlight');             
 end   
-if ~exist('vx_max','var')|isempty(vx_max)|~isnumeric(vx_max),
-   vx_max=max([max(max(data.vb(:,:,1))) max(max(data.vb(:,:,3)))]);
+if isempty(img_range.vx_max)||~isnumeric(img_range.vx_max),
+   img_range.vx_max=max([max(max(data.vb(:,:,1))) max(max(data.vb(:,:,3)))]);
+   ms_setvalue('disp_vx_max',img_range.vx_max,'highlight');          
 end 
-if ~exist('vy_min','var')|isempty(vy_min)|~isnumeric(vy_min),
-   vy_min=min([min(min(data.vb(:,:,2))) min(min(data.vb(:,:,4)))]);
+if isempty(img_range.vy_min)||~isnumeric(img_range.vy_min),
+   img_range.vy_min=min([min(min(data.vb(:,:,2))) min(min(data.vb(:,:,4)))]);
+   ms_setvalue('disp_vy_min',img_range.vy_min,'highlight');       
 end 
-if ~exist('vy_max','var')|isempty(vy_max)|~isnumeric(vy_max),
-   vy_max=max([max(max(data.vb(:,:,2))) max(max(data.vb(:,:,4)))]);
+if isempty(img_range.vy_max)||~isnumeric(img_range.vy_max),
+   img_range.vy_max=max([max(max(data.vb(:,:,2))) max(max(data.vb(:,:,4)))]);
+   ms_setvalue('disp_vy_max',img_range.vy_max,'highlight');    
 end 
 
 % ==== establish intensity limits for the colorbar 
-if exist('i_min','var')&~isempty(i_min)&isnumeric(i_min),
-   if i_min>=max(data.S(:)),
-      disp(sprintf('Given intensity range min=%g not suitable for graph.',i_min)); 
-      i_min=min(data.S(:));      
-      disp(sprintf('Plotting with default intensity range min=%g.',i_min));
+if ~(isempty(img_range.i_min)||~isnumeric(img_range.i_min))
+   if img_range.i_min>=max(data.S(:)),
+      fprintf('Given intensity range min=%g not suitable for graph.',img_range.i_min); 
+      img_range.i_min=min(data.S(:));      
+      fprintf('Plotting with default intensity range min=%g.',img_range.i_min);
+      ms_setvalue('disp_i_min',img_range.i_min,'highlight');    
    end
 else
-   i_min=min(data.S(:));
+   img_range.i_min=min(data.S(:));
+   ms_setvalue('disp_i_min',img_range.i_min,'highlight');       
 end   
-if exist('i_max','var')&~isempty(i_max)&isnumeric(i_max),
-   if i_max<=min(data.S(:)),
-    	disp(sprintf('Given intensity range max=%g not suitable for graph.',i_max)); 
-      i_max=max(data.S(:));       
-      disp(sprintf('Plotting with default intensity range max=%g.',i_max));
+if ~(isempty(img_range.i_max)||~isnumeric(img_range.i_max)),
+   if img_range.i_max<=min(data.S(:)),
+      fprintf('Given intensity range max=%g not suitable for graph.',img_range.i_max); 
+      img_range.i_max=max(data.S(:));       
+      fprintf('Plotting with default intensity range max=%g.',img_range.i_max);
+      ms_setvalue('disp_i_max',img_range.i_max,'highlight');          
    end      
 else
-	i_max=max(data.S(:));   
+	img_range.i_max=max(data.S(:));   
+    ms_setvalue('disp_i_max',img_range.i_max,'highlight');              
 end  
-if i_max<i_min,
-	temp=max(i_max,i_min);
-   i_min=min(i_max,i_min);
-   i_max=temp;
+if img_range.i_max<img_range.i_min
+   temp=max(img_range.i_max,img_range.i_min);
+   img_range.i_min=min(img_range.i_max,img_range.i_min);
+   img_range.i_max=temp;
+   ms_setvalue('disp_i_min',img_range.i_min,'highlight');          
+   ms_setvalue('disp_i_max',img_range.i_max,'highlight');                 
    disp('Swapped axes limits.');
-end   
+end
+% ==== if powder rebin mode, identify the values for powder rebin.
+if data.analmode==4
+    [img_range.dx_step_min,img_range.dy_step_min]=find_min_delta(img_range,data.vb);
+    if isempty(img_range.dx_step)||~isnumeric(img_range.dx_step)
+        img_range.dx_step = min(img_range.dx_step_min,img_range.dy_step_min);
+        ms_setvalue('disp_dx_step',img_range.dx_step,'highlight');             
+    end   
+    if isempty(img_range.dy_step)||~isnumeric(img_range.dy_step)
+        img_range.dy_step = min(img_range.dx_step_min,img_range.dy_step_min);
+        ms_setvalue('disp_dy_step',img_range.dy_step,'highlight');          
+    end
+    data = mslice_rebin2D(data,img_range);
+end
+
 
 % ==== establish shading option
-if ~exist('shad','var')|~ischar(shad)|...
-      ~(strcmp(deblank(shad),'faceted')|strcmp(deblank(shad),'flat')|strcmp(deblank(shad),'interp')),
-   shad='flat';
-   disp(['Default "flat" shading option chosen.'])
+if ~ischar(img_range.shad)||~(strcmp(deblank(img_range.shad),'faceted')||...
+    strcmp(deblank(img_range.shad),'flat')||strcmp(deblank(img_range.shad),'interp')),
+    img_range.shad='flat';
+    disp('Default "flat" shading option chosen.')
 end
 
 % === from the trajectories of the bin boundaries construct the X and Y grids for the plot 
@@ -108,27 +132,27 @@ Y=X;
 Z=X;
 i=(1:ndet)';
 X(2*i-1,:)=data.vb(i,:,1);	% vx values of the boundary on the "left"
-X(2*i,:)=data.vb(i,:,3);	% vx values of the boundary on the "right"
+X(2*i,:)  =data.vb(i,:,3);	% vx values of the boundary on the "right"
 Y(2*i-1,:)=data.vb(i,:,2);
-Y(2*i,:)=data.vb(i,:,4);
+Y(2*i,:)  =data.vb(i,:,4);
 Z(2*i-1,1:ne)=data.S;
 hplot=pcolor(X,Y,Z);
-axis([vx_min vx_max vy_min vy_max]);
-caxis([i_min i_max]);
-shading(shad);
+axis([img_range.vx_min img_range.vx_max img_range.vy_min img_range.vy_max]);
+caxis([img_range.i_min img_range.i_max]);
+shading(img_range.shad);
 
 % ==== choose colormap and plot colorbar
-if exist('map','var')&isnumeric(map)&(size(map,2)==3), 
+if exist('map','var')&&isnumeric(map)&&(size(map,2)==3), 
    colormap(map);
 else
    colormap jet;
 end
 
 % === set aspect ratio 1:1 if units along x and y are the same and are Å^{-1}
-if (~isempty(findstr(data.axis_unitlabel(1,:),'Å^{-1}')))&...
-      (~isempty(findstr(data.axis_unitlabel(2,:),'Å^{-1}'))),
+if (~isempty(strfind(data.axis_unitlabel(1,:),'Å^{-1}')))&& ...
+   (~isempty(strfind(data.axis_unitlabel(2,:),'Å^{-1}')))
    figure(fig);  
-	set(gca,'DataAspectRatioMode','manual');
+   set(gca,'DataAspectRatioMode','manual');
    a=get(gca,'DataAspectRatio');
    set(gca,'DataAspectRatio',[1./data.axis_unitlength([1;2])' a(3)]);
 else
@@ -144,9 +168,9 @@ set(h,'Tag','Colorbar');
 aspect=get(gca,'DataAspectRatio');
 YLim=get(gca,'Ylim');
 XLim=get(gca,'XLim');
-pos=get(gca,'Position');
-x=1/aspect(1)*[XLim(2)-XLim(1)];
-y=1/aspect(2)*[YLim(2)-YLim(1)];
+pos =get(gca,'Position');
+x=1/aspect(1)*(XLim(2)-XLim(1));
+y=1/aspect(2)*(YLim(2)-YLim(1));
 scx=pos(3)/x;
 scy=pos(4)/y;
 if scx<scy,
@@ -157,7 +181,7 @@ end
 
 h=h_colourbar;
 % === establish linear or log colour scale 
-if exist('linearlog','var')&ischar(linearlog)&strcmp(linearlog(~isspace(linearlog)),'log'),
+if exist('linearlog','var')&&ischar(linearlog)&&strcmp(linearlog(~isspace(linearlog)),'log'),
    set(h,'YScale','log');
    index=(Z==0);
    Z(index)=NaN;
@@ -167,19 +191,21 @@ else
    % === use linear scale and enable colour sliders
    % === put sliders for adjusting colour axis limits
    pos_h=get(h,'Position');
-   range=abs(i_max-i_min);
+   range=abs(img_range.i_max-img_range.i_min);
    hh=uicontrol(fig,'Style','slider',...
      'Units',get(h,'Units'),'Position',[pos_h(1) pos_h(2) pos_h(3)*1.5 pos_h(4)/20],...
-     'Min',i_min-range/2,'Max',i_max-range*0.1,...
-     'SliderStep',[0.01/1.4*2 0.10/1.4],'Value',i_min,'Tag','color_slider_min','Callback','color_slider_ms(gcf,''slider'')');  
+     'Min',img_range.i_min-range/2,'Max',img_range.i_max-range*0.1,...
+     'SliderStep',[0.01/1.4*2 0.10/1.4],'Value',img_range.i_min,...
+     'Tag','color_slider_min','Callback','color_slider_ms(gcf,''slider'')');  
      % the SliderStep is adjusted such that in real terms it is [0.02 0.10] of the displayed intensity range 
    hh_value=uicontrol(fig,'Style','edit',...
      'Units',get(h,'Units'),'Position',get(hh,'Position')+pos_h(3)*1.5*[1 0 0 0],...
      'String',num2str(get(hh,'Value')),'Tag','color_slider_min_value','Callback','color_slider_ms(gcf,''min'')');
    hh=uicontrol(fig,'Style','slider',...
      'Units',get(h,'Units'),'Position',[pos_h(1) pos_h(2)+pos_h(4)-pos_h(4)/20 pos_h(3)*1.5 pos_h(4)/20],...
-     'Min',i_min+range*0.1,'Max',i_max+range/2,...
-     'SliderStep',[0.01/1.4*2 0.10/1.4],'Value',i_max,'Tag','color_slider_max','Callback','color_slider_ms(gcf,''slider'')');
+     'Min',img_range.i_min+range*0.1,'Max',img_range.i_max+range/2,...
+     'SliderStep',[0.01/1.4*2 0.10/1.4],'Value',img_range.i_max,...
+     'Tag','color_slider_max','Callback','color_slider_ms(gcf,''slider'')');
    hh_value=uicontrol(fig,'Style','edit',...
      'Units',get(h,'Units'),'Position',get(hh,'Position')+pos_h(3)*1.5*[1 0 0 0],...
      'String',num2str(get(hh,'Value')),'Tag','color_slider_max_value','Callback','color_slider_ms(gcf,''max'')');
@@ -193,20 +219,20 @@ if data.emode==1,	% direct geometry Ei fixed
 elseif data.emode==2,	% indirect geometry Ef fixed
    titlestr1=[titlestr1 ', Ef=' num2str(data.efixed,form) ' meV'];
 else
-   disp(sprintf('Could not identify spectrometer type (only direct/indirect geometry allowed), emode=%g',data.emode));
+   fprintf('Could not identify spectrometer type (only direct/indirect geometry allowed), emode=%g',data.emode);
    titlestr1=[titlestr1 ', E=' num2str(data.efixed,form) ' meV'];   
 end   
 % if sample is single crystal and uv orientation and psi_samp are defined, include in title
-if isfield(data,'uv')&~isempty(data.uv)&isnumeric(data.uv)&(size(data.uv)==[2 3])&...
-      isfield(data,'psi_samp')&~isempty(data.psi_samp)&isnumeric(data.psi_samp)&...
-      (prod(size(data.psi_samp))==1),
+if isfield(data,'uv')&&~isempty(data.uv)&&isnumeric(data.uv)&&(all(size(data.uv)==[2 3]))&&...
+      isfield(data,'psi_samp')&&~isempty(data.psi_samp)&&isnumeric(data.psi_samp)&&...
+      (numel(data.psi_samp)==1)  
    titlestr2=sprintf('{\\bfu}=[%g %g %g], {\\bfv}=[%g %g %g], Psi=({\\bfu},{\\bfki})=%g',...
-      data.uv(1,:),data.uv(2,:),data.psi_samp*180/pi);
+             data.uv(1,:),data.uv(2,:),data.psi_samp*180/pi);
 else
    titlestr2=[];
 end
-titlestr3=[num2str(vx_min,form) '<' deblank(data.axis_label(1,:)) '<' num2str(vx_max,form) ];
-titlestr3=[titlestr3 ',  ' num2str(vy_min,form) '<' deblank(data.axis_label(2,:)) '<' num2str(vy_max,form)];
+titlestr3=[num2str(img_range.vx_min,form) '<' deblank(data.axis_label(1,:)) '<' num2str(img_range.vx_max,form) ];
+titlestr3=[titlestr3 ',  ' num2str(img_range.vy_min,form) '<' deblank(data.axis_label(2,:)) '<' num2str(img_range.vy_max,form)];
 if ~isempty(titlestr2), 	 
 	h=title({titlestr1, titlestr2, titlestr3});
 else
@@ -217,24 +243,21 @@ pos=get(h,'Position');
 set(h,'Position',[pos(1) YLim(2) pos(3)]);
 hsamp=findobj('Tag','ms_sample');
 if ~isempty(hsamp),
-   sample=get(hsamp,'Value');
-	if sample==1,
-   	analmode=get(findobj('Tag','ms_analysis_mode'),'Value');
-	end
-	if (sample==1)&(analmode==1),
+    sample=get(hsamp,'Value');
+    if sample==1,
+   	   analmode=get(findobj('Tag','ms_analysis_mode'),'Value');
+    end
+    if (sample==1)&&(analmode==1),
 		% single crystal axes
 		labelx=[combil(deblank(data.axis_label(1,:)),data.u(1,:)) ' ' deblank(data.axis_unitlabel(1,:))];
-   	labely=[combil(deblank(data.axis_label(2,:)),data.u(2,:)) ' ' deblank(data.axis_unitlabel(2,:))];
+   	    labely=[combil(deblank(data.axis_label(2,:)),data.u(2,:)) ' ' deblank(data.axis_unitlabel(2,:))];
 	else	% powder axes
-   	labelx=deblank(data.axis_unitlabel(1,:));
-   	labely=deblank(data.axis_unitlabel(2,:));
-   end 
+   	    labelx=deblank(data.axis_unitlabel(1,:));
+   	    labely=deblank(data.axis_unitlabel(2,:));
+    end 
 else
    labelx=[];
    labely=[];
 end
 xlabel(labelx);
 ylabel(labely);
-
-
-

@@ -19,7 +19,7 @@ axis_cel=add_right(axis_cel ,...
                                     uicontrol('Parent',h_root,'Style','text','String','Label',...
                                      'BackgroundColor',white,'Position',pos+[0,0,width,0],'Visible','off'));                                                        
 %========= u1  ==================
-strings={'Energy','|Q|','2Theta','Azimuth','Det Group Number'};
+AxisNames={'Energy','|Q|','2Theta','Azimuth','Det Group Number'};
 %
 u1_row =graph_objects_collection('u1_row',...,
                  uicontrol('Parent',h_root,'Style','text','String','u1','Position',pos,'Visible','off'));
@@ -28,7 +28,7 @@ grey = get(u1_row.handles{1},'BackgroundColor');
 u1_row =add_right(u1_row,...
                  uicontrol('Parent',h_root,'Style','popupmenu','Tag','ms_u1',...
                               'HorizontalAlignment','left',...
-                              'BackgroundColor',white,'String',strings,'Value',2,...
+                              'BackgroundColor',white,'String',AxisNames,'Value',2,...
                               'Callback',{@powder_update_selection,1},'Visible','off')); 
 u1_row =add_right(u1_row,...                          
                 uicontrol('Parent',h_root,'Style','edit','Enable','on','Tag','ms_u1label',...
@@ -42,7 +42,7 @@ u2_row =graph_objects_collection('u2_row',...,
 u2_row =add_right(u2_row,...
               uicontrol('Parent',h_root,'Style','popupmenu','Tag','ms_u2',...
                              'HorizontalAlignment','left',...
-                            'BackgroundColor',white,'String',strings,'Value',1,...
+                            'BackgroundColor',white,'String',AxisNames,'Value',1,...
                          	'Callback',{@powder_update_selection,2},'Visible','off'));
 u2_row =add_right(u2_row,...
              uicontrol('Parent',h_root,'Style','edit','Enable','on','Tag','ms_u2label',...
@@ -107,7 +107,7 @@ end
 function powder_updatelabel(hLabel,event,n,theLabel) %#ok<INUSD>
 if exist('theLabel','var') % set the label value from the agruments;
     set(hLabel,'String',theLabel);    
-else   % tge function ivoked from uicontrol and  we need to get the label from the uicontrol
+else   % the function ivoked from uicontrol and  we need to get the label from the uicontrol
     theLabel = get(hLabel,'String');
 end
 
@@ -116,16 +116,25 @@ end
 % update dependent fields in other gui elements;
 
 % MODIFY DISPLAY AXIS
-labelx=get(findobj('Tag',['ms_u1label']),'String');
-set(findobj('Tag','ms_disp_x_axis'),'String',['horizontal range* ' labelx ]);
-
-labely=get(findobj('Tag',['ms_u2label']),'String');
-set(findobj('Tag','ms_disp_y_axis'),'String',['vertical range* ' labely ]);
-
+switch n
+    case 1
+        labelx=get(findobj('Tag','ms_u1label'),'String');
+        set(findobj('Tag','ms_disp_x_axis'),'String',['horizontal range* ' labelx ]);
+        % clear limits in display range box
+        ms_setvalue('disp_vx_min','');
+        ms_setvalue('disp_vx_max','');
+    case 2
+        labely=get(findobj('Tag','ms_u2label'),'String');
+        set(findobj('Tag','ms_disp_y_axis'),'String',['vertical range* ' labely ]);
+        ms_setvalue('disp_vy_min','');
+        ms_setvalue('disp_vy_max','');
+    otherwise
+        error('MSUI_POWDER_SELECT_AXIS:updatelabel',' unknown option %d while trying to updated powder axis labels',n);
+end
 
 % update cut along axis selection list
 hCutLabels=findobj('Tag','ms_cut_x');
-cutLabels   =get(hCutLabels,'String');
+cutLabels    =get(hCutLabels,'String');
 cutLabels{n} = theLabel;
 set(hCutLabels,'String',cutLabels);
 

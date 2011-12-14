@@ -26,7 +26,8 @@ if spe_data.emode==1,
    if ~isfield(spe_data,'det_psi'),
       %data.det_psi=zeros(size(spe_data.det_theta));
      disp('Assume psi=0 for all detectors');
-     Qy=-(sin(spe_data.det_theta).*ones(size(spe_data.det_theta)))*kf;
+     %Qy=-(sin(spe_data.det_theta).*ones(size(spe_data.det_theta)))*kf;<---Why this strange formula?
+	 Qy=-kf*(sin(spe_data.det_theta))*ones(size(spe_data.en));	% (ndet,1)*(1,ne)           
      Qz=zeros(size(Qy));
    else
      Qy=-(sin(spe_data.det_theta).*cos(spe_data.det_psi))*kf;
@@ -46,8 +47,15 @@ elseif spe_data.emode==2,
     ki=sqrt((spe_data.efixed+spe_data.en)/E_to_wawelengh); % line-vector (1,ne)
     kf=sqrt(spe_data.efixed/E_to_wawelengh);	% scalar
 	Qx=ones(size(spe_data.det_theta))*ki-kf*cos(spe_data.det_theta)*ones(size(spe_data.en)); % matrix (ndet,ne)
-	Qy=-kf*(sin(spe_data.det_theta))*ones(size(spe_data.en));	% (ndet,1)*(1,ne)
-	Qz=zeros(size(Qx));
+    if ~isfield(spe_data,'det_psi'),
+      disp('Assume psi=0 for all detectors');
+	  Qy=-kf*(sin(spe_data.det_theta))*ones(size(spe_data.en));	% (ndet,1)*(1,ne)      
+      Qz= zeros(size(Qy));
+    else
+      Qy=(-kf*sin(spe_data.det_theta)).*cos(spe_data.det_psi);
+      Qz=(-kf*sin(spe_data.det_theta)).*sin(spe_data.det_psi);
+    end    
+
 	Q=cat(3,Qx,Qy,Qz);
 
 else

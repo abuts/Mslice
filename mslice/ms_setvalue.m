@@ -47,7 +47,7 @@ elseif ischar(val)&&(min(size(val))==1), % one-dimensional string of characters
 elseif isempty(val),
     val='';
 else
-    disp(sprintf('Could not set value of field %s . Invalid input value type.',field_name));
+    fprintf('Could not set value of field %s . Invalid input value type.',field_name);
     return;
 end    
     
@@ -57,7 +57,7 @@ if strcmp(get(h,'Style'),'checkbox'),
         set(h,'Value',floor(str2double(val)));
    	    %disp(['ms_' field_name ' gets ''Value'' property ' num2str(floor(str2num(val)))]);           
     else 
-        disp(sprintf('Invalid value for a checkbox, could be only 0 or 1 (unchecked or checked)'));
+        fprintf('Invalid value for a checkbox, could be only 0 or 1 (unchecked or checked)');
         return;
     end    
 elseif strcmp(get(h,'Style'),'popupmenu'),

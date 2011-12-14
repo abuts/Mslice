@@ -31,7 +31,7 @@ if samp==2,     % sample is powder
 elseif samp==1, % sample is single crystal 
    vars={'as','bs','cs','aa','bb','cc','ux','uy','uz','vx','vy','vz','psi_samp','efixed','emode','IntensityLabel','TitleLabel'};
    analmode=get(findobj('Tag','ms_analysis_mode'),'Value');
-   if analmode==2,	% analysed as powder
+   if analmode==2||analmode==4,	% analysed as powder
       vars=[vars,{'u1','u1label','u2','u2label'}];	   	  
       psd=(1<0);	% FALSE
    elseif analmode==1	% analysed as single crystal
@@ -209,6 +209,9 @@ else	% sample is powder or analysed as powder
    % projections for powder
    data=calcprojpowder(data);  
 end
+% propagate sample and analysis mode for further usage
+data.sample=samp;
+data.analmode=analmode;
 % no label should change when projections are calculated;
 %ms_updatelabel(1);
 %ms_updatelabel(2);
