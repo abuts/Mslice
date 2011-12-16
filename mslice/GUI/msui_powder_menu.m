@@ -13,7 +13,7 @@ function  msui_powder_menu(h_fig,position,white,analmode,sample)
 %
 % remove the part of ui responsible for crystal analysis
 mslice_gui = msui_collection(h_fig,'mslice_gui');
-mslice_gui = delete(mslice_gui,{'cryst_analysis_psd','cryst_analysis_nonpsd','detector_type_psd'});
+mslice_gui = delete(mslice_gui,{'cryst_analysis_psd','cryst_analysis_nonpsd','detector_type_psd','cut_output'});
 if sample==2
     mslice_gui=delete(mslice_gui,{'single_crystal_gui','analysis_mode'});
 end
@@ -43,7 +43,7 @@ pos =ui_powder_cut(pos,h_fig,oneline,interlines,white,sample);
 % cut output block -- the same for crystall and powder mode, so does its
 % own existance check;
 pos(2)  = pos(2)-0.1*height;
-msui_cut_output(pos,h_fig,oneline,interlines,white,sample);
+msui_cut_output(h_fig,pos,oneline,interlines,white,sample);
  
 if (analmode == 3)  % powder remap;
     % if it has been created above, mslice_gui knows nothing about it here; need to retrieve it from fig singleton; 

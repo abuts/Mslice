@@ -104,13 +104,13 @@ if img_range.i_max<img_range.i_min
 end
 % ==== if powder rebin mode, identify the values for powder rebin.
 if data.analmode==4
-    [img_range.dx_step_min,img_range.dy_step_min]=find_min_delta(img_range,data.vb);
+    [img_range.dx_step_min,img_range.dy_step_min]=find_min_delta(img_range,data.vb,data.u);
     if isempty(img_range.dx_step)||~isnumeric(img_range.dx_step)
-        img_range.dx_step = min(img_range.dx_step_min,img_range.dy_step_min);
+        img_range.dx_step = img_range.dx_step_min;
         ms_setvalue('disp_dx_step',img_range.dx_step,'highlight');             
     end   
     if isempty(img_range.dy_step)||~isnumeric(img_range.dy_step)
-        img_range.dy_step = min(img_range.dx_step_min,img_range.dy_step_min);
+        img_range.dy_step = img_range.dy_step_min;
         ms_setvalue('disp_dy_step',img_range.dy_step,'highlight');          
     end
     data = mslice_rebin2D(data,img_range);
@@ -186,7 +186,7 @@ if exist('linearlog','var')&&ischar(linearlog)&&strcmp(linearlog(~isspace(linear
    index=(Z==0);
    Z(index)=NaN;
    set(hplot,'Cdata',log10(Z));
-   caxis([log10(i_min) log10(i_max)]);
+   caxis([log10(img_range.i_min) log10(img_range.i_max)]);
 else
    % === use linear scale and enable colour sliders
    % === put sliders for adjusting colour axis limits

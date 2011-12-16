@@ -123,11 +123,13 @@ switch n
         % clear limits in display range box
         ms_setvalue('disp_vx_min','');
         ms_setvalue('disp_vx_max','');
+        ms_setvalue('disp_dx_step','');        
     case 2
         labely=get(findobj('Tag','ms_u2label'),'String');
         set(findobj('Tag','ms_disp_y_axis'),'String',['vertical range* ' labely ]);
         ms_setvalue('disp_vy_min','');
         ms_setvalue('disp_vy_max','');
+        ms_setvalue('disp_dy_step','');                
     otherwise
         error('MSUI_POWDER_SELECT_AXIS:updatelabel',' unknown option %d while trying to updated powder axis labels',n);
 end

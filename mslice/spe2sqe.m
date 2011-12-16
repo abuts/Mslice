@@ -61,7 +61,7 @@ elseif spe_data.emode==2,
 else
    disp('Only inelastic direct-geometry (emode=1, HET, MARI)');
    disp(' or inelastic indirect-geometry (emode=2, IRIS) spectrometer modes available.');
-	disp(['emode=' num2str(emode) ' not implemented. Transformation not performed']);
+   disp(['emode=' num2str(emode) ' not implemented. Transformation not performed']);
    Q=[];
    return
 end

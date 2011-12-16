@@ -22,7 +22,7 @@ end
 
 %=== load data file and find out which detectors are to be masked
 if isempty(spe_filename(~isspace(spe_filename))),	% if no filename given just load .phx file
-   disp(['No data loaded.']);
+   disp('No data loaded.');
    data=[];
 else
    data=load_spe(spe_filename); 		% data.en (1,ne), data.S (ndet,ne),  data.ERR (ndet,ne)
