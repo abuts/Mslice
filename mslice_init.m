@@ -56,6 +56,7 @@ if get(mslice_config,'enable_unit_tests')
     if ~exist('herbert_init.m','file')
         try
             herbert_on();
+            % need to clear persistent variable
             clear mslice_config;
         catch
         end

@@ -20,8 +20,11 @@ end
 
 % === read disp parameters from ControlWindow
 disp_par=struct('vx_min',[],'vx_max',[],'vy_min',[],'vy_max',[],...
-                'i_min',[],'i_max',[],'colmap',[],'nsmooth',[],'shad','',...
-                'dx_step',[],'dy_step',[]);
+                'i_min',[],'i_max',[],'colmap',[],'nsmooth',[],'shad','');
+if data.analmode==4
+    disp_par.dx_step=[];
+    disp_par.dy_step=[];    
+end
 fields=fieldnames(disp_par);
 raw_fields={'colmap','shad'};
 for i=1:numel(fields)

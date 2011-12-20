@@ -15,8 +15,6 @@ function [X,Y,Z] = mslice_rebin2D(data,img_range)
 % S   -- [npix,ne] signal array.
 % ERR -- [npix,ne] error array.
 % 
-%[ndet,ne]=size(data.S);
-%ndat=ndet*ne;
 
 % point detectors;
 
@@ -74,6 +72,9 @@ end
 function [X,Y,Z]= rebin_polyhons(data,img_range)
 %estimante the size of interpolation grid, given that dx/dy_step min are 
 % the minimal detectors projections
+[ndet,ne]=size(data.S);
+ndat=ndet*ne;
+
 if img_range.dx_step>img_range.dx_step_min
     n_ds = floor(img_range.dx_step/img_range.dx_step_min)+1;
     dx =   img_range.dx_step/n_ds;
