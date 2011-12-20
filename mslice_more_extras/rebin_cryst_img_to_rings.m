@@ -58,18 +58,18 @@ data.range = range;
 % being; (which can be deeply right)
 %
 % calculate indexes of old psi-s wrt the new bins
-psi_ind   = floor((data.det_theta-min_pol)/pol_step)+1;
+psi_ind = floor((data.det_theta-min_pol)/pol_step)+1;
 ind_max = floor((max_pol-min_pol)/pol_step)+1; % 
 %
 valid       = psi_ind>0 & psi_ind<=ind_max;
 % select  arrays elements which fit into the angular range requested;
-S           =  data.S(valid,:);
+S        =  data.S(valid,:);
 ERR      =  data.ERR(valid,:);
-psi_ind   =   psi_ind(valid); % make indexes column-wise as this is accumarray request
+psi_ind  = psi_ind(valid); % make indexes column-wise as this is accumarray request
 rez_size = size(S);
-mm        = rez_size(1)*rez_size(2);
-S           = reshape(S,mm,1);
-ERR      =  reshape(ERR,mm,1);
+mm       = rez_size(1)*rez_size(2);
+S        = reshape(S,mm,1);
+ERR      = reshape(ERR,mm,1);
 
 % extend indexes to all energies, as every detector contributes in number
 % of energies;
@@ -79,24 +79,24 @@ for i=1:rez_size(2)
 end
 psi_ext  = reshape(psi_ext,mm,1);
 % calculate number of detectors, contributed into each bin;
-n_hits    =    ones(numel(psi_ind),1);
-n_det     =    accumarray(psi_ind,n_hits);
-n_det_ex=   reshape(repmat(n_det,1,rez_size(2)),ind_max*rez_size(2),1);
+n_hits    =   ones(numel(psi_ind),1);
+n_det     =   accumarray(psi_ind,n_hits);
+n_det_ex  =   reshape(repmat(n_det,1,rez_size(2)),ind_max*rez_size(2),1);
 
 %
 SS         = (accumarray(psi_ext,S)./n_det_ex);
 SE         = sqrt(accumarray(psi_ext,ERR.*ERR)./n_det_ex);
-nans       =isnan(SS); % make NaN sticky i.e any nan contrubuting to a cell invalidates cell. 
+nans       = isnan(SS); % make NaN sticky i.e any nan contrubuting to a cell invalidates cell. 
 SS(nans)=NaN;
 SE(nans)=0;
 
 data.S    = reshape(SS,ind_max,rez_size(2));
-data.ERR=reshape(SE,ind_max,rez_size(2));
+data.ERR  = reshape(SE,ind_max,rez_size(2));
 % redefine new detectors, which correspond to valid values; 
-data.det_theta =  (min_pol:pol_step:max_pol)';
+data.det_theta = (min_pol:pol_step:max_pol)';
 data.det_dtheta= ones(ind_max,1)*pol_step;
-data.det_psi     = zeros(ind_max,1);
-data.det_dpsi   =  ones(ind_max,1); % should be recalculated as an average?
+data.det_psi   = zeros(ind_max,1);
+data.det_dpsi  = ones(ind_max,1); % should be recalculated as an average?
 % det_group left untouched -- should we regroup them?
 % det_id=data.det_group(valid);
 % block=[psi_ind,det_id];

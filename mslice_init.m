@@ -19,6 +19,8 @@ addpath(rootpath)  % MUST have rootpath so that mslice_init, mslice_off included
 
 % compartibility and interpackage dependensies directory
 addpath_message (rootpath,'ISIS_utilities');
+% this option is disabled as we do not connect mslice and libisis any more
+
 % if exist('libisis_init.m','file')   % if libisis is on the path we populate ISIS_utilities with contents from Libisis
 %     try % this is to deal with problem of really old version of libisis initiated on the machine
 %      libisis_ver=libisis_version('number');
@@ -48,8 +50,20 @@ addpath_message (rootpath,'mslice/GUI');
 addpath_message (rootpath,'mslice_extras');
 addpath_message (rootpath,'mslice_more_extras');
 addpath_message (rootpath,'DLL');
+
+% developer machine option
+if get(mslice_config,'enable_unit_tests')
+    if ~exist('herbert_init.m','file')
+        try
+            herbert_on();
+            clear mslice_config;
+        catch
+        end
+    end
+    addpath_message(rootpath,'unit_test');
+end
 disp('!==================================================================!')
-disp('!        MSLICE transitional  (ISIS modifcations from 01/07/2011)  !')
+disp('!        MSLICE transitional  (ISIS modifcations from 01/01/2012)  !')
 disp('!==================================================================!')
 
 

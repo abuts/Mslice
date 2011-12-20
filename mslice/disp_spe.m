@@ -55,53 +55,30 @@ end
    
 % ==== establish plot limits along the u1 and u2 axes
 if isempty(img_range.vx_min)||~isnumeric(img_range.vx_min),
-   img_range.vx_min=min([min(min(data.vb(:,:,1))) min(min(data.vb(:,:,3)))]);
+   img_range.vx_min=min([min(data.vb(:,:,1)) min(data.vb(:,:,3))]);
    ms_setvalue('disp_vx_min',img_range.vx_min,'highlight');             
 end   
 if isempty(img_range.vx_max)||~isnumeric(img_range.vx_max),
-   img_range.vx_max=max([max(max(data.vb(:,:,1))) max(max(data.vb(:,:,3)))]);
+   img_range.vx_max=max([max(data.vb(:,:,1)) max(data.vb(:,:,3))]);
    ms_setvalue('disp_vx_max',img_range.vx_max,'highlight');          
 end 
 if isempty(img_range.vy_min)||~isnumeric(img_range.vy_min),
-   img_range.vy_min=min([min(min(data.vb(:,:,2))) min(min(data.vb(:,:,4)))]);
+   img_range.vy_min=min([min(data.vb(:,:,2)) min(data.vb(:,:,4))]);
    ms_setvalue('disp_vy_min',img_range.vy_min,'highlight');       
 end 
 if isempty(img_range.vy_max)||~isnumeric(img_range.vy_max),
-   img_range.vy_max=max([max(max(data.vb(:,:,2))) max(max(data.vb(:,:,4)))]);
+   img_range.vy_max=max([max(data.vb(:,:,2)) max(data.vb(:,:,4))]);
    ms_setvalue('disp_vy_max',img_range.vy_max,'highlight');    
 end 
 
-% ==== establish intensity limits for the colorbar 
-if ~(isempty(img_range.i_min)||~isnumeric(img_range.i_min))
-   if img_range.i_min>=max(data.S(:)),
-      fprintf('Given intensity range min=%g not suitable for graph.',img_range.i_min); 
-      img_range.i_min=min(data.S(:));      
-      fprintf('Plotting with default intensity range min=%g.',img_range.i_min);
-      ms_setvalue('disp_i_min',img_range.i_min,'highlight');    
-   end
-else
-   img_range.i_min=min(data.S(:));
-   ms_setvalue('disp_i_min',img_range.i_min,'highlight');       
-end   
-if ~(isempty(img_range.i_max)||~isnumeric(img_range.i_max)),
-   if img_range.i_max<=min(data.S(:)),
-      fprintf('Given intensity range max=%g not suitable for graph.',img_range.i_max); 
-      img_range.i_max=max(data.S(:));       
-      fprintf('Plotting with default intensity range max=%g.',img_range.i_max);
-      ms_setvalue('disp_i_max',img_range.i_max,'highlight');          
-   end      
-else
-	img_range.i_max=max(data.S(:));   
-    ms_setvalue('disp_i_max',img_range.i_max,'highlight');              
-end  
-if img_range.i_max<img_range.i_min
-   temp=max(img_range.i_max,img_range.i_min);
-   img_range.i_min=min(img_range.i_max,img_range.i_min);
-   img_range.i_max=temp;
-   ms_setvalue('disp_i_min',img_range.i_min,'highlight');          
-   ms_setvalue('disp_i_max',img_range.i_max,'highlight');                 
-   disp('Swapped axes limits.');
+
+% ==== establish shading option
+if ~ischar(img_range.shad)||~(strcmp(deblank(img_range.shad),'faceted')||...
+    strcmp(deblank(img_range.shad),'flat')||strcmp(deblank(img_range.shad),'interp')),
+    img_range.shad='flat';
+    disp('Default "flat" shading option chosen.')
 end
+
 % ==== if powder rebin mode, identify the values for powder rebin.
 if data.analmode==4
     [img_range.dx_step_min,img_range.dy_step_min]=find_min_delta(img_range,data.vb,data.u);
@@ -113,29 +90,24 @@ if data.analmode==4
         img_range.dy_step = img_range.dy_step_min;
         ms_setvalue('disp_dy_step',img_range.dy_step,'highlight');          
     end
-    data = mslice_rebin2D(data,img_range);
+    [X,Y,Z] = mslice_rebin2D(data,img_range);
+    find_min_max_intensity(Z);
+else
+    find_min_max_intensity(data.S);
+    % === from the trajectories of the bin boundaries construct the X and Y grids for the plot 
+    % === and do the trick with padding an extra row and column on Z to use pcolor 
+    [ndet,ne]=size(data.S);
+    X=NaN*ones(2*ndet,ne+1);
+    Y=X;
+    Z=X;
+    i=(1:ndet)';
+    X(2*i-1,:)=data.vb(i,:,1);	% vx values of the boundary on the "left"
+    X(2*i,:)  =data.vb(i,:,3);	% vx values of the boundary on the "right"
+    Y(2*i-1,:)=data.vb(i,:,2);
+    Y(2*i,:)  =data.vb(i,:,4);
+    Z(2*i-1,1:ne)=data.S;
 end
 
-
-% ==== establish shading option
-if ~ischar(img_range.shad)||~(strcmp(deblank(img_range.shad),'faceted')||...
-    strcmp(deblank(img_range.shad),'flat')||strcmp(deblank(img_range.shad),'interp')),
-    img_range.shad='flat';
-    disp('Default "flat" shading option chosen.')
-end
-
-% === from the trajectories of the bin boundaries construct the X and Y grids for the plot 
-% === and do the trick with padding an extra row and column on Z to use pcolor 
-[ndet,ne]=size(data.S);
-X=NaN*ones(2*ndet,ne+1);
-Y=X;
-Z=X;
-i=(1:ndet)';
-X(2*i-1,:)=data.vb(i,:,1);	% vx values of the boundary on the "left"
-X(2*i,:)  =data.vb(i,:,3);	% vx values of the boundary on the "right"
-Y(2*i-1,:)=data.vb(i,:,2);
-Y(2*i,:)  =data.vb(i,:,4);
-Z(2*i-1,1:ne)=data.S;
 hplot=pcolor(X,Y,Z);
 axis([img_range.vx_min img_range.vx_max img_range.vy_min img_range.vy_max]);
 caxis([img_range.i_min img_range.i_max]);
@@ -261,3 +233,39 @@ else
 end
 xlabel(labelx);
 ylabel(labely);
+%--------------------------------------------------------------------
+    function find_min_max_intensity(S)
+    % ==== establish intensity limits for the colorbar 
+    if ~(isempty(img_range.i_min)||~isnumeric(img_range.i_min))
+        if img_range.i_min>=max(S(:)),
+            fprintf('Given intensity range min=%g not suitable for graph.',img_range.i_min); 
+            img_range.i_min=min(S(:));      
+            fprintf('Plotting with default intensity range min=%g.',img_range.i_min);
+            ms_setvalue('disp_i_min',img_range.i_min,'highlight');    
+        end
+    else
+        img_range.i_min=min(S(:));
+        ms_setvalue('disp_i_min',img_range.i_min,'highlight');       
+    end   
+    if ~(isempty(img_range.i_max)||~isnumeric(img_range.i_max)),
+        if img_range.i_max<=min(S(:)),
+            fprintf('Given intensity range max=%g not suitable for graph.',img_range.i_max); 
+            img_range.i_max=max(S(:));       
+            fprintf('Plotting with default intensity range max=%g.',img_range.i_max);
+            ms_setvalue('disp_i_max',img_range.i_max,'highlight');          
+        end      
+    else
+        img_range.i_max=max(S(:));   
+        ms_setvalue('disp_i_max',img_range.i_max,'highlight');              
+    end  
+    if img_range.i_max<img_range.i_min
+        temp=max(img_range.i_max,img_range.i_min);
+        img_range.i_min=min(img_range.i_max,img_range.i_min);
+        img_range.i_max=temp;
+        ms_setvalue('disp_i_min',img_range.i_min,'highlight');          
+        ms_setvalue('disp_i_max',img_range.i_max,'highlight');                 
+        disp('Swapped axes limits.');
+    end
+        
+    end
+end

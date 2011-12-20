@@ -20,8 +20,8 @@ function [dx_min,dy_min] = find_min_delta( range,grid,u)
 %
 gr_size= size(grid);
 grid=reshape(grid,gr_size(1)*gr_size(2),gr_size(3));
-r_out = (grid(:,1)<range.vx_min)&(grid(:,3)>range.vx_max)& ...
-        (grid(:,2)<range.vy_min)&(grid(:,4)>range.vy_max);
+r_out = (grid(:,1)<=range.vx_min)&(grid(:,3)>range.vx_max)& ...
+        (grid(:,2)<=range.vy_min)&(grid(:,4)>range.vy_max);
 
 grid(r_out,:)=NaN;
 clear r_out;
@@ -39,7 +39,7 @@ clear dx;
 if u(2)==1
    grid=reshape(grid,gr_size);    
    dy  =grid(:,2:end,2)-grid(:,1:end-1,2);    
-   dy=reshape(dy,gr_size(1)*(gr_size(2)-1),1);       
+   dy  = reshape(dy,gr_size(1)*(gr_size(2)-1),1);       
 else
    dy=grid(:,4)-grid(:,2);    
 end

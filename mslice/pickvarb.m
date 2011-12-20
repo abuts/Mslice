@@ -23,10 +23,11 @@ switch xx,
    case {2}, 			% mod Q 
       v=spe2modQ(data);
       data.en=en;	% (1,ne+1)
-      data.det_theta=data.det_theta-data.det_dtheta/2;
+      data.det_theta=data.det_theta-0.5*data.det_dtheta;
       vb1=spe2modQ(data);
       data.det_theta=data.det_theta+data.det_dtheta;
       vb2=spe2modQ(data);
+      data.det_theta=data.det_theta-0.5*data.det_dtheta;      
 	  axislabel=[deblank(data.axis_label(x,:)) ' (Å^{-1})'];
     case {3},			% TwoTheta
       v=(data.det_theta*180/pi)*ones(size(data.en));

@@ -1,8 +1,8 @@
 function config=get_all(this,opt)
 % Retrieve all configurations currently in memory
 %
-%   >> S = get_all (config)             % retrive current configurations
-%   >> S = get_all (config,'default')   % retrive default configurations
+%   >> config = get_all (config)             % retrive current configurations
+%   >> config = get_all (config,'default')   % retrive default configurations
 %
 % Each field in the structure corresponds to a configuration thatis currently
 % in memory.
