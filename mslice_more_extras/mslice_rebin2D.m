@@ -1,22 +1,25 @@
 function [X,Y,Z] = mslice_rebin2D(data,img_range)
-% function rebins 2-dimensional mslice data
+% function does 2-dimensional centerpoint rebinning of mslice data 
 % on a square grid in the range specified by the second
-% argument
-% img_range is a structure with fields:
+% argument. Tested on crystal rebinned as powder. 
+%
+% Input parameters:
+% Data -- mslice data structure. 
+% Procedure uses data fields:
+% S   -- [npix,ne] signal array.
+% V   -- [npix,ne] the centerpoints of the detectors projections into
+%                   selected coordinate system
+% img_range:
+%                   structure with fields:
 %: vx_min, vx_max -- min and max X values for interpolation region
 %: vy_min, vy_max -- min and max Y values for interpolation region
 %: dx_step,dy_step -- steps of the interpolation grid in x and y directions
-%: dx_step_min, dy_step_min -- min steps of the heterogeneous mslice grid
-%                              vb(:,:,[1:4]), which describes detectors
-%                              projections into the coordinate system
-%                              requested.
+%: dx_step_min, dy_step_min -- min detectro sized (not used currentlry)
 %
-% Procedure uses data fields:
-% S   -- [npix,ne] signal array.
-% ERR -- [npix,ne] error array.
+%
+%  $Revision: 57 $   ($Date: 2010-01-08 17:22:35 +0000 (Fri, 08 Jan 2010) $)
 % 
 
-% point detectors;
 
 dx = img_range.dx_step;
 dy = img_range.dy_step;
