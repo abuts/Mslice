@@ -28,7 +28,7 @@ else
 end
 % veryfy reninning ranges
 min_pol  = min(data.det_theta);
-max_pol = max(data.det_theta);
+max_pol  = max(data.det_theta);
 pol_step = min(data.det_dtheta);
 if isempty(range.polar_min)||range.polar_min<min_pol   % if limits changed, the GUI values have to change too.
     range.polar_min = min_pol;
@@ -51,6 +51,19 @@ end
 if (range.polar_min>max_pol)||(range.polar_max<min_pol)
     error('MSLICE:rebin_cryst_img_to_rings','no detectors in angular range from %d to %d, no remapping performed',range.polar_min,range.polar_max);
 end
+
+% TODO: SHOULD BE DISABLED IF OUT OF MEMORY !!!!
+% cash initial data to streamline data flow and to allow returning back
+% without need to reload data
+%-----------------------------------------------------------------
+data.cash.S         = data.S;
+data.cash.ERR       = data.ERR;
+data.cash.det_theta = data.det_theta;
+data.cash.det_dtheta= data.det_dtheta;
+data.cash.det_psi   = data.det_psi;
+data.cash.det_dpsi  = data.det_dpsi; 
+data.cash.det_group = data.det_group;
+%-----------------------------------------------------------------
 data.range = range;
 % multiply to radde2deg
 %

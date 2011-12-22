@@ -65,6 +65,24 @@ else
    delete(mslice_gui,'powder_rebin_step');            
 end
 
+%-> get data
+data=get(h_fig,'UserData');
+if isempty(data),
+   disp('No data set in the Control Window. Load data first.');
+   return;
+end
+
+% reset previous projections if analmode changed
+if ~isfield(data,'analmode')
+    data.analmode=analmode;
+end
+if analmode ~= data.analmode
+    % reset previous projections
+    data=rmfield(data,'v'); 
+    data.analmode=analmode;
+    set(h_fig,'UserData',data);    
+end
+
 
 %
 %

@@ -42,9 +42,8 @@ white=get(sampobj,'BackgroundColor');
 
 
 % === if AnalysisMode=single crystal put menu option for detector types  
-if (analmode==1),	% === change analysis from powder to single crystal mode   
-     msui_detector_type(fig,pos,interlines,white);
-    
+if (analmode==1),	% === change analysis from powder to single crystal mode     
+     msui_detector_type(fig,pos,interlines,white);   
      ms_disp_or_slice;
 else 	% powder analysis mode
   

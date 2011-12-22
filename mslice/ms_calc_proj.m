@@ -8,13 +8,19 @@ if isempty(fig),
    disp('Control Window not present. Return');
    return;
 end
+
+%-> get data
 data=get(fig,'UserData');
 if isempty(data),
    disp('No data set in the Control Window. Load data first.');
    return;
 end
-data.v=[]; % reset previous projections
-set(fig,'UserData',data);
+
+% reset previous projections
+if isfield(data,'v')
+    data=rmfield(data,'v'); 
+    set(fig,'UserData',data);
+end
 
 % === highlight red button indicating 'busy'
 h_status=findobj(fig,'Tag','ms_status');
@@ -24,8 +30,23 @@ if ~isempty(h_status)&&ishandle(h_status),
    drawnow;
 end
 % === establish which variable names are to be read depending on sample type, analysis mode and detector type
-analmode=get(findobj('Tag','ms_analysis_mode'),'Value');
-samp=get(findobj(fig,'Tag','ms_sample'),'Value');
+analmode= get(findobj('Tag','ms_analysis_mode'),'Value');
+samp    = get(findobj(fig,'Tag','ms_sample'),'Value');
+
+% check cashed data, and return to it if data were cashed
+if isfield(data,'cash')
+    data.S         = data.cash.S;
+    data.ERR       = data.cash.ERR;
+    data.det_theta = data.cash.det_theta;
+    data.det_dtheta= data.cash.det_dtheta;
+    data.det_psi   = data.cash.det_psi;
+    data.det_dpsi  = data.cash.det_dpsi; 
+    data.det_group = data.cash.det_group;
+    
+    data=rmfield(data,'cash');
+    set(fig,'UserData',data);    
+end
+
 
 if samp==2,     % sample is powder 
    vars={'u1','u1label','u2','u2label','efixed','emode','IntensityLabel','TitleLabel'};
@@ -35,7 +56,7 @@ elseif samp==1, % sample is single crystal
       vars=[vars,{'u1','u1label','u2','u2label'}];	   	  
       psd=(1<0);	% FALSE
    elseif analmode==1	% analysed as single crystal
-      vars=[vars,{'u1label','u2label','u11','u12','u13','u14','u21','u22','u23','u24'}];
+        vars=[vars,{'u1label','u2label','u11','u12','u13','u14','u21','u22','u23','u24'}];
 		dettype=findobj('Tag','ms_det_type');
 		% === read flag for detector type and identify if PSD
 		if isempty(dettype),
