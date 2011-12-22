@@ -39,8 +39,8 @@ copy_files_list(rootpath,[target_Dir,'/Mslice'],'+_');
 disp('!    The mslice  program files collected successfully===============!')
 
 % copy the file which should initiate mslice (after minor modifications)
-install_file=which('install_isis');
-copyfile(install_file,  [target_Dir '/install_isis.m'],  'f');
+install_file=which('mslice_on');
+copyfile(install_file,  [target_Dir '/mslice_on.m'],  'f');
 %copyfile('mslice_on.mt', [target_Dir '/mslice_on.mt'], 'f');
 %copyfile('start_app.m',  [target_Dir '/start_app.m'],  'f');
 %
