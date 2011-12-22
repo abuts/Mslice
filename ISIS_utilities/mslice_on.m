@@ -3,6 +3,9 @@ function path=mslice_on(non_default_path)
 % return the path were mslice is resided or 
 % empty string if mslice has not been found
 %
+% modify this function on new installation for msl_default_path
+% to point on location of the mslice and add this function to matlab search path
+%
 %
 % The function has to be present in Matlab search path 
 % and modified for each machine to know default mslice location
