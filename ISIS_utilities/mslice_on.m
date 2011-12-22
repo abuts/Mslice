@@ -1,11 +1,11 @@
 function path=mslice_on(non_default_path)
 % The function intended to swich mslice on and
-% return the path were herbert is resided or 
-% empty string if herbert has not been found
+% return the path were mslice is resided or 
+% empty string if mslice has not been found
 %
 %
 % The function has to be present in Matlab search path 
-% and modified for each machine to know default herbert location
+% and modified for each machine to know default mslice location
 %
 %Usage:
 %>>path=mslice_on(); 

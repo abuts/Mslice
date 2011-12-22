@@ -23,14 +23,14 @@ if ~isempty(h_status)&&ishandle(h_status),
    set(h_status,'BackgroundColor',red);
    drawnow;
 end
-
 % === establish which variable names are to be read depending on sample type, analysis mode and detector type
+analmode=get(findobj('Tag','ms_analysis_mode'),'Value');
 samp=get(findobj(fig,'Tag','ms_sample'),'Value');
+
 if samp==2,     % sample is powder 
    vars={'u1','u1label','u2','u2label','efixed','emode','IntensityLabel','TitleLabel'};
 elseif samp==1, % sample is single crystal 
    vars={'as','bs','cs','aa','bb','cc','ux','uy','uz','vx','vy','vz','psi_samp','efixed','emode','IntensityLabel','TitleLabel'};
-   analmode=get(findobj('Tag','ms_analysis_mode'),'Value');
    if analmode==2||analmode==4,	% analysed as powder
       vars=[vars,{'u1','u1label','u2','u2label'}];	   	  
       psd=(1<0);	% FALSE

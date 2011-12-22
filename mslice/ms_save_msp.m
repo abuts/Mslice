@@ -101,12 +101,12 @@ if (f2==-1),
 end
 % identify fields which are moved to mslice configuration file and should
 % not be written into msp file
-msl_fields=get(mslice_config,'all');
-msl_fields = msl_fields.mslice_config;
+msl_fields=get(mslice_config);
+%msl_fields = msl_fields.mslice_config;
 
 % === write parameters line by line to the newfile mirroring structure of default file
 t=fgetl(f1);	% read one line of the default file
-while (ischar(t)&(~isempty(t(~isspace(t))))),	% until reaching the end of the defauilt file do ...
+while (ischar(t)&&(~isempty(t(~isspace(t))))),	% until reaching the end of the defauilt file do ...
    pos=findstr(t,'=');
    field=t(1:pos-1);   
    fieldname=field(~isspace(field));	% obtain true fieldname by removing white spaces from field
