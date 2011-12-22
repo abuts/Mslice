@@ -10,7 +10,7 @@ end
 width      = position(3);
 pos        = position;
 
-h=uicontrol('Parent',h_root,'Style','text','String','2Theta:: min:','HorizontalAlignment','left','Visible','off');
+h=uicontrol('Parent',h_root,'Style','text','String','2Theta::from*:','HorizontalAlignment','left','Visible','off');
 delta_phi_block =graph_objects_collection(this_name,h,pos);
 
 pos(3) = width;
@@ -20,7 +20,7 @@ delta_phi_block=add_right(delta_phi_block,...
 
 pos(3) = 0.5*width;
 delta_phi_block=add_right(delta_phi_block,...
-                         uicontrol('Parent',h_root,'Style','text','String','max:', 'Position',pos,'HorizontalAlignment','left','Visible','off'));
+                         uicontrol('Parent',h_root,'Style','text','String','to*:', 'Position',pos,'HorizontalAlignment','left','Visible','off'));
 
 
 pos(3) = width;
@@ -30,7 +30,7 @@ delta_phi_block=add_right(delta_phi_block,...
 
 pos(3) = 0.5*width;
 delta_phi_block=add_right(delta_phi_block,...
-                        uicontrol('Parent',h_root,'Style','text','String','delta: ','Position',pos,'HorizontalAlignment','left','Visible','off'));
+                        uicontrol('Parent',h_root,'Style','text','String','step*: ','Position',pos,'HorizontalAlignment','left','Visible','off'));
 pos(3) = width;
 delta_phi_block=add_right(delta_phi_block,...
                           uicontrol('Parent',h_root,'Style','edit','Enable','on','Tag','ms_polar_delta',...
