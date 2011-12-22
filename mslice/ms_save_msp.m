@@ -69,8 +69,13 @@ if samp==1,
    elseif analmode==2,
       % ==== single crystal sample analysed in powder mode
       DefaultMspFile='crystal_as_powder.msp';
+   elseif analmode==3
+       % == powder remap
+      DefaultMspFile='crystal_powder_remap.msp';       
+   elseif analmode==4
+      DefaultMspFile='crystal_powder_rebin.msp';              
    else
-    	disp(['Only single-crystal- and powder-mode (analysis_mode=1,2) allowed.']);
+    	disp('Only single-crystal- and 3 powder-modes (analysis_mode=1,2,3,4) allowed.');
      	disp('Parameter file not saved');
     	return;
 	end      
