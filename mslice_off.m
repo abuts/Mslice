@@ -14,7 +14,10 @@ function mslice_off
 rootpath = fileparts(which('mslice_off'));
 
 % Close down mslice, if running
-mslice_finish
+try
+    mslice_finish   % sometimes this might not be on the path e.g. if mslice has not been initialised. Do not want mslice_off to fail.
+catch
+end
 
 warn_state=warning('off','all');    % turn of warnings (so don't get errors if remove non-existent paths)
 try
