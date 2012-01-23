@@ -17,7 +17,7 @@ function mslice_init
 rootpath = fileparts(which('mslice_init'));
 addpath(rootpath)  % MUST have rootpath so that mslice_init, mslice_off included
 
-% compartibility and interpackage dependensies directory
+% compatibility and interpackage dependencies directory
 addpath_message (rootpath,'ISIS_utilities');
 % this option is disabled as we do not connect mslice and libisis any more
 

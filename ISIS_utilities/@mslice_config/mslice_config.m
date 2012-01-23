@@ -1,11 +1,10 @@
-function conf=mslice_config()
-% the constructor describing horace-memory and some other defaults configuration and providing singleton
-% behaviour.
+function this=mslice_config()
+% Create the mslice configuration object 
 %
-% Do not inherit your configuration classes from this class; 
-% Inherit from the basic class 'config' instead
+%   >> this=mslice_config
 %
-%
+% Type >> mslice_config  to see the list of current configuration option values.
+
 % $Revision: 1835 $ ($Date: 2011-10-22 22:49:44 +0100 (Sat, 22 Oct 2011) $)
 %
 %--------------------------------------------------------------------------------------------------
@@ -14,43 +13,46 @@ function conf=mslice_config()
 %  ***  configuration structure.                                                         ***
 %--------------------------------------------------------------------------------------------------
 % This block contains generic code. Do not alter. Alter only the sub-function default_config below
-persistent this_local;
 
-if isempty(this_local)
-    config_name=mfilename('class');
-
-    build_configuration(config,@mslice_defaults,config_name);    
-    this_local=class(struct([]),config_name,config);
-end
-conf = this_local;
+config_name=mfilename('class');
+build_configuration(config,@mslice_defaults,config_name);
+this=class(struct([]),config_name,config);
 
 
+%--------------------------------------------------------------------------------------------------
+%  Alter only the contents of the following subfunction, and the help section of the main function
+%
+%  This subfunction sets the field names, their defaults, and which ones are sealed against change
+%  by the 'set' method.
+%
+%  The sealed fields must be a cell array of field names, or can be empty. The matlab function
+%  struct that can be used has confusing syntax for this purpose: suppose we have fields
+%  called 'v1', 'v2', 'v3',...  then we might have:
+%   - if no sealed fields:  ...,sealed_fields,{{''}},...
+%   - if one sealed field   ...,sealed_fields,{{'v1'}},...
+%   - if two sealed fields  ...,sealed_fields,{{'v1','v2'}},...
+%  Note that 'sealed_fields' will be treated as a sealed field, whether or not it is in the list.
+%
+%--------------------------------------------------------------------------------------------------
 function defaults=mslice_defaults()
-% functuion builds the structure, which describes default parameters used
-% by mslice;
-% This structure is used if no previous configuration has been defined on
-% this machine,e.g. configuration file does not exist. 
-% Ths function also can define the fields which will always have default
-% values specifying their names in the field:
-% fields_sealed
 
 defaults = ...
-     struct('last_copied_libisis',1620, ... % by default, this is the lowest Libisis version which supports copying
-            'MSliceDir','',...  % -- sealed: Mslice folder
-            'SampleDir','',...  % -- sealed: folder with msp configuration files 
-            'MspDir','', ...    % folder with msp files which describe mslice configurations
-            'MspFile','crystal_psd.msp',... % default msp file
-            'DataDir','',...    % data files (spe files)
-            'PhxDir','', ...    % phx files (detector angular positions)
-            'cut_OutputDir','', ...  % defauld folder to save cuts.              % 'use_par_from_nxspe', 1 ... % if an nxspe file is selected as a source, use par, stored in nxspe file
-            'enable_unit_tests',false ...
-             ) ;                        
-    
+    struct('last_copied_libisis',1620, ... % by default, this is the lowest Libisis version which supports copying
+    'MSliceDir','',...  % -- sealed: Mslice folder
+    'SampleDir','',...  % -- sealed: folder with msp configuration files
+    'MspDir','', ...    % folder with msp files which describe mslice configurations
+    'MspFile','crystal_psd.msp',... % default msp file
+    'DataDir','',...    % data files (spe files)
+    'PhxDir','', ...    % phx files (detector angular positions)
+    'cut_OutputDir','', ...  % defauld folder to save cuts.              % 'use_par_from_nxspe', 1 ... % if an nxspe file is selected as a source, use par, stored in nxspe file
+    'enable_unit_tests',false ...
+    ) ;
 
-% and the location of the default configuration file
+
+% Location of the default configuration file
 if isdeployed
-     defaults.MSliceDir=pwd;
-     defaults.SampleDir=fullfile(defaults.MSliceDir,'Data');
+    defaults.MSliceDir=pwd;
+    defaults.SampleDir=fullfile(defaults.MSliceDir,'Data');
 else
     defaults.MSliceDir    = fullfile(fileparts(which('mslice_init.m')),'mslice');
     defaults.SampleDir    = fullfile(fileparts(which('mslice_init.m')),'Data');
@@ -64,12 +66,4 @@ if isempty(ms_path)
     ms_path = pwd;
 end
 defaults.cut_OutputDir=ms_path;
-defaults.sealed_fields={'sealed_fields','MSliceDir','SampleDir'...
-                        }; % specify the fields which values can not be changed by user;
-
-
-
-
-
-
-
+defaults.sealed_fields={'MSliceDir','SampleDir'}; % specify the fields which values can not be changed by user;
