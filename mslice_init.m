@@ -46,7 +46,6 @@ addpath_message (rootpath,'ISIS_utilities');
 % end
 % Other directories
 addpath_message (rootpath,'mslice');
-addpath_message (rootpath,'mslice/GUI');
 addpath_message (rootpath,'mslice_extras');
 addpath_message (rootpath,'mslice_more_extras');
 addpath_message (rootpath,'DLL');
@@ -79,7 +78,8 @@ function addpath_message (varargin)
 
 string=fullfile(varargin{:});
 if exist(string,'dir')==7
-    addpath (string);
+    path=genpath_special(string);
+    addpath (path);
 else
     warning('"%s" is not a directory - not added to path',string)
 end

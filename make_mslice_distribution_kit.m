@@ -28,10 +28,19 @@ rootpath = fileparts(which('mslice_init')); % MUST have rootpath so that libisis
 % else
 % end
 %
+current_dir  = pwd;
+root_dir     = current_dir;
+% if inside herbert package dir, go avay from there:
+if strncmpi(root_dir,current_dir,size(current_dir))
+	cd(rootpath);
+	cd('../');
+end
+
 disp('!===================================================================!')
 disp('!==> Preparing MSLICE  distributon kit =============================!')
 disp('!    Start collecting the mslice program files =====================!')
 %
+
 target_Dir=[pwd,'/ISIS'];
 % copy files including special folders starting with _ ('+_' parameter)
 copy_files_list(rootpath,[target_Dir,'/Mslice'],'+_'); 
@@ -39,8 +48,8 @@ copy_files_list(rootpath,[target_Dir,'/Mslice'],'+_');
 disp('!    The mslice  program files collected successfully===============!')
 
 % copy the file which should initiate mslice (after minor modifications)
-install_file=which('mslice_on');
-copyfile(install_file,  [target_Dir '/mslice_on.m'],  'f');
+install_file=which('mslice_on.m.template');
+copyfile(install_file,  [target_Dir '/mslice_on.m.template'],  'f');
 %copyfile('mslice_on.mt', [target_Dir '/mslice_on.mt'], 'f');
 %copyfile('start_app.m',  [target_Dir '/start_app.m'],  'f');
 %
@@ -57,6 +66,7 @@ disp('!    Files compressed. Deleting the auxiliary files and directories=!')
 rmdir(target_Dir,'s');
 disp('!    All done folks ================================================!')
 sound(-1:0.001:1);
+cd(current_dir);
 disp('!===================================================================!')
 
 
