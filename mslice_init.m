@@ -16,9 +16,9 @@ function mslice_init
 % root directory is assumed to be that in which this function resides
 rootpath = fileparts(which('mslice_init'));
 addpath(rootpath)  % MUST have rootpath so that mslice_init, mslice_off included
-
+addpath(fullfile(rootpath,'ISIS_utilities'));
 % compatibility and interpackage dependencies directory
-addpath_message (rootpath,'ISIS_utilities');
+
 % this option is disabled as we do not connect mslice and libisis any more
 
 % if exist('libisis_init.m','file')   % if libisis is on the path we populate ISIS_utilities with contents from Libisis
