@@ -61,7 +61,7 @@ if get(mslice_config,'enable_unit_tests')
         catch
         end
     end
-    addpath_message(rootpath,'admin','unit_test');
+    addpath_message(rootpath,'admin','_unit_test');
 end
 disp('!==================================================================!')
 disp('!        MSLICE transitional  (ISIS modifcations from 01/01/2012)  !')
