@@ -1,5 +1,6 @@
 ===============================================================================
  Mslice installation                      (T.G.Perring 8 July 2007, 3 Sep 2009)
+ Modified to reflect recent changes        March 2012.
 ===============================================================================
 
 This folder and sub-folders contain the mslice program of Radu Coldea (in
@@ -25,49 +26,25 @@ To install:
         mslice_init
 
 
-(3) After editing your startup.m, start matlab, then type
-	>> mslice_setup_examples
-
-    Alternatively, if you haven't run the modified startup.m, set the current directory
-   in matlab to the mslice home directory:
-	>> cd c:\mprogs\mslice
-
-   or for the other example installation:
-	>> cd d:\matlab_stuff\mslice
-
-   and then type:
-	>> mslice_setup_examples
-
-    This step is required for the example files within mslice to work. You only need
-   to do this once, at the time of installation of mslice.
-
-
-
-
-   [ *** If running the standalone version, run the mslice_examples.exe file *** ]
-
- 
 
 
 NOTE:
-     It should not be necessary to recompile the mex files, but if this does happen 
-    (for example, you install a later version of Matlab that requires a different
-    format for the compiled files), then:
-
-    After editing your startup.m, start matlab, then type
+	To verify if mslice mex files work properly, type mslice in matlab command prompt 
+	and select "About Mslice-> Quick check mex files correctness." If in Matlab window you 
+	see set of messages, which report current versions on different mex files, mex files 
+	are at least compartible with your OS. After that select "About Mslice->Self-test Mslice". 
+	This would produce number of messages and couple of pictures. If any of these steps fail, 
+	you need to recompile mslice. To do that you have to had fortran and C compilers 
+	installed in your system and configured accrodingly to Matlab requests. Check Matlab 
+	mex -setup command to verify that. 
+	Consult Matlab user manual for the details on the compilers compartibility and 
+	how to configure your compilers	properly.
+   
+	If your compilers are configured to work with Matlab properly, compiling mslice is easy. 
+    After editing your startup.m, start matlab, (or just execute startup command) and then type:
 	 >> mslice_mex
 
-    Alternatively, if you haven't run the modified startup.m, set the current directory
-   in matlab to the mslice
-	 >> cd c:\mprogs\mslice
-
-    or for the other example installation:
-	 >> cd d:\matlab_stuff\mslice
-
-    and then type:
-	 >> mslice_mex
-
-
+	Verify the results of mexing as described above. 
 
 ===============================================================================
  Contents of the three subfolders
@@ -95,6 +72,29 @@ New functions that add functionality to mslice. See the word document
 Further functions that add functionality to mslice, mostly easing the use
 of mslice from the command line when operating in single crystal PSD mode.
 The 3D viewing option requires that one of mgenie or Libisis is installed.
+
+\DLL 
+==================
+compiled mex files for different OS. After installing mslice you can delete 
+files, which are inappropriate for your OS. See output of mexext command 
+to obtain the extensions, corresponding to your OS.
+
+\Data
+==================
+Examples of data and mslice files, which demonstrate Mslice usage for different
+instruments. Keeps also msp templates for different data analysis modes. 
+
+\admin
+==================
+files mainly used for Mslice package initialization, mexing, testing and support. 
+
+\ISIS_utilites
+==================
+folder intended to support Libisis-mslice interoperability. Will become redundant 
+after Libisis is phased out. 
+
+
+
 
 
 

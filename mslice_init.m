@@ -16,10 +16,11 @@ function mslice_init
 % root directory is assumed to be that in which this function resides
 rootpath = fileparts(which('mslice_init'));
 addpath(rootpath)  % MUST have rootpath so that mslice_init, mslice_off included
+addpath(fullfile(rootpath,'admin'));
 addpath(fullfile(rootpath,'ISIS_utilities'));
 % compatibility and interpackage dependencies directory
 
-% this option is disabled as we do not connect mslice and libisis any more
+% this option is disabled as we do not bind mslice and libisis any more
 
 % if exist('libisis_init.m','file')   % if libisis is on the path we populate ISIS_utilities with contents from Libisis
 %     try % this is to deal with problem of really old version of libisis initiated on the machine
@@ -60,7 +61,7 @@ if get(mslice_config,'enable_unit_tests')
         catch
         end
     end
-    addpath_message(rootpath,'unit_test');
+    addpath_message(rootpath,'admin','unit_test');
 end
 disp('!==================================================================!')
 disp('!        MSLICE transitional  (ISIS modifcations from 01/01/2012)  !')
