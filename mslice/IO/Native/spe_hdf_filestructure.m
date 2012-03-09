@@ -24,7 +24,7 @@ function [rez,spe_hdf_filestructure_version]=spe_hdf_filestructure(varargin)
 %              should be added to the end of existing file structure as users of the filestructure may refer exsisting structure fields by
 %              their numbers (BAD!!!).
 %
-% $Revision: 200 $ ($Date: 2011-11-24 14:05:19 +0000 (Thu, 24 Nov 2011) $)
+% $Revision$ ($Date$)
 %
 % This is the version of the subprogram itself
 spe_hdf_filestructure_version=1;

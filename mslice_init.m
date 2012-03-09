@@ -50,15 +50,17 @@ addpath_message (rootpath,'mslice');
 addpath_message (rootpath,'mslice_extras');
 addpath_message (rootpath,'mslice_more_extras');
 addpath_message (rootpath,'DLL');
-
+% temporary option used during debugging and transition to herbert io
+herbert_io('-off');
 % developer machine option
 if get(mslice_config,'enable_unit_tests')
     if ~exist('herbert_init.m','file')
         try
-            herbert_on();
+            her_path=herbert_on('where');
             % need to clear persistent variable
-            clear mslice_config;
+            addpath_message (fullfile(her_path,'_test/matlab_xunit/xunit'));
         catch
+            warning('MSLICE:init','can not initate unit tests framework requested by configuration');
         end
     end
     addpath_message(rootpath,'admin','_unit_test');

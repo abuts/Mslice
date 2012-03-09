@@ -14,35 +14,14 @@ start_dir=pwd;
 rootpath = fileparts(which('mslice_init'));
 cd(rootpath)
 
-
-% -----------------------------------------------------
-disp('!==================================================================!')
-disp('! Would you like to select your compilers (win) or have configured !')
-disp('! your compiler yourself?:  y/n/c/f/e                              !')
-disp('! y-select and configure;  n - already configured                  !')
-disp('! c or f allow you to build C or FORTRAN part of the program       !')
-disp('!        having configured proper compiler yourself                !')
-disp('!------------------------------------------------------------------!')
-disp('! If you are going to build standalone version, the compiler has to!')
-disp('! be configured for static linkage (e.g. /MT for VS C compiler or  !')
-disp('! /libs:static for ifort compiler)                                 !')
-disp('!------------------------------------------------------------------!')
-disp('! e -- cancel (end)                                                !')
-user_entry=input('! y/n/c/f/e :','s');
-user_entry=strtrim(lower(user_entry));
-user_choise = user_entry(1);
-disp(['!===> ' user_choise,' choosen                                                    !']);
-disp('!==================================================================!')
-if ~(user_choise=='y'||user_choise=='n'||user_choise=='c'||user_choise=='f')
-    user_choise='e';
-end
-if user_choise=='e'
+user_choice = disp_compiler_dialog();
+if user_choice=='e'
     disp('!  canceled                                                        !')        
     disp('!==================================================================!')    
     return;
 end
 
-if user_choise=='y'
+if user_choice=='y'
     % Prompt for fortran compiler
     disp('!==================================================================!')
     disp('! please, select your FORTRAN compiler  ===========================!')
@@ -58,11 +37,12 @@ mslice_Ccode_dir_base  =fullfile(rootpath,'mslice','_LowLevelCode');
 % choose the code version
 
 code_kind = '32and64after7.4';
-mslice_fortcode_rel_dir=fullfile('mslice','_LowLevelCode',code_kind);
+mslice_fortcode_rel_dir= fullfile('mslice','_LowLevelCode',code_kind);
 mslice_Ccode_dir       = fullfile(mslice_Ccode_dir_base ,code_kind);
 
 try   
-     if user_choise ~= 'c'
+    
+     if user_choice ~= 'c'
 			cd(mslice_fortcode_rel_dir);
             mex_single ('./', './', 'avpix_df.F90')
             mex_single ('./', './', 'cut2d_df.F90')
@@ -85,13 +65,13 @@ try
             cd(start_dir);
     end            
 
-    if user_choise=='y'
+    if user_choice=='y'
         % Prompt for C compiler, and compile all C code    
         disp('!==================================================================!')
         disp('! please, select your C compiler ==================================!')
         mex -setup
     end
-    if user_choise ~= 'f'
+    if user_choice ~= 'f'
         cd(mslice_Ccode_dir);
         mex_single ('./', './', 'ffind.c')
         copyfile([mslice_Ccode_dir,filesep,'*.',mexext],mslice_mex_target_dir);
@@ -128,3 +108,27 @@ end
 
 disp(['Mex file creation from ',flname,' ...'])
 mex(flname,'-outdir', outdir);
+
+
+function choice=disp_compiler_dialog()
+% -----------------------------------------------------
+disp('!==================================================================!')
+disp('! Would you like to select your compilers (win) or have configured !')
+disp('! your compiler yourself?:  y/n/c/f/e                              !')
+disp('! y-select and configure;  n - already configured                  !')
+disp('! c or f allow you to build C or FORTRAN part of the program       !')
+disp('!        having configured proper compiler yourself                !')
+disp('!------------------------------------------------------------------!')
+disp('! If you are going to build standalone version, the compiler has to!')
+disp('! be configured for static linkage (e.g. /MT for VS C compiler or  !')
+disp('! /libs:static for ifort compiler)                                 !')
+disp('!------------------------------------------------------------------!')
+disp('! e -- cancel (end)                                                !')
+user_entry=input('! y/n/c/f/e :','s');
+user_entry=strtrim(lower(user_entry));
+choice  = user_entry(1);
+disp(['!===> ' choice,' choosen                                                    !']);
+disp('!==================================================================!')
+if ~(choice=='y'||choice=='n'||choice=='c'||choice=='f')
+    choice='e';
+end

@@ -25,6 +25,11 @@ if isempty(spe_filename(~isspace(spe_filename))),	% if no filename given just lo
    disp('No data loaded.');
    data=[];
 else
+   rd = rundata(spe_filename,phx_filename);
+   if ~exist('phx_filename','var')||isemtpy(phx_filename)
+        [data.S,data.ERR,data.en]=get_rundata(rd,'S','ERR','en','-nonan');
+   else
+        [data.S,data.ERR,data.en,]=get_rundata(rd,'S','ERR','en','-nonan');       
    data=load_spe(spe_filename); 		% data.en (1,ne), data.S (ndet,ne),  data.ERR (ndet,ne)
 	% remove masked detectors
    if ~isempty(data),

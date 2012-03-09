@@ -4,7 +4,7 @@ function varargout=read_hdf_fields(hdf_file,fieldnames)
 % The data are described by the list of the fields, specified by the
 % parameter 'fieldnames'
 % 
-% $Revision: 200 $ ($Date: 2011-11-24 14:05:19 +0000 (Thu, 24 Nov 2011) $)
+% $Revision$ ($Date$)
 %
 if ~exist(hdf_file,'file')
     error('MATLAB:read_hdf_fields',' can not find file %s',hdf_file);

@@ -8,12 +8,27 @@ function validate_mslice()
 test_path=set_unit_test();
 root_path=fileparts(which('mslice_init.m'));
 
-runtests(fullfile(root_path,'admin','unit_test','test_object_collection'));
+runtests(fullfile(root_path,'admin','_unit_test','test_object_collection'));
+
+
+% temporary, untill Herbert IO completed
+state = herbert_io();
+%herbert_io('-off');
+%runtests(fullfile(root_path,'admin','_unit_test','test_herbert_IO'));
+herbert_io('-on');
+runtests(fullfile(root_path,'admin','_unit_test','test_herbert_IO'));
+
+if state
+    herbert_io('-on');
+else
+    herbert_io('-off');
+end
+
 
 rmpath(test_path)
 
 
 function test_path=set_unit_test()
-root= fileparts(which('herbert_init.m'));
+root= herbert_on('where');
 test_path = fullfile(root,'_test','matlab_xunit','xunit');
 addpath(test_path);
