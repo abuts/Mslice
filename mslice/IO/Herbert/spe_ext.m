@@ -22,12 +22,16 @@ full_form=false;
 
 % Check input arguments
 if nargin>0
-    if ismember('-testwin',varargin)        
-        win_fs = true;
-    elseif ismember('-testunix',varargin)        
-        win_fs = false;
+    if ischar(varargin{1})
+        if ismember('-testwin',varargin)        
+            win_fs = true;
+        elseif ismember('-testunix',varargin)        
+            win_fs = false;
+        else
+            full_form=true;
+        end
     else
-        full_form=true;
+       full_form=true;
     end
     if nargin>1
         full_form=true;

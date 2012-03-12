@@ -15,15 +15,21 @@ function ext=spe_ext(varargin)
 % $Revision: 200 $ ($Date: 2011-11-24 14:05:19 +0000 (Thu, 24 Nov 2011) $)
 %
 win_fs = ispc;
+% provide output as cellarray of extensions with the description of the
+% extencion meanings.
 full_form=false;
 % Check input arguments
 if nargin>0
-    if ismember('-testwin',varargin)        
-        win_fs = true;
-    elseif ismember('-testunix',varargin)        
-        win_fs = false;
+    if ischar(varargin{1})
+        if ismember('-testwin',varargin)        
+            win_fs = true;
+        elseif ismember('-testunix',varargin)        
+            win_fs = false;
+        else
+            full_form=true;
+        end
     else
-        full_form=true;
+       full_form=true;
     end
     if nargin>1
         full_form=true;
