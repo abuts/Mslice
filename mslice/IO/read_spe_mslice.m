@@ -21,7 +21,9 @@ if size(data.S,1)~=size(phx,1),
 end
 
 % REMOVE DATA IN MASKED DETECTORS
-masked=((data.S(:,1)<=-1e+30)|isnan(data.S(:,1))|isinf(data.S(:,1)));
+masked=isnan(data.S(:,1));	% 
+masked=~((data.S(:,1)<=nulldata)|isinf(data.S(:,1))|masked);
+%masked=((data.S(:,1)<=-1e+30)|isnan(data.S(:,1))|isinf(data.S(:,1)));
 disp(['Total number of masked detectors is ' num2str(sum(masked))]);
 %disp(['Masked detectors in file have numbers : ' sprintf(' %d ',phx(masked,1))]);
 data.S(masked,:)=[];

@@ -53,6 +53,9 @@ end
 
 % === eliminate spurious NaN or Inf points
 index=(isnan(data.S)|isinf(data.S)|isnan(data.ERR)|isinf(data.ERR));
+%index=isnan(data.S));	% 
+%index=~((data.S(:,1)<=nulldata)|isinf(data.S(:,1))|index);
+
 if sum(index(:))>=1,
     disp(sprintf('%d points with NaN or Inf data. ',sum(index(:))));
     data.S(index)=nulldata;

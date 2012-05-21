@@ -11,7 +11,8 @@ if ~exist('in_data','var'),
    return
 end
 nulldata=-1e+30;
-index_masked=(isnan(in_data.S)|(in_data.S<=nulldata)|(isinf(in_data.S))); % masked pixels
+index_masked = (in_data.S<=nulldata);
+index_masked=(isnan(in_data.S)|index_masked|(isinf(in_data.S))); % masked pixels
 temp=sum(index_masked,2); % sum along energy direction
 index_masked_det=(temp==size(in_data.S,2)); % whole detector masked
 index_masked(index_masked_det,:)=[]; % remove completely these masked detectors

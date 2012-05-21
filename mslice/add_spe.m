@@ -51,8 +51,8 @@ for i=1:length(weight),
       disp(['Could not load .spe file ' spedir spefiles{i}]);
       return;
    end
-   index=~isnan(data.S(:,1));	% (ndet,1) is 1 where pixel is data and 0 where detector has 'nulldata' in current data set
-   index=~((data.S(:,1)<=nulldata)|isinf(data.S(:,1)))|index;
+   index=isnan(data.S(:,1));	% (ndet,1) is 1 where pixel is data and 0 where detector has 'nulldata' in current data set
+   index=~((data.S(:,1)<=nulldata)|isinf(data.S(:,1))|index);
 
    if ~exist('cumm_index','var'),	% if it is the first file to be loaded, initaialize cumm_index, cumm_S, ERR2 ...
       det_theta=data.det_theta;
