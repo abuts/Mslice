@@ -109,6 +109,12 @@ bottomy=scr(4)-height-bottomy; % move to top
 if bottomy<=0
     bottomy=33;
 end
+% if screen is too small to fit the whole image, move mslice to the
+% position where it shows its top part and cut the bottom, which is rarely
+% used
+if bottomy+height>scr(4)
+    bottomy = scr(4)-height;
+end
 set(fig,'Position',[bottomx bottomy width height]);
 pos=[0 lineheight*(nlines-1)+interlines*(nlines-1) pos(3) pos(4)];
 set(h,'Position',pos); 
