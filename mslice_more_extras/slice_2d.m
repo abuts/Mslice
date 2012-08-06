@@ -14,11 +14,14 @@ function [slice_d,slice_full]=slice_2d (data, varargin)
 % ------------------------------
 %   >> wout = slice_2d (..., 'file')              % prompt for a file name to write results
 %   >> wout = slice_2d (..., 'file', filename)    % write results to named file
+%   >> mslice_1d (..., 'type', cut_type)    % slice type:
+%               'slc'       Full pixel info. with labels (DEFAULT)
+%               'xye'       x-y-z-e data
 %
 %   >> wout = slice_2d (..., 'noplot')            % turn off plotting (DEFAULT)
 %
-%   >> wout = slice_2d (..., 'plot')              % plot, with current smoothing
-%   >> wout = slice_2d (..., 'plot', nsmooth)     % plot, changing smoothing to current value
+%   >> wout = slice_2d (..., 'plot')              % plot, without smoothing
+%   >> wout = slice_2d (..., 'plot', nsmooth)     % plot, with smoothing
 % 
 %   >> wout = slice_2d (..., 'surf')              % surface plot, with current smoothing
 %   >> wout = slice_2d (..., 'surf', nsmooth)     % surface plot, changing smoothing to current value
@@ -36,20 +39,27 @@ function [slice_d,slice_full]=slice_2d (data, varargin)
 
 
 % Parse the input arguments
-[p,ux,uy,uz,file,filename,plotcmd,nsmooth,range,lims]= slice_2d_parse(data,varargin{:});
+[p,ux,uy,uz,file,filename,type,plotcmd,nsmooth,range,lims]= slice_2d_parse(data,varargin{:});
 if isempty(p)
     error ('Must give binning and integration ranges')
 end
+if isempty(nsmooth), nsmooth=0; end     % no smoothing if nsmooth not given
 
 % Create slice, writing to file if required, but no plotting yet.
 if file
     if isempty(filename)
-        filename = ms_putfile_full('*.slc');
+        filename = ms_putfile_full(['*.',type]);
         if isempty(filename)
             error('No output file name given')
         end
     end
-    [slice_d_tmp,slice_full_tmp]=slice_spe_full(data,p,uz(1),uz(2),ux(1),ux(3),ux(2),uy(1),uy(3),uy(2),'','','','noplot',filename);
+    if strcmp(type,'slc')
+        [slice_d_tmp,slice_full_tmp]=slice_spe_full(data,p,uz(1),uz(2),ux(1),ux(3),ux(2),uy(1),uy(3),uy(2),'','','','noplot',filename);
+    else
+        [slice_d_tmp,slice_full_tmp]=slice_spe_full(data,p,uz(1),uz(2),ux(1),ux(3),ux(2),uy(1),uy(3),uy(2),'','','','noplot','');
+        slice_d_tmp_smooth=smooth_slice(slice_d_tmp,nsmooth);
+        save_slice_xye(slice_d_tmp_smooth,filename)
+    end
 else
     [slice_d_tmp,slice_full_tmp]=slice_spe_full(data,p,uz(1),uz(2),ux(1),ux(3),ux(2),uy(1),uy(3),uy(2),'','','','noplot','');
 end
@@ -62,10 +72,8 @@ else
 end
 
 if strcmp(plotcmd,'plot')
-    if isempty(nsmooth), nsmooth=0; end     % no smoothing if nsmooth not given
     plot_slice(smooth_slice(slice_d_tmp,nsmooth),i_min,i_max,'flat');
 elseif strcmp(plotcmd,'surf')
-    if isempty(nsmooth), nsmooth=0; end     % no smoothing if nsmooth not given
     surf_slice(smooth_slice(slice_d_tmp,nsmooth),i_min,i_max,'flat');
 end
 

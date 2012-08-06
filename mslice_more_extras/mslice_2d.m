@@ -14,6 +14,9 @@ function [slice_d,slice_full]=mslice_2d (varargin)
 % ------------------------------
 %   >> mslice_2d (..., 'file')              % prompt for a file name to write results
 %   >> mslice_2d (..., 'file', filename)    % write results to named file
+%   >> mslice_1d (..., 'type', cut_type)    % slice type:
+%               'slc'       Full pixel info. with labels (DEFAULT)
+%               'xye'       x-y-z-e data
 %
 %   >> mslice_2d (..., 'noplot')            % turn off plotting
 %
@@ -62,7 +65,7 @@ else
 end
 
 % Parse the input arguments
-[p,ux,uy,uz,file,filename,plotcmd,nsmooth,range,lims]= slice_2d_parse(data,varargin{:});
+[p,ux,uy,uz,file,filename,type,plotcmd,nsmooth,range,lims]= slice_2d_parse(data,varargin{:});
 
 % Set values in GUI
 if ~isempty(p)
@@ -114,22 +117,30 @@ end
 if ~file
     if ~isempty(plotcmd)
         [slice_d_tmp,slice_full_tmp]=ms_slice_write ('$nofile', plotcmd);
-%         slice_d_tmp=ms_slice (plotcmd);
     else
         [slice_d_tmp,slice_full_tmp]=ms_slice_write ('$nofile');
-%         slice_d_tmp=ms_slice;
     end
 else
     if isempty(filename)
-        filename = ms_putfile_full('*.slc');
+        filename = ms_putfile_full(['*.',type]);
         if isempty(filename)
             error('No output file name given')
         end
     end
-    if ~isempty(plotcmd)
-        [slice_d_tmp,slice_full_tmp]=ms_slice_write (filename, plotcmd);
-    else
-        [slice_d_tmp,slice_full_tmp]=ms_slice_write (filename);
+    if strcmp(type,'slc')
+        if ~isempty(plotcmd)
+            [slice_d_tmp,slice_full_tmp]=ms_slice_write (filename, plotcmd);
+        else
+            [slice_d_tmp,slice_full_tmp]=ms_slice_write (filename);
+        end
+    else    % must be xye type
+        if ~isempty(plotcmd)
+            [slice_d_tmp,slice_full_tmp]=ms_slice_write ('$nofile', plotcmd);
+        else
+            [slice_d_tmp,slice_full_tmp]=ms_slice_write ('$nofile');
+        end
+        slice_d_tmp_smooth=smooth_slice(slice_d_tmp,ms_getvalue('slice_nsmooth'));
+        save_slice_xye(slice_d_tmp_smooth,filename)
     end
 end
 

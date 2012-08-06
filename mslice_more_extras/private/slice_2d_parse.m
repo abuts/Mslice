@@ -1,4 +1,4 @@
-function [p,ux,uy,uz,file,filename,plotcmd,nsmooth,range,lims]= slice_2d_parse(data,varargin)
+function [p,ux,uy,uz,file,filename,type,plotcmd,nsmooth,range,lims]= slice_2d_parse(data,varargin)
 % Parse the input arguments
 %
 %   >> [p,ux,uy,uz,filename,plotcmd,nsmooth,range,lims]= slice_2d_parse(data,varargin)
@@ -16,6 +16,9 @@ function [p,ux,uy,uz,file,filename,plotcmd,nsmooth,range,lims]= slice_2d_parse(d
 % ------------------------------
 %   >> mslice_2d (..., 'file')              % prompt for a file name to write results
 %   >> mslice_2d (..., 'file', filename)    % write results to named file
+%   >> mslice_1d (..., 'type', cut_type)    % slice type:
+%               'slc'       Full pixel info. with labels (DEFAULT)
+%               'xye'       x-y-z-e data
 %
 %   >> mslice_2d (..., 'noplot')            % turn off plotting
 %
@@ -28,6 +31,10 @@ function [p,ux,uy,uz,file,filename,plotcmd,nsmooth,range,lims]= slice_2d_parse(d
 %   >> mslice_2d (..., 'range', [i_min,i_max])  % intensity range for plot
 
 % T.G.Perring   Feb 2009
+
+typelist={'slc','xye'};  % file type options
+file_typedefault='slc';
+nonfile_typedefault='xye';
 
 narg=numel(varargin);
 
@@ -74,6 +81,7 @@ end
 % Get options
 file=false;
 filename='';
+type='';
 plotcmd='';
 nsmooth=[];
 range=false;
@@ -118,10 +126,35 @@ while ibeg<=narg
                 filename=varargin{ibeg};
                 ibeg=ibeg+1;
             end
+        elseif strmatch(lower(varargin{ibeg}),'type')
+            ibeg=ibeg+1;
+            if ibeg<=narg && ischar(varargin{ibeg}) && isempty(strmatch(lower(varargin{ibeg}),{'plot','noplot','surf','file','range'}))
+                ind=strmatch(lower(varargin{ibeg}),typelist);
+                if ~isempty(ind)
+                    type=typelist{ind};
+                    ibeg=ibeg+1;
+                else
+                    error('Invalid output file type')
+                end
+            else
+                error('Check output file type')
+            end
         else
             error('Check number and type of arguments')
         end
     else
         error('Check number and type of arguments')
+    end
+end
+
+% Now do some consistency checks
+% ---------------------------------
+% Choose default file type if output file requested
+if isempty(type)
+    if file
+        disp('Choosing default output file type as .slc')
+        type=file_typedefault;
+    else
+        type=nonfile_typedefault;
     end
 end
