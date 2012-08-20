@@ -104,8 +104,8 @@ null_data = -1.0e30;    % conventional NaN in spe files
 file_tmp=strtrim(file);
 
 % Get file name and path (incl. final separator)
-[path,name,ext,ver]=fileparts(file_tmp);
-filename=[name,ext,ver];
+[path,name,ext]=fileparts(file_tmp);
+filename=[name,ext];
 filepath=[path,filesep];
 
 % Prepare data for Fortran routine
