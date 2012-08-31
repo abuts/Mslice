@@ -104,8 +104,8 @@ height= lineheight*nlines+interlines*(nlines-1);
 
 scr=get(0,'ScreenSize');
 bottomx=5;
-bottomy=66;
-bottomy=scr(4)-height-bottomy; % move to top
+bottomy0=66;
+bottomy=scr(4)-height-bottomy0; % move to top
 if bottomy<=0
     bottomy=33;
 end
@@ -113,10 +113,15 @@ end
 % position where it shows its top part and cut the bottom, which is rarely
 % used
 if bottomy+height>scr(4)
-    bottomy = scr(4)-height;
+    bottomy = 0;
 end
+mslice_window_size = height-lineheight;
+if mslice_window_size+5*lineheight>scr(4)
+    mslice_window_size = scr(4)-4*lineheight;
+end
+
 set(fig,'Position',[bottomx bottomy width height]);
-pos=[0 lineheight*(nlines-1)+interlines*(nlines-1) pos(3) pos(4)];
+pos=[0 mslice_window_size pos(3) pos(4)];
 set(h,'Position',pos); 
 oneline=[0 lineheight+0*interlines 0 0];
 pos=pos-[0 interlines 0 0];
