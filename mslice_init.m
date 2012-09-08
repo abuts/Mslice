@@ -65,9 +65,13 @@ if get(mslice_config,'enable_unit_tests')
     end
     addpath_message(rootpath,'admin','_unit_test');
 end
+
 disp('!==================================================================!')
-disp('!        MSLICE transitional  (ISIS modifcations from 01/01/2012)  !')
-disp('!==================================================================!')
+disp('!                      MSLICE                                        !')
+disp('!------------------------------------------------------------------!')
+disp('!  Radu Coldea    1998-2001                                        !')
+disp('!  Various ISIS modifications and enhancements added               !')
+disp('!------------------------------------------------------------------!')
 
 
 %--------------------------------------------------------------------------

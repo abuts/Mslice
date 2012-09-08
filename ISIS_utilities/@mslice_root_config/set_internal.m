@@ -1,10 +1,14 @@
 function this=set_internal(this,change_sealed,varargin)
 % Set one or more fields in a configuration, optionally allowing the sealed fields to be changed
+% NOTE: This method has to be public because it is used by customised set methods
+%       configuration objects. It should not be used in any other context.
 %
-%   >> var = set_internal (configobj, change_sealed, arg1, arg2, ...)
+%   >> set_internal (config_obj, change_sealed, arg1, arg2, ...)
+%   >> var = set_internal (config_obj, change_sealed, arg1, arg2, ...)
 %
 % Input:
-%   configobj       Configuration object
+% ------
+%   config_obj      Configuration object
 %   change_sealed   Indicates if sealed fields can be altered.
 %                   '-change_sealed' or '-nochange_sealed'
 %                         true       or        false
@@ -12,7 +16,9 @@ function this=set_internal(this,change_sealed,varargin)
 %   arg1, arg2,...  Arguments according to one of the useage options below
 %
 % Output:
+% -------
 %   var             Copy of configuration object
+%
 %
 % Syntax for different input arguments:
 % -------------------------------------
@@ -27,7 +33,7 @@ function this=set_internal(this,change_sealed,varargin)
 % NOTE: This method has to be public because it is used by customised set methods
 %       configuration objects. It should not be used in any other context.
 %
-% $Revision$ ($Date$)
+% $Revision: 122 $ ($Date: 2011-12-23 16:33:53 +0000 (Fri, 23 Dec 2011) $)
 
 
 % Get the value of change_sealed

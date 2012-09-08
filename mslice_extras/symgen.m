@@ -59,7 +59,7 @@ for i=1:length(theta)
 end
 format_string = repmat('%g,',1,length(theta));
 format_string = format_string(1:end-1);
-label=sprintf(['symgen(%g,%g) rot(',format_string,')'],n1,n2,theta)
+label=sprintf(['symgen(%g,%g) rot(',format_string,')'],n1,n2,theta);
 data.title_label=label;
 
 % Put data back into mslice

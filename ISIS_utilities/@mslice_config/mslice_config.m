@@ -5,8 +5,6 @@ function this=mslice_config()
 %
 % Type >> mslice_config  to see the list of current configuration option values.
 
-% $Revision: 1835 $ ($Date: 2011-10-22 22:49:44 +0100 (Sat, 22 Oct 2011) $)
-%
 %--------------------------------------------------------------------------------------------------
 %  ***  Alter only the contents of the subfunction at the bottom of this file called     ***
 %  ***  default_config, and the help section above, which describes the contents of the  ***
@@ -14,9 +12,14 @@ function this=mslice_config()
 %--------------------------------------------------------------------------------------------------
 % This block contains generic code. Do not alter. Alter only the sub-function default_config below
 
+root_config=mslice_root_config;
+
 config_name=mfilename('class');
-build_configuration(config,@mslice_defaults,config_name);
-this=class(struct([]),config_name,config);
+[ok,this]=is_config_stored(root_config,config_name);
+if ~ok
+    this=class(struct([]),config_name,root_config);
+    build_configuration(this,@default_config,config_name);
+end
 
 
 %--------------------------------------------------------------------------------------------------
@@ -34,7 +37,7 @@ this=class(struct([]),config_name,config);
 %  Note that 'sealed_fields' will be treated as a sealed field, whether or not it is in the list.
 %
 %--------------------------------------------------------------------------------------------------
-function defaults=mslice_defaults()
+function defaults=default_config
 
 defaults = ...
     struct('last_copied_libisis',1620, ... % by default, this is the lowest Libisis version which supports copying

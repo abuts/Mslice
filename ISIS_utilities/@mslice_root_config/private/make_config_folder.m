@@ -3,8 +3,12 @@ function folder_path=make_config_folder(folder_name)
 %
 %   >> folder_path=make_config_folder(folder_name)
 %
+% Input:
+% ------
 %   folder_name         Name of default folder to hold all configurations
 %                       e.g. 'ISIS_config'
+% Output:
+% -------
 %   folder_path         Full path to default folder
 %
 % The attempt to create the default folder for user configurations takes place
@@ -23,7 +27,7 @@ function folder_path=make_config_folder(folder_name)
 % usually the same for a given machine, so the path to the configurations 
 % will be the same next next time the function is called. 
 
-% $Revision$ ($Date$)
+% $Revision: 122 $ ($Date: 2011-12-23 16:33:53 +0000 (Fri, 23 Dec 2011) $)
 
 
 % First try to create where find startup.m
