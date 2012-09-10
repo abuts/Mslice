@@ -71,6 +71,7 @@ disp('!                      MSLICE                                      !')
 disp('!------------------------------------------------------------------!')
 disp('!  Radu Coldea    1998-2001                                        !')
 disp('!  Various ISIS modifications and enhancements added               !')
+disp('!  Last ISIS substantial modifications date: 01/09/2012            !')
 disp('!------------------------------------------------------------------!')
 
 
