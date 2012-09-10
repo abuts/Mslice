@@ -67,7 +67,7 @@ if get(mslice_config,'enable_unit_tests')
 end
 
 disp('!==================================================================!')
-disp('!                      MSLICE                                        !')
+disp('!                      MSLICE                                      !')
 disp('!------------------------------------------------------------------!')
 disp('!  Radu Coldea    1998-2001                                        !')
 disp('!  Various ISIS modifications and enhancements added               !')
