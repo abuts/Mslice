@@ -1,3 +1,12 @@
+This folder used to keep general Matlab utilites which were common with Libisis. 
+Currently the utilites here are mainly related to old style hdf rotuines in Mslice 
+and generic configuration routines (may be equal to Herbert)
+
+The hdf files may clash with Libisis but Herbert uses different apporach. 
+the configuration may clash with Herbert
+
+
+Obsolete===>
 This folder intended to keep the general matlab utilites which are not related to libisis or neutron experiments but are used by all ISIS packages
 It is used primary during packages installation
 

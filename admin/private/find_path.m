@@ -16,8 +16,12 @@ function thePath=find_path(partPath)
 % the function searches for case-insensitive string on PC or case sensitive
 % path under unix/mac
 %
+% function has been used in folders synchronization between different packages. 
+% At the moment this function is not used anywhere as the synchcronization is disconnected. 
+%
+%
 % Libisis:
-% $Revision$ ($Date$)
+% $Revision: 200 $ ($Date: 2011-11-24 14:05:19 +0000 (Thu, 24 Nov 2011) $)
 %
 % build cell array of folders in the path
 allPath = regexp(path,pathsep,'split'); 
