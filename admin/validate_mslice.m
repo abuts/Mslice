@@ -29,6 +29,10 @@ rmpath(test_path)
 
 
 function test_path=set_unit_test()
-root= herbert_on('where');
+try
+    root= herbert_on('where');
+catch
+    error('herbert_on has not been found anywhere. Herbert provides unit tests package, so no unit tests availible for Mslice');
+end
 test_path = fullfile(root,'_test','matlab_xunit','xunit');
 addpath(test_path);
