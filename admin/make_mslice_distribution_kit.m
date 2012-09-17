@@ -29,7 +29,7 @@ rootpath = fileparts(which('mslice_init')); % MUST have rootpath so that libisis
 % end
 %
 current_dir  = pwd;
-root_dir     = current_dir;
+root_dir     = rootpath;
 % if inside herbert package dir, go avay from there:
 if strncmpi(root_dir,current_dir,numel(current_dir))
 	cd(rootpath);
