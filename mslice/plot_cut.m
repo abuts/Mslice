@@ -235,8 +235,9 @@ if ~isfield(cut_d,'y_label')|isempty(cut_d.y_label)|~(ischar(cut_d.y_label)|isce
 end
 
 figure(fig); 
-xlabel(cut_d.x_label);
-ylabel(cut_d.y_label);
+font_size=get(mslice_config,'cut_font_size');
+xlabel(cut_d.x_label,'FontSize',font_size);
+ylabel(cut_d.y_label,'FontSize',font_size);
 axis(cut_d.axis); 
 % add current plot title at the bottom of the list with the other titles
 if exist('oldtitle','var'),	

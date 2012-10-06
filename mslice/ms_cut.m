@@ -233,7 +233,7 @@ else
     noplot=(1<0);
 end
 
-if (sample==1)&(analmode==1)&(psd==1),
+if (sample==1)&&(analmode==1)&&(psd==1),
    cut_d=cut_spe(data,x,vx_min,vx_max,bin_vx,vy_min,vy_max,vz_min,vz_max,i_min,i_max,OutputType,output_filename,tomfit,noplot);
 else
    cut_d=cut_spe(data,x,vx_min,vx_max,bin_vx,vy_min,vy_max,i_min,i_max,OutputType,output_filename,tomfit,noplot);

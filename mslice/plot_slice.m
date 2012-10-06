@@ -117,8 +117,9 @@ h=title(slice_data.title);
 YLim=get(gca,'YLim');
 pos=get(h,'Position');
 set(h,'Position',[pos(1) YLim(2)+0*pos(3) pos(3)]);
-xlabel(deblank(slice_data.axis_label(1,:)));
-ylabel(deblank(slice_data.axis_label(2,:)));
+font_size=get(mslice_config,'slice_font_size');
+xlabel(deblank(slice_data.axis_label(1,:)),'FontSize',font_size);
+ylabel(deblank(slice_data.axis_label(2,:)),'FontSize',font_size);
 
 % === adjust colorbar height, determine real height of graph, after adjustment of units  
 h=colorbar;
