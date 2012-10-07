@@ -97,6 +97,8 @@ shading(shad);
 
 % === set aspect ratio 1:1 if units along x and y are the same and {Å^{-1}}
 figure(fig);
+font_size=get(mslice_config,'slice_font_size');
+set(gca,'FontSize',font_size);
 if (~isempty(findstr(slice_data.axis_label(1,:),'Å^{-1}')))&...
       (~isempty(findstr(slice_data.axis_label(2,:),'Å^{-1}'))),
    set(gca,'DataAspectRatioMode','manual');
@@ -117,15 +119,16 @@ h=title(slice_data.title);
 YLim=get(gca,'YLim');
 pos=get(h,'Position');
 set(h,'Position',[pos(1) YLim(2)+0*pos(3) pos(3)]);
-font_size=get(mslice_config,'slice_font_size');
-xlabel(deblank(slice_data.axis_label(1,:)),'FontSize',font_size);
-ylabel(deblank(slice_data.axis_label(2,:)),'FontSize',font_size);
+
+xlabel(deblank(slice_data.axis_label(1,:)));
+ylabel(deblank(slice_data.axis_label(2,:)));
 
 % === adjust colorbar height, determine real height of graph, after adjustment of units  
 h=colorbar;
 h_colourbar=h;
 set(h,'Tag','Colorbar');
 aspect=get(gca,'DataAspectRatio');
+set(gca,'FontSize',font_size);
 YLim=get(gca,'Ylim');
 XLim=get(gca,'XLim');
 pos=get(gca,'Position');
