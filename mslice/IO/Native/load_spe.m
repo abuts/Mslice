@@ -95,6 +95,15 @@ end
 hdf_file_str=spe_hdf_filestructure();
 name=[name,ext];
 hdf_failed = false;
+
+% check if spe file in reality is an hdf file wrongly tagged by Mantid as
+% spe, identify it as true in this case. 
+if strcmpi(ext,'.spe')
+    if  H5F.is_hdf5(spe_filename)
+        ext = hdf_file_str(2).spe_hdf_file_ext;
+        warning('LOAD_SPE:wrong_extension',' the file %s is in fact a nxspe file. Deploying nxspe file reader',[name,ext])
+    end
+end
 if strcmpi(ext,hdf_file_str(1).spe_hdf_file_ext)
      try %try hdf5
         
