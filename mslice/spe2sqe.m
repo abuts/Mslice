@@ -52,8 +52,8 @@ elseif spe_data.emode==2,
 	  Qy=-kf*(sin(spe_data.det_theta))*ones(size(spe_data.en));	% (ndet,1)*(1,ne)      
       Qz= zeros(size(Qy));
     else
-      Qy=(-kf*sin(spe_data.det_theta)).*cos(spe_data.det_psi);
-      Qz=(-kf*sin(spe_data.det_theta)).*sin(spe_data.det_psi);
+      Qy=((-kf*sin(spe_data.det_theta)).*cos(spe_data.det_psi))*ones(size(spe_data.en));
+      Qz=((-kf*sin(spe_data.det_theta)).*sin(spe_data.det_psi))*ones(size(spe_data.en));
     end    
 
 	Q=cat(3,Qx,Qy,Qz);

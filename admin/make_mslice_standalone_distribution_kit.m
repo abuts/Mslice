@@ -40,8 +40,8 @@ disp('!    Start collecting the mslice  program files ====================!')
 
 % get configuration and clear it to avoid referring to wrong configuration
 % in a future
-config_folder_nm=get(config,'config_folder_name');
-config_folder_ph=get(config,'config_folder_path');
+config_folder_nm=get(mslice_root_config,'config_folder_name');
+config_folder_ph=get(mslice_root_config,'config_folder_path');
 config_folder=fullfile(config_folder_ph,config_folder_nm);
 all_config   = fullfile(config_folder,'config.mat');
 msl_config   = fullfile(config_folder,'mslice_config.mat');

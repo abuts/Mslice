@@ -109,7 +109,7 @@ data.ERR  = reshape(SE,ind_max,rez_size(2));
 data.det_theta = (min_pol:pol_step:max_pol)';
 data.det_dtheta= ones(ind_max,1)*pol_step;
 data.det_psi   = zeros(ind_max,1);
-data.det_dpsi  = ones(ind_max,1); % should be recalculated as an average?
+data.det_dpsi  = 2*pi*ones(ind_max,1); % should be recalculated as an average?
 % det_group left untouched -- should we regroup them?
 % det_id=data.det_group(valid);
 % block=[psi_ind,det_id];
