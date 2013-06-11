@@ -200,9 +200,12 @@ disp(['Successfully read parameter file ' fullname]);
 % replace sting in old msp file with its new equivalents
 
 if ~isempty(modificators)&&(~is_read_only)
-    for i=1:floor(nmodific/2)
-        perl('set_key_value.pl',fullname,modificators{2*i-1},modificators{2*i});       
-    end
+    keys  = modificators(1:2:nmodific);
+    values = modificators(2:2:nmodific);    
+    set_key_value(fullname,keys,values)
+%     for i=1:floor(nmodific/2)
+%         perl('set_key_value.pl',fullname,modificators{2*i-1},modificators{2*i});       
+%     end
 end
 
 % === update .msp file details

@@ -39,7 +39,8 @@ if ~exist(file_name,'file')
 
         full_msp=fullfile(msp_dir,msp_file);
         
-        perl('set_key_value.pl',full_msp,file_field(4:end),file_name);
+        set_key_value(full_msp,file_field(4:end),file_name)        
+   %     perl('set_key_value.pl',full_msp,file_field(4:end),file_name);
         
         
         %h_file

@@ -63,10 +63,12 @@ else
          msp_file=get(mslice_config,'MspFile');
 
          full_msp=fullfile(msp_dir,msp_file);
-      if ~isempty(file_name)        
-         perl('set_key_value.pl',full_msp,'PhxFile',file_name) 
+      if ~isempty(file_name) 
+         set_key_value(full_msp,'PhxFile',file_name)
+       %  perl('set_key_value.pl',full_msp,'PhxFile',file_name) 
       end
-      perl('set_key_value.pl',full_msp,'PhxDir', path_name)          
+      set_key_value(full_msp,'PhxDir',path_name)      
+      %perl('set_key_value.pl',full_msp,'PhxDir', path_name)          
     end
 
 
