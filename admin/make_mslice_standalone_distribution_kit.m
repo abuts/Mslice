@@ -59,6 +59,7 @@ mslice_m1   = [mslice_src_dir,filesep,'mslice'];
 mslice_m2   = [mslice_src_dir,filesep,'ISIS_utilities'];
 mslice_add1 = [mslice_src_dir,filesep,'mslice_extras'];
 mslice_add2 = [mslice_src_dir,filesep,'mslice_more_extras'];
+mslice_add3 = [mslice_src_dir,filesep,'admin'];
 %
 if exist(mslice_src_dir,'dir')  % source directory;
      rmdir(mslice_src_dir,'s');
@@ -70,6 +71,7 @@ copy_files_list([source_dir,filesep,'mslice'],mslice_m1,'.m');
 copy_files_list([source_dir,filesep,'ISIS_utilities'],mslice_m2,'.m'); 
 copy_files_list([source_dir,filesep,'mslice_extras'],mslice_add1,'.m'); 
 copy_files_list([source_dir,filesep,'mslice_more_extras'],mslice_add2,'.m'); 
+copy_files_list([source_dir,filesep,'admin'],mslice_add3,'.m'); 
 % the files which will not be necessary for stand-alone but will be used
 % during installation:
 %copyfile([source_dir,filesep,'mslice_setup_examples.m '],[mslice_src_dir,filesep,'mslice_setup_examples.m ']);
@@ -107,7 +109,7 @@ cd(target_dir);
 %BundleFileString=['-o  homer -W main -d  ''',homer_tmp_dir,''' -a ''',homer_src_DLL,''' -T link:exe -v -N ',Homer_GUI];
 mslice_main= 'mslice.m';
 msliceFileString=['-v -o  mslice -W main -d  ''',mslice_tmp_dir,...
-                ''' -a ''',mslice_m1,''' -a ''',mslice_m2,''' -a ''',mslice_add1,''' -a ''',mslice_add2,''' -a ''',mslice_dll,...
+                ''' -a ''',mslice_m1,''' -a ''',mslice_m2,''' -a ''',mslice_add1,''' -a ''',mslice_add2,''' -a ''',mslice_add3,''' -a ''',mslice_dll,...
                 ''' -T link:exe -v -N ',mslice_main];
 %
 %
