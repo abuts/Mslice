@@ -107,8 +107,8 @@ if(exist(targ_file,'file'))
 end
 
 disp(['Mex file creation from ',flname,' ...'])
-mex(flname,'-outdir', outdir);
-
+mex(flname,'-outdir',outdir);
+%mex flname -v COMPFLAGS="\$COMPFLAGS -free" '-outdir' ./
 
 function choice=disp_compiler_dialog()
 % -----------------------------------------------------

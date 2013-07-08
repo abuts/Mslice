@@ -120,7 +120,7 @@ if size(data.v,3)==3,	%=== single crystal data and PSD detectors
       catch
          [cut.x,cut.y,cut.e,cut.perm,cut.npixels,vy,vz] =cut3d_m(data.v(:,:,x),data.v(:,:,y),data.v(:,:,z),...
             data.S,data.S,grid);
-      end
+      end      
       try
          [cut.y,cut.e]=avpix_df(data.S,cut.perm,cut.npixels);
       catch   
@@ -175,11 +175,15 @@ else	%=== single crystal and conventional detectors, or powder data
          [cut.y,cut.e]=avpix_m(data.S,cut.perm,cut.npixels);
       end
    else
-      try
-         [cut.x,cut.y,cut.e,cut.perm,cut.npixels,vy]=cut2d_df(data.v(:,:,x),data.v(:,:,y),data.S,data.ERR,grid);            
-      catch
-         [cut.x,cut.y,cut.e,cut.perm,cut.npixels,vy] =cut2d_m(data.v(:,:,x),data.v(:,:,y),data.S,data.ERR,grid);            
-      end   
+       if verLessThan('matlab','8.0')
+        try
+             [cut.x,cut.y,cut.e,cut.perm,cut.npixels,vy]=cut2d_df(data.v(:,:,x),data.v(:,:,y),data.S,data.ERR,grid);            
+        catch
+             [cut.x,cut.y,cut.e,cut.perm,cut.npixels,vy] =cut2d_m(data.v(:,:,x),data.v(:,:,y),data.S,data.ERR,grid);            
+        end   
+       else
+            [cut.x,cut.y,cut.e,cut.perm,cut.npixels,vy] =cut2d_m(data.v(:,:,x),data.v(:,:,y),data.S,data.ERR,grid);                       
+       end
    end      
 end
 
