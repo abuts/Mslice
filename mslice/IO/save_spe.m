@@ -62,7 +62,6 @@ if sum(index(:))>=1,
     data.ERR(index)=0;
 end
 
-
 % Require data to have following fields:
 %   data.S          [ne x ndet] array of signal values
 %   data.ERR        [ne x ndet] array of error values (st. dev.)
@@ -114,6 +113,15 @@ if sum(index(:)>0)
     data.S(index)=null_data;
     data.ERR(index)=0;
 end
+
+% Prepare data for Matlab: - must ensure no data has exponents outside range -99 to +99
+% The problem is that although the fortran will write e.g. -1.234E-008 as -1.234-008, which
+% the fortran read routines will cope with, the Matlab and C++ reads will not cope. Matlab
+% sees -1.234-008 as two numbers, and C++ sees this as one number, but does not interpreet the
+% exponent.
+small_data=1.0e-30;
+data.S(abs(data.S)<small_data)=0;
+data.ERR(abs(data.ERR)<small_data)=0;
 
 % Write to file
 try
@@ -167,6 +175,9 @@ function [ok,mess]=put_spe_matlab(data,file)
 % sprintf documentation
 %
 % 15 Aug 2009: modified to make write consistent with matlab write as far as can.
+%
+% 9 Sep 2013: Seems that the exponent is no longer always written as Esnnn  (s= + or -, nnn three
+% digits. Make the test now that three digits are written, not ispc.
 
 
 ok=true;
@@ -224,9 +235,11 @@ if rem(ne+1,8)~=0,
 end
 
 % === write S(det,energy) and ERR(det,energy)
+% Test if thriple digit exponent guaranteed
+triple_exp=(12-strfind(sprintf('%13.4E',-4.01e2),'E')==3);
 for i=1:ndet
     fprintf(fid,'%s\n','### S(Phi,w)');
-    if ispc
+    if triple_exp
         for j=1:8:ne
             temp = sprintf('%+11.3E%+11.3E%+11.3E%+11.3E%+11.3E%+11.3E%+11.3E%+11.3E',data.S(j:min(j+7,ne),i));
             temp = strrep(strrep(temp, 'E+0', 'E+'), 'E-0', 'E-');
@@ -239,7 +252,7 @@ for i=1:ndet
         end
     end
     fprintf(fid,'%s\n','### Errors');
-    if ispc
+    if triple_exp
         for j=1:8:ne
             temp = sprintf('%+11.3E%+11.3E%+11.3E%+11.3E%+11.3E%+11.3E%+11.3E%+11.3E',data.ERR(j:min(j+7,ne),i));
             temp = strrep(strrep(temp, 'E+0', 'E+'), 'E-0', 'E-');
