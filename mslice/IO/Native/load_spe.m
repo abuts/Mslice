@@ -146,6 +146,7 @@ elseif    strcmpi(ext,hdf_file_str(2).spe_hdf_file_ext)
      try  %try nxspe
          data = load_nxspe_fields(strtrim(spe_filename),hdf_file_str(2).data_field_names,hdf_file_str(2).data_attrib_names);
          [ndet,ne]=size(data.S); 
+         data.det_theta=ones(ndet,1);         
      catch
         hdf_failed=true;            
      end    
