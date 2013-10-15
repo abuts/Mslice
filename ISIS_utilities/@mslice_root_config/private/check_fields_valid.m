@@ -53,7 +53,7 @@ elseif isstruct(input)
 elseif isobject(input)
     if ~isa(input,root_config_name)
         for i=1:numel(input)
-            [valid,mess]=check_fields_valid_private (input(i), root_config_name);
+            [valid,mess]=check_fields_valid_private (struct(input(i)), root_config_name);
             if ~valid, return, end
         end
     else
