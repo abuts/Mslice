@@ -24,6 +24,9 @@ if ~H5F.is_hdf5(nxspe_filename)
 end
 % get the name of the root folder for nxspe
 [filepath,filename]= fileparts(nxspe_filename);
+if ~iscell(data_field_names)
+    data_field_names={data_field_names};
+end
 %
 data_root = find_root_nexus_dir(nxspe_filename,'NXSPE');
 root = repmat( [data_root,'/'],numel(data_field_names),1);

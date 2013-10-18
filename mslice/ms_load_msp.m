@@ -80,9 +80,9 @@ is_nxspe_file=false;       % usually not;
 disp(['Proceed reading parameter file ' fullname]);
 t=fgetl(fid);
 while (ischar(t))&(~isempty(t(~isspace(t)))),
-    pos=findstr(t,'=');
+    pos=strfind(t,'=');
     field=t(1:pos-1);
-    field=field(~isspace(field));
+    field=field(~isspace(field));    
 
     % === if having reached det_type, the sample is single crystal and analysis mode is undefined
     % === put by default analysis mode = single crystal
@@ -95,15 +95,32 @@ while (ischar(t))&(~isempty(t(~isspace(t)))),
         end
     end
     value=t(pos+1:length(t));    	
-    value=strtrim(deblank(value));% remove leading and trailing blanks from both the beginning and end of string
-    
+    % check if the value is not a form 
+    str_position = strfind(value,'#');    
+    its_a_form   = false;
+    if isempty(str_position)
+        % remove leading and trailing blanks from both the beginning and end of string        
+        value=strtrim(deblank(value));
+    else
+        % remove the character, which indicates that it is a form
+        value = value(str_position+1:end);
+        its_a_form =true;
+    end
     h=findobj(h_cw,'Tag',['ms_' field]);
     if ~isempty(h),
         if strcmp(get(h,'Style'),'popupmenu')|| strcmp(get(h,'Style'),'checkbox'),
-            set(h,'Value',str2num(value));
+            if its_a_form
+                form_contents = regexp(value,';','split');
+                set(h,'String',form_contents(1:end-1));
+                t=fgetl(fid);                
+                continue
+            else                
+                set(h,'Value',str2double(value));
+            end
         else
             set(h,'String',value);
         end
+            
        % To avoid the use of eval set the sample mode implicity everytime and execute ms_sample to
        % generate the correct fields in the main window.
        % The code
@@ -194,6 +211,7 @@ while (ischar(t))&(~isempty(t(~isspace(t)))),
     end
     t=fgetl(fid);
 end
+drawnow;
 fclose(fid);
 disp(['Successfully read parameter file ' fullname]);
 

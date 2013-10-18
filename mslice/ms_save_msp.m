@@ -131,10 +131,21 @@ while (ischar(t)&&(~isempty(t(~isspace(t))))),	% until reaching the end of the d
             return;
         end
         % if object is popupmenu or checkbox its value is stored in the 'Value' property, otherwise in 'String' 
-        if strcmp(get(h,'Style'),'popupmenu')|strcmp(get(h,'Style'),'checkbox'),
+        if strcmp(get(h,'Style'),'popupmenu')
             value=num2str(get(h,'Value'));
     %   	disp(['ms_' field ' has ''Value'' property ' value]);   
-        else
+            form = get(h,'String');
+            % In addition to value, save the structure of the pop-up form
+            if iscell(form)
+                str_form ='#';
+                for i=1:numel(form)
+                   str_form = [str_form (form{i}) ';'];
+                end
+                fprintf(f2,'%s%2s%s\n',field,'= ',str_form);                        
+            end
+        elseif strcmp(get(h,'Style'),'checkbox')
+           value=num2str(get(h,'Value'));
+        else           
           value=get(h,'String');
           value=deblank(value);	% remove trailing blanks from both beginning and end
           value=strtrim(value); 
