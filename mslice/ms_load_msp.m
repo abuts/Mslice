@@ -45,7 +45,7 @@ else  % ==== select given or default .msp file =========
       disp(['Given parameter file ' file ' not found in search path.']);
       file_path = get(mslice_config,'SampleDir');
       file_name = 'crystal_psd.msp';
-      fullname=fullfile(data_path,file_name); 
+      fullname=fullfile(file_path,file_name); 
       if ~exist(fullname,'file')
           error('ms_load_msp:mslice_error','a file %s which is the part of mslice distributive is absent',fullname);
       end
@@ -79,7 +79,11 @@ is_nxspe_file=false;       % usually not;
 %=== READ .MSP FILE LINE BY LINE
 disp(['Proceed reading parameter file ' fullname]);
 t=fgetl(fid);
-while (ischar(t))&(~isempty(t(~isspace(t)))),
+while (ischar(t))&(~isempty(t(~isspace(t))))
+    if t(1)=='#' % scip comments
+        t=fgetl(fid);
+        continue
+    end
     pos=strfind(t,'=');
     field=t(1:pos-1);
     field=field(~isspace(field));    

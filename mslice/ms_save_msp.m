@@ -103,6 +103,9 @@ if (f2==-1),
    disp(['in folder: ' msp_dir]);   
    disp('Parameter file not saved.');
    return;
+else
+% write service information    
+  fprintf(f2,'#valid from:18/10/2013 MSLICE parameters file\n');
 end
 % identify fields which are moved to mslice configuration file and should
 % not be written into msp file
@@ -112,7 +115,11 @@ msl_fields=get(mslice_config);
 % === write parameters line by line to the newfile mirroring structure of default file
 t=fgetl(f1);	% read one line of the default file
 while (ischar(t)&&(~isempty(t(~isspace(t))))),	% until reaching the end of the defauilt file do ...
-   pos=findstr(t,'=');
+    if t(1) == '#' % scip comments
+        t=fgetl(f1);
+        continue
+    end
+   pos=strfind(t,'=');
    field=t(1:pos-1);   
    fieldname=field(~isspace(field));	% obtain true fieldname by removing white spaces from field
    if isfield(msl_fields,fieldname)
