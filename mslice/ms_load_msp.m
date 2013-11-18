@@ -80,7 +80,7 @@ is_nxspe_file=false;       % usually not;
 disp(['Proceed reading parameter file ' fullname]);
 t=fgetl(fid);
 while (ischar(t))&(~isempty(t(~isspace(t))))
-    if t(1)=='#' % scip comments
+    if t(1)=='#' % skip comments
         t=fgetl(fid);
         continue
     end

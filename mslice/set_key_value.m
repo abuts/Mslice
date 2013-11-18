@@ -104,7 +104,13 @@ n_strings = numel(cellstrings);
 keys = cell(n_strings,1);
 vals = cell(n_strings,1);
 for i = 1:n_strings
-    sent = regexp(cellstrings{i},'\s+','split');
+    string = cellstrings{i};
+    if string(1)== '#' % its comment, keep unchanged
+        keys{i}=string;
+        vals{i}='';
+        continue
+    end
+    sent = regexp(string,'\s+','split');
     keys{i}=sent{1};
     if sent{2} ~= delim
         error('MSLICE:set_key_value',' can not properly understand the string N %d, namely: %s',i,cellstrings{i});
