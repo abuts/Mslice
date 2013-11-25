@@ -115,7 +115,7 @@ msl_fields=get(mslice_config);
 % === write parameters line by line to the newfile mirroring structure of default file
 t=fgetl(f1);	% read one line of the default file
 while (ischar(t)&&(~isempty(t(~isspace(t))))),	% until reaching the end of the defauilt file do ...
-    if t(1) == '#' % scip comments
+    if t(1) == '#' % skip comments
         t=fgetl(f1);
         continue
     end
@@ -147,6 +147,9 @@ while (ischar(t)&&(~isempty(t(~isspace(t))))),	% until reaching the end of the d
                 str_form ='#';
                 for i=1:numel(form)
                    str_form = [str_form (form{i}) ';'];
+                end
+                if str_form == '#' % do write empty forms (how could they occur, but apparently they can)
+                    continue
                 end
                 fprintf(f2,'%s%2s%s\n',field,'= ',str_form);                        
             end
