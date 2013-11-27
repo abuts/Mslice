@@ -124,10 +124,10 @@ while (ischar(t)&&(~isempty(t(~isspace(t))))),	% until reaching the end of the d
    fieldname=field(~isspace(field));	% obtain true fieldname by removing white spaces from field
    if isfield(msl_fields,fieldname)
        if strcmp(fieldname,'MspFile')
-        fprintf(f2,'%s%2s%s\n',field,'= ',newfile);
+        fprintf(f2,'%s = %s\n',field,newfile);
        else
         value=get(mslice_config,fieldname);
-        fprintf(f2,'%s%2s%s\n',field,'= ',value); 
+        fprintf(f2,'%s = %s\n',field,value); 
        end
    else
         h=findobj('Tag',['ms_' fieldname]);
@@ -151,7 +151,7 @@ while (ischar(t)&&(~isempty(t(~isspace(t))))),	% until reaching the end of the d
                 if str_form == '#' % do write empty forms (how could they occur, but apparently they can)
                     continue
                 end
-                fprintf(f2,'%s%2s%s\n',field,'= ',str_form);                        
+                fprintf(f2,'%s = %s\n',field,str_form);                        
             end
         elseif strcmp(get(h,'Style'),'checkbox')
            value=num2str(get(h,'Value'));
@@ -161,7 +161,7 @@ while (ischar(t)&&(~isempty(t(~isspace(t))))),	% until reaching the end of the d
           value=strtrim(value); 
     %      disp(['ms_' field ' has ''String'' property ' value]); 
         end 
-        fprintf(f2,'%s%2s%s\n',field,'= ',value);        
+        fprintf(f2,'%s = %s\n',field,value);        
    end
 
    t=fgetl(f1);

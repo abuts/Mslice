@@ -107,8 +107,7 @@ while (ischar(t))&(~isempty(t(~isspace(t))))
         value=strtrim(deblank(value));
     else
         % remove the character, which indicates that it is a form
-        value = value(str_position+1:end);
-        value=strtrim(deblank(value));
+        value = value(str_position+1:end);      
         its_a_form =true;
     end
     h=findobj(h_cw,'Tag',['ms_' field]);
@@ -120,7 +119,7 @@ while (ischar(t))&(~isempty(t(~isspace(t))))
                 form_contents =form_contents(valid_fields);
                 if numel(form_contents)>0
                     set(h,'Value',1);                
-                    set(h,'String',form_contents(1:end-1));
+                    set(h,'String',form_contents(:));
                 end
                 t=fgetl(fid);                
                 continue
@@ -168,15 +167,15 @@ while (ischar(t))&(~isempty(t(~isspace(t))))
                   end
             otherwise
         end
-        drawnow;
-        lw = warning('query','last');
-        if numel(lw)>0 && strcmpi(lw.identifier,'MATLAB:hg:uicontrol:ParameterValuesMustBeValid')
-            menue = get(h,'String');
-            val   = str2double(get(h,'Value'));
-            if val> numel(menue)
-                set(h,'Value',1);
-            end
-        end
+       % drawnow;
+%         lw = warning('query','last');
+%         if numel(lw)>0 && strcmpi(lw.identifier,'MATLAB:hg:uicontrol:ParameterValuesMustBeValid')
+%             menu = get(h,'String');
+%             val   = str2double(get(h,'Value'));
+%             if val> numel(menu)
+%                 set(h,'Value',1);
+%             end
+%         end
      else % it is possible that the field is defined in configuration now. This field is a path then
         if isfield(msl_conf,field) 
             % this is a path which may be specified either in the file
