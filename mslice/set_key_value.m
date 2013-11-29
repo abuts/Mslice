@@ -81,7 +81,7 @@ if fh<0
     message = message+' system error message: '+mes;
 end
 
-print_string = @(x,y)fprintf(fh,'%s\t\t\t%s\n',x,[key_val_framing,key_val_delimiter,key_val_framing,y]);
+print_string = @(x,y)print_string_f(x,y,fh,key_val_delimiter,key_val_framing);
 cellfun(print_string,dict_keys,dict_vals);
 
 fclose(fh);
@@ -95,6 +95,13 @@ newValIndex = ismember(keys,dict_key);
 new_val=values(newValIndex);
 
 
+function prstr=print_string_f(x,y,fh,delim,frame)
+%
+if x(1) == '#'
+    prstr = fprintf(fh,'%s\n',x);
+else
+    prstr = fprintf(fh,'%-35s%s\n',x,[frame,delim,frame,y]);
+end
 
 function [keys,vals] = parse_dictionary(cellstrings,delim)
 % function builds key-value dictionary from list of strings provided
@@ -118,6 +125,10 @@ for i = 1:n_strings
     if numel(sent)==2
         vals{i}='';
     else
-        vals{i}=sent{3};
+        if numel(sent)>3
+            vals{i} = sprintf('%s ',sent{3:end});
+        else
+            vals{i}=sent{3};
+        end
     end
 end
