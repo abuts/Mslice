@@ -1,0 +1,5 @@
+Mslice application keeps its main information in big graphical object
+Here are the methods and functions responsible for data exchange between this graphical object and Matlab 
+and some data manipulation around the way
+% 
+If whole overhaul of mslice, these would be various accessors/mutators of mslice data object
