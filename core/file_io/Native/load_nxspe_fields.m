@@ -14,7 +14,7 @@ function spe_data = load_nxspe_fields(nxspe_filename,data_field_names,data_attri
 % Output:
 % 
 % 
-% $Revision: 261 $ ($Date: 2013-11-27 19:39:20 +0000 (Wed, 27 Nov 2013) $)
+% $Revision$ ($Date$)
 %
 if ~exist(nxspe_filename,'file')
     error('MATLAB:load_nxspe_fields',' can not find file %s',nxspe_filename);

@@ -6,7 +6,7 @@ function [ndet,en,this]=get_data_info(this,some_file)
 %
 % Original author: T.G.Perring
 %
-% $Revision: 225 $ ($Date: 2012-03-09 19:35:46 +0000 (Fri, 09 Mar 2012) $)
+% $Revision$ ($Date$)
 %
 % redefime input file
 if exist('some_file','var')

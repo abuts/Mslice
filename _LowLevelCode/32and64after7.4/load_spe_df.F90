@@ -5,7 +5,7 @@
 !     07-Oct-2000 compiled for PC/WINNT using Matlab 5.3 and
 !     Digital Visual Fortran Professional Edition 6
 !    
-!    $Revisison: $  ($Date: 2011-08-16 13:21:17 +0100 (Tue, 16 Aug 2011) $)
+!    $Revisison: $  ($Date$)
 !  
 !====================================================================	
 subroutine mexFunction(nlhs, plhs, nrhs, prhs)
@@ -15,7 +15,7 @@ subroutine mexFunction(nlhs, plhs, nrhs, prhs)
   character*(40) :: PROG_NAME= 'Fortran SPE in mslice (load_spe_df.F90) '
   character*(70) :: PROG_REV
   character*(110):: REVISION
-  DATA PROG_REV/'$Rev:: 190  $ ($Date:: 2011-08-16 13:21:17 +0100 (Tue, 16 Aug 2011) $)'/
+  DATA PROG_REV/'$Rev::      $ ($Date::                                              $)'/
   
   mwpointer :: plhs(*), prhs(*)
   integer*4 :: nrhs, nlhs,complex_flag

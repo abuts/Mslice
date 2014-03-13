@@ -1,6 +1,6 @@
 function this=set_width(this,width,gap)
 %
-%   $Rev: 201 $ ($Date: 2011-11-24 17:30:22 +0000 (Thu, 24 Nov 2011) $)
+%   $Rev$ ($Date$)
 %
 
 nw = numel(width);

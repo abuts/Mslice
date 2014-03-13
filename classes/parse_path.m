@@ -22,7 +22,7 @@ function my_path=parse_path(in_path)
 % Written by: Alex Buts 27/08/2009
 %
 % Libisis:
-% $Revision: 200 $ ($Date: 2011-11-24 14:05:19 +0000 (Thu, 24 Nov 2011) $)
+% $Revision$ ($Date$)
 
 dirs = regexp(in_path,'[\/\\]','split');
 

@@ -25,7 +25,7 @@ function build_configuration(this, default_config_fun, config_name)
 % NOTE: This method has to be public because it is used by the constructor of all
 %       configuration objects. It should not be used in any other context.
 %
-% $Revision: 128 $ ($Date: 2012-01-23 08:30:12 +0000 (Mon, 23 Jan 2012) $)
+% $Revision$ ($Date$)
 
 
 % Determine if the class has already been constructed - if so, then nothing to do

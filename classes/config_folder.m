@@ -22,7 +22,7 @@ function folder_path=config_folder(folder_short_name)
 %  if 5) fails than something is fundamentally wrong and error is thrown. 
 %
 %
-% $Revision: 200 $ ($Date: 2011-11-24 14:05:19 +0000 (Thu, 24 Nov 2011) $)
+% $Revision$ ($Date$)
 %
     location = which('startup.m');    
     if ~isempty(location)

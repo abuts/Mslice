@@ -12,7 +12,7 @@ function ms_setvalue(field_name,value,highlight)
 %
 % R. Coldea 18-Sep-2003
 %
-%  $Rev: 203 $  ($Date: 2011-12-14 20:08:58 +0000 (Wed, 14 Dec 2011) $)
+%  $Rev$  ($Date$)
 %
 
 % === return if Mslice ControlWindow not opened 

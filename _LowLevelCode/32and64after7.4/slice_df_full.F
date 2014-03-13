@@ -16,7 +16,7 @@ C	-----------------------------
 C     Modified version of slice_df that returns the information to write out a slice
 C     in the format expected by TOBYFIT_V2
 C
-C    $Revision: 194 $  ($Date: 2011-09-22 21:43:49 +0100 (Thu, 22 Sep 2011) $)
+C    $Revision$  ($Date$)
 C
 C==============================================================================================
       subroutine mexFunction(nlhs, plhs, nrhs, prhs)
@@ -27,8 +27,8 @@ C declares the pointer and integer sizes for current os and platform
       character*(120)::REVISION=
 C                1         2         3         4         5
      1 "Fortran Slice_full (slice_df_full.F)    "//
-     2 "$Rev:: 194  $ " //
-     3 "($Date:: 2011-09-22 21:43:49 +0100 (Thu, 22 Sep 2011) $)"
+     2 "$Rev::      $ " //
+     3 "($Date::                                              $)"
 C       123456789012345678901234567890123456789012345678901234567890      
 
       mwpointer :: plhs(*), prhs(*)

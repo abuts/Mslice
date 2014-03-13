@@ -6,7 +6,7 @@ function this=config(varargin)
 % Note of the fields of the root configuration class can be altered. It exists to provide a
 % conduit for other configuration classes to use the methods of the root configuration class.
 
-% $Revision: 128 $ ($Date: 2012-01-23 08:30:12 +0000 (Mon, 23 Jan 2012) $)
+% $Revision$ ($Date$)
 
 [ok,this]=config_store;
 if ~ok

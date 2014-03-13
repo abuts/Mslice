@@ -2,7 +2,7 @@ function [ndet,en,this]=get_run_info(this)
 % Get number of detectors defined by the class or in ascii par or phx file
 %   >> ndet = load_par_info(filename)
 %
-% $Revision: 225 $ ($Date: 2012-03-09 19:35:46 +0000 (Fri, 09 Mar 2012) $)
+% $Revision$ ($Date$)
 %
 if isempty(this.n_detectors)
 

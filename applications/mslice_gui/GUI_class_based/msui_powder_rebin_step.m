@@ -3,7 +3,7 @@ function msui_powder_rebin_step(h_root,pos_u1step,pos_u2step,interlines,white)
 % e.g. dx and dy rebin steps and acompanying information
 %
 %
-%  $Revision: 57 $   ($Date: 2010-01-08 17:22:35 +0000 (Fri, 08 Jan 2010) $)
+%  $Revision$   ($Date$)
 %
 
 this_name = 'powder_rebin_step';

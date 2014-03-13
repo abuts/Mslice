@@ -9,7 +9,7 @@ function varargout= get(this,varargin)
 % Recursively searches the sub-structures and classes of the configuration class
 % until a field with the given name is found.
 
-% $Revision: 122 $ ($Date: 2011-12-23 16:33:53 +0000 (Fri, 23 Dec 2011) $)
+% $Revision$ ($Date$)
 
 % Fetch the current configuration
 config_name = class(this);

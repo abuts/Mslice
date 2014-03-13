@@ -10,7 +10,7 @@ function varargout = get(this, index)
 
 % Original author: T.G.Perring
 %
-% $Revision: 225 $ ($Date: 2012-03-09 19:35:46 +0000 (Fri, 09 Mar 2012) $)
+% $Revision$ ($Date$)
 
 % Edited from:
 % A Comprehensive Guide to Object Oriented Programming in MATLAB

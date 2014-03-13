@@ -2,7 +2,7 @@ function default_values =get_defaults(this,varargin)
 % method returns default values, defined by default fields of 
 % the class 
 %
-% $Revision: 225 $ ($Date: 2012-03-09 19:35:46 +0000 (Fri, 09 Mar 2012) $)
+% $Revision$ ($Date$)
 % 
 if nargin==1
     default_values=this.the_fields_defaults;

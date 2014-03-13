@@ -15,7 +15,7 @@ function [config_data,ok,mess] = load_config (file_name)
 %   ok              File succesfully read, or file does not exist
 %   mess            Message. Empty if ok==true
 
-% $Revision: 122 $ ($Date: 2011-12-23 16:33:53 +0000 (Fri, 23 Dec 2011) $)
+% $Revision$ ($Date$)
 
 if exist(file_name,'file')
     try

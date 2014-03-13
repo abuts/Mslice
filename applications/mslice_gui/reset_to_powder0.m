@@ -1,7 +1,7 @@
 function reset_to_powder0
 % function resets all folders to the state was when the mslice was initially installed;
 %
-%  $Revision: 159 $   ($Date: 2011-02-25 13:46:33 +0000 (Fri, 25 Feb 2011) $)
+%  $Revision$   ($Date$)
 %
 msp_dir  = get(mslice_config,'SampleDir');
 msp_file = 'crystal_psd.msp';

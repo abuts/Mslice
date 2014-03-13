@@ -2,7 +2,7 @@ function this=delete(this,element_names)
 % delete collection of the graphic elements, specified by their names
 % from the users menu
 %
-%   $Rev: 201 $ ($Date: 2011-11-24 17:30:22 +0000 (Thu, 24 Nov 2011) $)
+%   $Rev$ ($Date$)
 %
 
 to_keep  = ~ismember(this.elements_names,element_names);

@@ -24,7 +24,7 @@
                     
 void   mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 {              
-   char REVISION[] = "C find file position (ffind.c) $Rev:: 91   $ ($Date:: 2010-03-30 19:58:16 +0100 (Tue, 30 Mar 2010) $) ";
+   char REVISION[] = "C find file position (ffind.c) $Rev::      $ ($Date::                                              $) ";
    FILE *ReadPtr;
    char ReadFile[MAXLINE+1], String[MAXLINE+1], Line[MAXLINE+1];        
    long fpos;

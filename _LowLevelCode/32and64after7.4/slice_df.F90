@@ -17,7 +17,7 @@ subroutine mexFunction(nlhs, plhs, nrhs, prhs)
 !         1         2         3         4         5         6         7         8         9         0
   character*(70) :: PROG_REV
   character*(110):: REVISION
-  DATA PROG_REV /'$Rev:: 189  $ ($Date:: 2011-08-09 08:55:36 +0100 (Tue, 09 Aug 2011) $)'/
+  DATA PROG_REV /'$Rev::      $ ($Date::                                              $)'/
   
   mwpointer :: plhs(*), prhs(*)
   integer*4 :: nrhs, nlhs

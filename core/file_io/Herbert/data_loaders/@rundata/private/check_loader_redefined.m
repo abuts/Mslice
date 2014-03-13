@@ -4,7 +4,7 @@ function [this,is_redefined]= check_loader_redefined(this)
 %
 % $Author: Alex Buts; 20/10/2011
 %
-% $Revision: 225 $ ($Date: 2012-03-09 19:35:46 +0000 (Fri, 09 Mar 2012) $)
+% $Revision$ ($Date$)
 %
 
  is_redefined=false;

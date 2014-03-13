@@ -11,7 +11,7 @@ function [S,Err,en,this] =get_signal(this,varargin)
 %
 %
 %
-% $Revision: 225 $ ($Date: 2012-03-09 19:35:46 +0000 (Fri, 09 Mar 2012) $)
+% $Revision$ ($Date$)
 %
 
 if exist('file_name','var')||isempty(this.S)

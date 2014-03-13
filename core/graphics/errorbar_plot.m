@@ -23,7 +23,7 @@ function hh = errorbar_plot(x, y, l,u,symbol)
 
 %   L. Shure 5-17-88, 10-1-91 B.A. Jones 4-5-93
 %   Copyright (c) 1984-98 by The MathWorks, Inc.
-%   $Revision: 5.14 $  $Date: 1997/12/02 19:47:51 $
+%   $Revision$  $Date$
 
 if min(size(x))==1,
   npt = length(x);

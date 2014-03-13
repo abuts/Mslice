@@ -8,7 +8,7 @@ function config_data=save_restore_data(config_data,config_folder,config_file_nam
 %  config_folder     | the parts of the full path to the configuration data
 %  config_file_name  |
 %
-% $Revision: 200 $ ($Date: 2011-11-24 14:05:19 +0000 (Thu, 24 Nov 2011) $)
+% $Revision$ ($Date$)
 %
 config_file = fullfile(config_folder,[config_file_name,'.mat']);
 if exist(config_file,'file')

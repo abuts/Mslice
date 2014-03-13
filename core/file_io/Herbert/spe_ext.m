@@ -12,7 +12,7 @@ function ext=spe_ext(varargin)
 % the result of the function is formatted as needed to use in a
 % filter for uigetfile
 %
-% $Revision: 226 $ ($Date: 2012-03-12 12:36:12 +0000 (Mon, 12 Mar 2012) $)
+% $Revision$ ($Date$)
 %
 spe_ext=rundata().supported_extensions;
 spe_ext = strcat({'*'},spe_ext);

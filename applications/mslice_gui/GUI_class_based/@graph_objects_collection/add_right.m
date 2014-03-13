@@ -4,7 +4,7 @@ function this=add_right(this,h,gap)
 %
 % Modifys the location and the coordinates of the enclosing box accordingly
 %
-%   $Rev: 201 $ ($Date: 2011-11-24 17:30:22 +0000 (Thu, 24 Nov 2011) $)
+%   $Rev$ ($Date$)
 %
 
 

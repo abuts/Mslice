@@ -7,7 +7,7 @@
 !     24-Oct-2000 version for Digital Visual Fortran 6
 !     use passing pointers in Fortran through the %VAL construct
 !    
-!    $Revisison: $  ($Date: 2011-08-16 13:21:17 +0100 (Tue, 16 Aug 2011) $)
+!    $Revisison: $  ($Date$)
 !
 !===============================================================================
 subroutine mexFunction(nlhs, plhs, nrhs, prhs)
@@ -18,7 +18,7 @@ subroutine mexFunction(nlhs, plhs, nrhs, prhs)
 !123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678
 !         1         2         3         4         5         6         7         8         9         0
   character*(70) :: PROG_REV
-  DATA PROG_REV /"$Rev:: 190  $ ($Date:: 2011-08-16 13:21:17 +0100 (Tue, 16 Aug 2011) $)"/
+  DATA PROG_REV /"$Rev::      $ ($Date::                                              $)"/
   character*(110):: REVISION
 
 

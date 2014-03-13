@@ -1,6 +1,6 @@
 classdef test_GraphObjectCollection< TestCase
 %
-%   $Rev: 200 $ ($Date: 2011-11-24 14:05:19 +0000 (Thu, 24 Nov 2011) $)
+%   $Rev$ ($Date$)
 %
     properties 
         fig;

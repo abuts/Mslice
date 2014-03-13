@@ -7,7 +7,7 @@ function [ok,mess]=valid_sealed_fields(sealed_fields,namlist)
 %
 %   Assumes that namlist is a cellarray of field names
 
-% $Revision: 120 $ ($Date: 2011-12-20 18:18:12 +0000 (Tue, 20 Dec 2011) $)
+% $Revision$ ($Date$)
 
 ok=true;
 mess='';

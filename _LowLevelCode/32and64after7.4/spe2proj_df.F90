@@ -13,7 +13,7 @@ subroutine mexFunction(nlhs, plhs, nrhs, prhs)
   character*(40) :: PROG_NAME= 'Fortran spe2proj (spe2proh_df.F90)      '
   character*(70) :: PROG_REV 
   character*(110):: REVISION
-  DATA PROG_REV/'$Rev:: 190  $ ($Date:: 2011-08-16 13:21:17 +0100 (Tue, 16 Aug 2011) $)'/
+  DATA PROG_REV/'$Rev::      $ ($Date::                                              $)'/
   
   mwpointer :: plhs(*), prhs(*)
   integer*4 :: nrhs, nlhs,complex_flag 

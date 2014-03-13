@@ -20,7 +20,7 @@ function thePath=find_path(partPath)
 % At the moment this function is not used anywhere as the synchronization is disconnected. 
 %
 %
-% $Revision: 200 $ ($Date: 2011-11-24 14:05:19 +0000 (Thu, 24 Nov 2011) $)
+% $Revision$ ($Date$)
 %
 % build cell array of folders in the path
 allPath = regexp(path,pathsep,'split'); 

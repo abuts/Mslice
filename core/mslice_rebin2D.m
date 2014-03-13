@@ -17,7 +17,7 @@ function [X,Y,Z] = mslice_rebin2D(data,img_range)
 %: dx_step_min, dy_step_min -- min detector sized (not used currently)
 %
 %
-%  $Revision: 57 $   ($Date: 2010-01-08 17:22:35 +0000 (Fri, 08 Jan 2010) $)
+%  $Revision$   ($Date$)
 % 
 
 

@@ -36,7 +36,7 @@ function [dataset_info,ds_group_path] = find_dataset_info(Groups,the_group_name,
 %
 % $Author: Alex Buts; 20/10/2011
 %
-% $Revision: 225 $ ($Date: 2012-03-09 19:35:46 +0000 (Fri, 09 Mar 2012) $)
+% $Revision$ ($Date$)
 %
 %
 %--> clear search request

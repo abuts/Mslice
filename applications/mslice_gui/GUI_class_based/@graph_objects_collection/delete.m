@@ -1,7 +1,7 @@
 function this=delete(this)
 % Method clears all object present in the class and invalidate the collection box
 %
-%   $Rev: 201 $ ($Date: 2011-11-24 17:30:22 +0000 (Thu, 24 Nov 2011) $)
+%   $Rev$ ($Date$)
 %
 
 for i=1:numel(this.handles)

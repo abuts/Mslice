@@ -20,7 +20,7 @@ function mslice(MspFile)
 %
 % T.G.Perring, 3 April 2009: No longer put mslice at top of the mslice path
 %
-%  $Revision: 57 $   ($Date: 2010-01-08 17:22:35 +0000 (Fri, 08 Jan 2010) $)
+%  $Revision$   ($Date$)
 %
 global MSliceDir;
 MSliceDir = get(mslice_config,'MSliceDir');

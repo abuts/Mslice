@@ -20,7 +20,7 @@ function files_list=copy_files_list(source_dir,targ_dir,varargin)
 % 
 % returns the cell array containing the full list of the files copied;
 % Libisis: 
-% $Revision: 219 $ ($ Date: $)
+% $Revision$ ($ Date: $)
 %
 global source_dir_root;
 global targ_dir_root;

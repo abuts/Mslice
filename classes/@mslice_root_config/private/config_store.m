@@ -34,7 +34,7 @@ function varargout = config_store (varargin)
 % No error checking on the consistency or type of the input arguments is performed,
 % as it is assumed that this is has been done by the calling method.
 
-% $Revision: 128 $ ($Date: 2012-01-23 08:30:12 +0000 (Mon, 23 Jan 2012) $)
+% $Revision$ ($Date$)
 
 
 persistent config_created root_config_object config_objects current_configs default_configs
