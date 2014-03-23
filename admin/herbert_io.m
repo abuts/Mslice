@@ -25,18 +25,16 @@ else
 end
 
 rootpath = fileparts(which('mslice_init.m'));
+her_path=genpath_special(fullfile(rootpath,'core','file_io','Herbert'));
+std_path=genpath_special(fullfile(rootpath,'core','file_io','Native'));
 if herb_io
     if is_herbert_IO_on(); return; end
-    old_path=genpath_special(fullfile(rootpath,'mslice','IO','Native'));
-    rmpath(old_path);
-    new_path=genpath_special(fullfile(rootpath,'mslice','IO','Herbert'));
-    addpath(new_path);
+    rmpath(std_path);
+    addpath(her_path);
 else
     if ~is_herbert_IO_on(); return; end    
-    old_path=genpath_special(fullfile(rootpath,'mslice','IO','Herbert'));
-    rmpath(old_path);
-    new_path=genpath_special(fullfile(rootpath,'mslice','IO','Native'));
-    addpath(new_path);
+    rmpath(her_path);
+    addpath(std_path);
     
 end
 

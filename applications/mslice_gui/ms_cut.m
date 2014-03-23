@@ -24,7 +24,7 @@ if isempty(fig),
    return;
 end
 data=get(fig,'UserData');
-if isempty(data)|~isfield(data,'S'),
+if isempty(data)||~isfield(data,'S'),
    disp('Load data first, calculate projections, then do cut.');
    return;
 elseif ~isfield(data,'v'),
@@ -45,7 +45,8 @@ if sample==1,   % single crystal sample
        end
    end
 end
-vars=[vars,{'intensity','i_min','i_max','symbol_colour','symbol_type','symbol_line','OutputType','OutputDir','OutputFile','xaxis'}];
+vars=[vars,{'intensity','i_min','i_max','symbol_colour','symbol_type','symbol_line',...
+            'OutputType','OutputDir','OutputFile','xaxis'}];
 
 for i=1:size(vars,2)
     name=['cut_',vars{i}];
@@ -89,9 +90,9 @@ for i=1:size(vars,2)
     end
 end
 
-colours=str2mat('w','r','b','m','g','c','y','k');
-symbols=str2mat('o','s','d','p','h','*','x','+','^','v','>','<','.');
-lines=str2mat('','-','--',':','-.');
+colours=['w';'r';'b';'m';'g';'c';'y';'k'];
+symbols=['o';'s';'d';'p';'h';'*';'x';'+';'^';'v';'>';'<';'.'];
+lines=['  ';'- ';'--';': ';'-.'];
 symbol=[deblank(colours(symbol_colour,:)) deblank(symbols(symbol_type,:)) deblank(lines(symbol_line,:))];
 
 % === extract data from ControlWindow and set symbol type according to cut menu 

@@ -41,7 +41,7 @@
 !     Check for proper number of MATLAB input and output arguments 
       if (nrhs .ne. 3) then
          call mexErrMsgTxt('Three inputs (x,perm,number_pix) required.')
-      else if (nlhs .ne. 2) then
+      else if (nlhs .gt. 2) then
          call mexErrMsgTxt ('Two outputs (xx,std_dev) required.')
       end if
 

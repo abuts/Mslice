@@ -210,7 +210,7 @@
 			<Tool
 				Name="VCPostBuildEventTool"
 				Description="Copying target 64-bit mex files to the destination directory"
-				CommandLine="copy $(Outdir)\*.mexw64 $(Outdir)\..\..\..\core\DLL\*"
+				CommandLine="copy $(Outdir)\*.mexw64 $(Outdir)\..\..\..\..\core\DLL"
 			/>
 		</Configuration>
 	</Configurations>

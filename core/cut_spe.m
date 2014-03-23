@@ -1,4 +1,4 @@
-function cut=cut_spe(data,x,vx_min,vx_max,bin_vx,vy_min,vy_max,vz_min,vz_max,i_min,i_max,out_type,out_file,tomfit,noplot)
+function cut=cut_spe(data,ix,vx_min,vx_max,bin_vx,vy_min,vy_max,vz_min,vz_max,i_min,i_max,out_type,out_file,tomfit,noplot)
 
 % function cut=cut_spe(data,x,vx_min,vx_max,bin_vx,vy_min,vy_max,vz_min,vz_max,i_min,i_max,out_type,out_file,tomfit)
 %       for single crystal data with PSD detectors and
@@ -43,7 +43,7 @@ if ~exist('data','var')||~isfield(data,'v')
 end
 
 % === check presence of required parameters in the calling syntax
-if ~exist('x','var')||isempty(x)||~isnumeric(x)||(length(x)~=1)
+if ~exist('ix','var')||isempty(ix)||~isnumeric(ix)||(length(ix)~=1)
     disp('Cut cannot be performed if axis is not specified.');
     cut=[];
     return;
@@ -83,12 +83,12 @@ if size(data.v,3)==2,   %=== 2d data set
 end
 
 % === find out if cut is to be saved to a cut, smh or hkl format to an ASCII file
-to_cut_file=exist('out_file','var')&(~isempty(out_file))&(~isempty(findstr(lower(out_type),'cut')));
+to_cut_file=exist('out_file','var')&(~isempty(out_file))&(~isempty(strfind(lower(out_type),'cut')));
 % TRUE if pixel information to be saved in .cut format
-to_smh_file=exist('out_file','var')&(~isempty(out_file))&(~isempty(findstr(lower(out_type),'smh')))&...
+to_smh_file=exist('out_file','var')&(~isempty(out_file))&(~isempty(strfind(lower(out_type),'smh')))&...
     isfield(data,'hkl');
 % TRUE if pixel information to be saved in .smh format
-to_hkl_file=exist('out_file','var')&(~isempty(out_file))&(~isempty(findstr(lower(out_type),'hkl')))&...
+to_hkl_file=exist('out_file','var')&(~isempty(out_file))&(~isempty(strfind(lower(out_type),'hkl')))&...
     isfield(data,'hkl');
 % TRUE if pixel information to be saved in .smh format
 
@@ -96,6 +96,7 @@ to_hkl_file=exist('out_file','var')&(~isempty(out_file))&(~isempty(findstr(lower
 %=== CHOOSE BETWEEN SINGLE CRYSTAL AND PSD DETECTORS (3 viewing axes),
 %=== AND POWDER OR SINGLE CRYSTAL + CONVENTIONAL DETECTORS (2 viewing axes)
 %==============================================================================
+[use_mex,force_mex] = get(mslice_config,'use_mex','force_mex_if_use_mex');
 if size(data.v,3)==3,   %=== single crystal data and PSD detectors
     %=== check that cut limits are in the correct order
     if (vx_min>vx_max)||(vy_min>vy_max)||(vz_min>vz_max),
@@ -104,33 +105,34 @@ if size(data.v,3)==3,   %=== single crystal data and PSD detectors
         cut=[];
         return
     end
-    switch x,   % choose the other axes by permutation
-        case 1,  y=2; z=3;
-        case 2,  y=3; z=1;
-        case 3,  y=1; z=2;
+    switch ix,   % choose the other axes by permutation
+        case 1,  iy=2; iz=3;
+        case 2,  iy=3; iz=1;
+        case 3,  iy=1; iz=2;
         otherwise, disp(['Cannot perform cut along axis number ' num2str(x)]); cut=[];return
     end
     grid=[vx_min vx_max bin_vx vy_min vy_max vz_min vz_max];
     
-    [use_mex,force_mex] = get(mslice_config,'use_mex','force_mex_if_use_mex');    
     % === if y-axis not intensity, then use standard deviation of the mean per bin as error
     if ~isfield(data,'ERR')||isempty(data.ERR),
         if use_mex
-            try,
-                [cut.x,cut.y,cut.e,cut.perm,cut.npixels,vy,vz]=cut3d_df(data.v(:,:,x),data.v(:,:,y),data.v(:,:,z),...
-                        data.S,data.S,grid);
+            try
+                [cut.x,cut.y,cut.e,cut.perm,cut.npixels,vy,vz]=...
+                    cut3d_df(data.v(:,:,ix),data.v(:,:,iy),data.v(:,:,iz),...
+                    data.S,data.S,grid);
                 [cut.y,cut.e]=avpix_df(data.S,cut.perm,cut.npixels);
-            catch,
-                if force_mex 
+            catch
+                if force_mex
                     error('MSLICE:cut_spe',' can not use mex when forced to do it');
                 end
-                use_mex = false
+                use_mex = false;
             end
         end
         if ~use_mex
-            [cut.x,cut.y,cut.e,cut.perm,cut.npixels,vy,vz] =cut3d_m(data.v(:,:,x),data.v(:,:,y),data.v(:,:,z),...
-                data.S,data.S,grid);        
-            [cut.y,cut.e] =avpix_m(data.S,cut.perm,cut.npixels);                
+            [cut.x,cut.y,cut.e,cut.perm,cut.npixels,vy,vz] =...
+                cut3d_m(data.v(:,:,ix),data.v(:,:,iy),data.v(:,:,iz),...
+                data.S,data.S,grid);
+            [cut.y,cut.e] =avpix_m(data.S,cut.perm,cut.npixels);
         end
     else  % normal binning of intensity values
         % to increase speed xye cut only use basic algorithm (do not calculate pixel permutation matrix)
@@ -139,36 +141,38 @@ if size(data.v,3)==3,   %=== single crystal data and PSD detectors
             if use_mex
                 try
                     [cut.x,cut.y,cut.e,vy,vz]=...
-                        cut3dxye_df(data.v(:,:,x),data.v(:,:,y),data.v(:,:,z),data.S,data.ERR,grid);                
+                        cut3dxye_df(data.v(:,:,ix),data.v(:,:,iy),data.v(:,:,iz),data.S,data.ERR,grid);
                 catch
-                    if force_mex 
+                    if force_mex
                         error('MSLICE:cut_spe',' can not use mex when forced to do it');
                     end
-                use_mex = false
+                    use_mex = false;
+                end
             end
             %
             if ~use_mex
                 [cut.x,cut.y,cut.e,vy,vz]=...
-                    cut3dxye_m(data.v(:,:,x),data.v(:,:,y),data.v(:,:,z),data.S,data.ERR,grid);                 
+                    cut3dxye_m(data.v(:,:,ix),data.v(:,:,iy),data.v(:,:,iz),data.S,data.ERR,grid);
             end
             cut.perm=[];
             cut.npixels=[];
         else  % need full pixel information to save data in special format(cut,smh,hkl) or plot on alternative x-axis
             if use_mex
-                try     
+                try
                     [cut.x,cut.y,cut.e,cut.perm,cut.npixels,vy,vz]=...
-                        cut3d_df(data.v(:,:,x),data.v(:,:,y),data.v(:,:,z),data.S,data.ERR,grid);
+                        cut3d_df(data.v(:,:,ix),data.v(:,:,iy),data.v(:,:,iz),data.S,data.ERR,grid);
                 catch
-                    if force_mex 
+                    if force_mex
                         error('MSLICE:cut_spe',' can not use mex when forced to do it');
                     end
-                    use_mex = false
-                end
-                if ~use_mex             
-                    [cut.x,cut.y,cut.e,cut.perm,cut.npixels,vy,vz] =...
-                        cut3d_m(data.v(:,:,x),data.v(:,:,y),data.v(:,:,z),data.S,data.ERR,grid);
+                    use_mex = false;
                 end
             end
+            if ~use_mex
+                [cut.x,cut.y,cut.e,cut.perm,cut.npixels,vy,vz] =...
+                    cut3d_m(data.v(:,:,ix),data.v(:,:,iy),data.v(:,:,iz),data.S,data.ERR,grid);
+            end
+            
         end
     end
 else    %=== single crystal and conventional detectors, or powder data
@@ -178,42 +182,50 @@ else    %=== single crystal and conventional detectors, or powder data
         cut=[];
         return
     end
-    switch x,
-        case 1, y=2;
-        case 2, y=1;
+    switch ix,
+        case 1, iy=2;
+        case 2, iy=1;
         otherwise, disp(['Cannot perform cut along axis number ' num2str(x)]); cut=[]; return
     end
     grid=[vx_min vx_max bin_vx vy_min vy_max];
     % === if y-axis not intensity, then use standard deviation of the mean per bin as error
     if ~isfield(data,'ERR')||isempty(data.ERR),
-	    if use_mex
+        if use_mex
             try
-                [cut.x,cut.y,cut.e,cut.perm,cut.npixels,vy]=cut2d_df(data.v(:,:,x),data.v(:,:,y),data.S,data.S,grid);
-                [cut.y,cut.e]=avpix_df(data.S,cut.perm,cut.npixels);                
-            catch 
-                if force_mex 
-                   error('MSLICE:cut_spe',' can not use mex when forced to do it');
+                [cut.x,cut.y,cut.e,cut.perm,cut.npixels,vy]=...
+                    cut2d_df(data.v(:,:,ix),data.v(:,:,iy),data.S,data.S,grid);
+                [cut.y,cut.e]=avpix_df(data.S,cut.perm,cut.npixels);
+            catch
+                if force_mex
+                    error('MSLICE:cut_spe',' can not use mex when forced to do it');
                 end
-                use_mex = false
+                use_mex = false;
             end
             if ~use_mex
-                [cut.x,cut.y,cut.e,cut.perm,cut.npixels,vy] =cut2d_m(data.v(:,:,x),data.v(:,:,y),data.S,data.S,grid);
-                [cut.y,cut.e]=avpix_m(data.S,cut.perm,cut.npixels);                
+                [cut.x,cut.y,cut.e,cut.perm,cut.npixels,vy] =...
+                    cut2d_m(data.v(:,:,ix),data.v(:,:,iy),data.S,data.S,grid);
+                [cut.y,cut.e]=avpix_m(data.S,cut.perm,cut.npixels);
             end
         end
     else
-        if verLessThan('matlab','8.0') && use_mex
+        % this should be fixed 
+        if verLessThan('matlab','8.0')
+            use_mex = false;
+        end
+        if use_mex 
             try
-                [cut.x,cut.y,cut.e,cut.perm,cut.npixels,vy]=cut2d_df(data.v(:,:,x),data.v(:,:,y),data.S,data.ERR,grid);
+                [cut.x,cut.y,cut.e,cut.perm,cut.npixels,vy]=...
+                    cut2d_df(data.v(:,:,ix),data.v(:,:,iy),data.S,data.ERR,grid);
             catch
-                if force_mex 
-                   error('MSLICE:cut_spe',' can not use mex when forced to do it');
+                if force_mex
+                    error('MSLICE:cut_spe',' can not use mex when forced to do it');
                 end
-                use_mex = false
+                use_mex = false;
             end
         end
         if ~use_mex
-            [cut.x,cut.y,cut.e,cut.perm,cut.npixels,vy] =cut2d_m(data.v(:,:,x),data.v(:,:,y),data.S,data.ERR,grid);
+            [cut.x,cut.y,cut.e,cut.perm,cut.npixels,vy] =...
+                cut2d_m(data.v(:,:,ix),data.v(:,:,iy),data.S,data.ERR,grid);
         end
     end
 end
@@ -227,10 +239,18 @@ end
 
 % === if plotting axis not cut axis, then average alternative x-values
 if isfield(data,'altx')&&~isempty(data.altx)&&isnumeric(data.altx),
-    try
-        [cut.x,temp]=avpix_df(data.altx,cut.perm,cut.npixels);
-    catch
-        [cut.x,temp]=avpix_m(data.altx,cut.perm,cut.npixels);
+    if use_mex
+        try
+            cut.x=avpix_df(data.altx,cut.perm,cut.npixels);
+        catch
+            if force_mex
+                error('MSLICE:cut_spe',' can not use avpix_df mex when forced to do it');
+            end
+            use_mex = false;
+        end
+    end
+    if ~use_mex
+        cut.x=avpix_m(data.altx,cut.perm,cut.npixels);
     end
 end
 
@@ -258,16 +278,24 @@ if to_smh_file,
     cut.en_index=floor((en(cut.perm)-cut.emin)/ebin)+1;
 end
 if to_smh_file||to_hkl_file, % average h,k,l,energy values per bin
-    try
-        [cut.h,temp]=avpix_df(data.hkl(:,:,1),cut.perm,cut.npixels);
-        [cut.k,temp]=avpix_df(data.hkl(:,:,2),cut.perm,cut.npixels);
-        [cut.l,temp]=avpix_df(data.hkl(:,:,3),cut.perm,cut.npixels);
-        [cut.energy,temp]=avpix_df(en,cut.perm,cut.npixels);
-    catch
-        [cut.h,temp]=avpix_m(data.hkl(:,:,1),cut.perm,cut.npixels);
-        [cut.k,temp]=avpix_m(data.hkl(:,:,2),cut.perm,cut.npixels);
-        [cut.l,temp]=avpix_m(data.hkl(:,:,3),cut.perm,cut.npixels);
-        [cut.energy,temp]=avpix_m(en,cut.perm,cut.npixels);
+    if use_mex
+        try
+            cut.h=avpix_df(data.hkl(:,:,1),cut.perm,cut.npixels);
+            cut.k=avpix_df(data.hkl(:,:,2),cut.perm,cut.npixels);
+            cut.l=avpix_df(data.hkl(:,:,3),cut.perm,cut.npixels);
+            cut.energy=avpix_df(en,cut.perm,cut.npixels);
+        catch
+            if force_mex
+                error('MSLICE:cut_spe',' can not use avpix_df mex when forced to do it');
+            end
+            use_mex = false;          
+        end
+    end
+    if ~use_mex        
+        cut.h=avpix_m(data.hkl(:,:,1),cut.perm,cut.npixels);
+        cut.k=avpix_m(data.hkl(:,:,2),cut.perm,cut.npixels);
+        cut.l=avpix_m(data.hkl(:,:,3),cut.perm,cut.npixels);
+        cut.energy=avpix_m(en,cut.perm,cut.npixels);
     end
 end
 if to_cut_file
@@ -315,10 +343,10 @@ if isfield(data,'uv')&&~isempty(data.uv)&&isnumeric(data.uv)&&all(size(data.uv)=
 else
     titlestr2=[];
 end
-titlestr3=['cut ' deblank(data.axis_label(x,:)) '='  num2str(vx_min,form) ':' num2str(bin_vx,form) ':' num2str(vx_max,form) ];
-titlestr3=[titlestr3 ' , ' num2str(vy_min,form) '<' deblank(data.axis_label(y,:)) '<' num2str(vy_max,form)];
-if exist('z','var'),    % single crystal data and PSD detectors
-    titlestr3=[titlestr3 ' , ' num2str(vz_min,form) '<' deblank(data.axis_label(z,:)) '<' num2str(vz_max,form)];
+titlestr3=['cut ' deblank(data.axis_label(ix,:)) '='  num2str(vx_min,form) ':' num2str(bin_vx,form) ':' num2str(vx_max,form) ];
+titlestr3=[titlestr3 ' , ' num2str(vy_min,form) '<' deblank(data.axis_label(iy,:)) '<' num2str(vy_max,form)];
+if exist('iz','var'),    % single crystal data and PSD detectors
+    titlestr3=[titlestr3 ' , ' num2str(vz_min,form) '<' deblank(data.axis_label(iz,:)) '<' num2str(vz_max,form)];
 end
 if ~isempty(titlestr2),
     cut.title={titlestr1,titlestr2,titlestr3};
@@ -327,11 +355,11 @@ else
 end
 
 % === establish axis labels for the plot
-averages=[', <' deblank(data.axis_label(y,:)) '>=' num2str(vy,form)];
-if exist('z','var'),    % single crystal sample, analysed as single crystal and with PSD detectors
-    temp=data.u(y,:)*mean([vy_min vy_max])+data.u(z,:)*mean([vz_min vz_max]);
-    cut.x_label=[ combil(deblank(data.axis_label(x,:)),data.u(x,:),temp) ' ' deblank(data.axis_unitlabel(x,:))];
-    averages=[averages ' <' deblank(data.axis_label(z,:)) '>=' num2str(vz,form)];
+averages=[', <' deblank(data.axis_label(iy,:)) '>=' num2str(vy,form)];
+if exist('iz','var'),    % single crystal sample, analysed as single crystal and with PSD detectors
+    temp=data.u(iy,:)*mean([vy_min vy_max])+data.u(iz,:)*mean([vz_min vz_max]);
+    cut.x_label=[ combil(deblank(data.axis_label(ix,:)),data.u(ix,:),temp) ' ' deblank(data.axis_unitlabel(ix,:))];
+    averages=[averages ' <' deblank(data.axis_label(iz,:)) '>=' num2str(vz,form)];
     cut.y_label=deblank(data.axis_unitlabel(4,:));  % intensity label
 else
     sample=get(findobj('Tag','ms_sample'),'Value');
@@ -340,10 +368,10 @@ else
     end
     if (sample==1)&&(analmode==1),    % single crystal sample, analysed as single crystal and with conventional (non-PSD) detectors
         temp=data.u(y,:)*mean([vy_min vy_max]);
-        cut.x_label=[ combil(deblank(data.axis_label(x,:)),data.u(x,:),temp) ' ' deblank(data.axis_unitlabel(x,:))];
+        cut.x_label=[ combil(deblank(data.axis_label(ix,:)),data.u(ix,:),temp) ' ' deblank(data.axis_unitlabel(ix,:))];
         cut.y_label=deblank(data.axis_unitlabel(3,:));      % intensity label
     else   % powder axes
-        cut.x_label=deblank(data.axis_unitlabel(x,:));
+        cut.x_label=deblank(data.axis_unitlabel(ix,:));
         cut.y_label=deblank(data.axis_unitlabel(3,:));  % intensity label
     end
 end
@@ -407,8 +435,8 @@ else
 end
 
 % === save cut to a file, if required
-if ~isempty(out_file)&&isempty(findstr(out_type,'none')),
-    if to_cut_file&&(~isempty(findstr(lower(out_type),'mfit'))),
+if ~isempty(out_file)&&isempty(strfind(out_type,'none')),
+    if to_cut_file&&(~isempty(strfind(lower(out_type),'mfit'))),
         cut.efixed=data.efixed;   % numeric
         cut.emode=data.emode;       % numeric
         cut.MspDir=data.MspDir;   % string
@@ -420,7 +448,8 @@ if ~isempty(out_file)&&isempty(findstr(out_type,'none')),
             cut.psi_samp=data.psi_samp;    % numeric
         end
     end
-    if ~strcmp(out_file,'$full')
+    [path,file_name]=fileparts(out_file);
+    if ~strcmp(file_name,'$full')
         save_cut(cut,out_file,out_type);
     end
 end

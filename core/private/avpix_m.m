@@ -14,17 +14,20 @@ function [xx,std_dev]=avpix_m(x,perm,number_pix)
 disp('Execute matlab version of avpix_m.m');
 % === read total number of pixels and determine total number of bins 
 npixels=length(perm); % total number of contributing pixels
-nbins=length(number_pix);	% total number of x bins
+
 
 % === initialize variables and check consistency of binning recipe
 xx=zeros(size(number_pix));
 std_dev=zeros(size(number_pix));
-cumm_pixels=0;
-for i=1:nbins,
-   %xx(i)=0;       
-   %std_dev(i)=0;
-   cumm_pixels=cumm_pixels+number_pix(i);
-end
+
+%nbins=length(number_pix);	% total number of x bins
+%cumm_pixels=0;
+% for i=1:nbins,
+%    %xx(i)=0;       
+%    %std_dev(i)=0;
+%    cumm_pixels=cumm_pixels+number_pix(i);
+% end
+cumm_pixels = sum(number_pix);
 if npixels~=cumm_pixels,
    disp('Error, binning recipe and given number of pixels not compatible');
    xx=[];

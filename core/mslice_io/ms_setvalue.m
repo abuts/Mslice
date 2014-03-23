@@ -88,7 +88,7 @@ elseif strcmp(get(h,'Style'),'popupmenu'),
     end 
 else
     if exist('highlight','var')
-        set(h,'String',val,'ForegroundColor','g');        
+        set(h,'String',val,'ForegroundColor','b');        
     else
         set(h,'String',val);                
     end
