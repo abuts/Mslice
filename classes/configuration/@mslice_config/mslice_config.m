@@ -1,4 +1,10 @@
 classdef mslice_config<config_base
+    % Class holds Mslice saveable configuration -- child of config_base
+    %
+    %
+    % $Revision: 313 $ ($Date: 2013-12-02 11:31:41 +0000 (Mon, 02 Dec 2013) $)
+    %
+    
     properties(Dependent,SetAccess=private)
         MSliceDir  % -- calculated: Mslice folder
         SampleDir  % -- calculated: folder with msp configuration files which define GUI
@@ -9,13 +15,18 @@ classdef mslice_config<config_base
         DataDir    % data files (spe files)
         PhxDir     % phx files (detector angular positions)
         cut_OutputDir   % defauld folder to save cuts.
-        enable_unit_tests=false
         slice_font_size=10
         cut_font_size=10
         use_mex=true    % try to use mex if found
         force_mex_if_use_mex=false % fail if mex files do not work
         
+        % if to set on Matlab path Herbert/Maltab unit test harness
+        init_unit_tests=false;
+        % the path to the unit tests folders used last time when unit tests
+        % were enabled.
+        last_unittest_path;
     end
+    
     properties(Access=protected)
         MSliceDir_=[] % -- calculated: Mslice folder
         SampleDir_=[] % -- sealed: folder with msp configuration files
@@ -23,18 +34,20 @@ classdef mslice_config<config_base
         MspFile_='crystal_psd.msp' % default msp file
         DataDir_    % data files (spe files)
         PhxDir_     % phx files (detector angular positions)
-        cut_OutputDir_   % defauld folder to save cuts.
-        enable_unit_tests_=false
-        slice_font_size_=10
-        cut_font_size_=10
-        use_mex_=true    % try to use mex if found
+        cut_OutputDir_   % defauld folder to save cuts -- defaults calculated by constructor from Mslice path
+        init_unit_tests_  =  false
+        slice_font_size_  =  10
+        cut_font_size_    =  10
+        use_mex_          =  true    % try to use mex if found
         force_mex_if_use_mex_=false % fail if mex files do not work
+        %
+        last_unittest_path_=''
         
     end
     properties(Constant,Access=private)
         saved_properties_list_={'MspDir','MspFile','DataDir','PhxDir',...
-            'cut_OutputDir','enable_unit_tests','slice_font_size','cut_font_size'...
-            'use_mex','force_mex_if_use_mex'};
+            'cut_OutputDir','init_unit_tests','slice_font_size','cut_font_size'...
+            'use_mex','force_mex_if_use_mex','last_unittest_path'};
     end
     
     methods
@@ -52,11 +65,11 @@ classdef mslice_config<config_base
             obj.PhxDir_       = obj.SampleDir_;
             
             obj.MspDir_       = obj.SampleDir_;
-            ms_path = userpath();
+            ms_path = strrep(userpath(),';','');
             if isempty(ms_path)
                 ms_path = pwd;
             end
-            obj.cut_OutputDir=ms_path;
+            obj.cut_OutputDir_=ms_path;
             
             
         end
@@ -83,8 +96,8 @@ classdef mslice_config<config_base
         function use = get.cut_OutputDir(this)
             use = get_or_restore_field(this,'cut_OutputDir');
         end
-        function use = get.enable_unit_tests(this)
-            use = get_or_restore_field(this,'enable_unit_tests');
+        function use = get.init_unit_tests(this)
+            use = get_or_restore_field(this,'init_unit_tests');
         end
         function use = get.slice_font_size(this)
             use = get_or_restore_field(this,'slice_font_size');
@@ -97,6 +110,9 @@ classdef mslice_config<config_base
         end
         function use = get.force_mex_if_use_mex(this)
             use = get_or_restore_field(this,'force_mex_if_use_mex');
+        end
+        function path=get.last_unittest_path(this)
+            path = get_or_restore_field(this,'last_unittest_path');
         end
         %-----------------------------------------------------------------
         % overloaded setters
@@ -121,9 +137,6 @@ classdef mslice_config<config_base
             config_store.instance().store_config(this,'cut_OutputDir',val);
         end
         
-        function this = set.enable_unit_tests(this,val)
-            process_xunit_tests_path(this,val);
-        end
         function this = set.slice_font_size(this,val)
             if val<4 || val > 44; error('MSLICE_CONFIG:set_slice_font_size',' slice font size should be in range 4-44 points'); end
             config_store.instance().store_config(this,'slice_font_size',val);
@@ -151,28 +164,26 @@ classdef mslice_config<config_base
             config_store.instance().store_config(this,'force_mex_if_use_mex',use);
         end
         
+        function this = set.init_unit_tests(this,val)
+            process_xunit_tests_path(this,val);
+        end        
+        function this = set.last_unittest_path(this,val)
+            % no checks here as user ususally do not need to set this path
+            % (unless one wants to) The path is set automatically when 
+            % enable_unit_tests is executed and herbert is present on the
+            % path (at least once);
+            if ~isempty(val)
+                config_store.instance().store_config(this,'last_unittest_parh',val);
+            end
+        end
+        
         
         %------------------------------------------------------------------
         % ABSTACT INTERFACE DEFINED
         %------------------------------------------------------------------
-        function this=set_stored_data(this,data)
-            % method places the data, provided as second argument, into
-            % the class storage. (the operation opposite to
-            % get_data_to_store operation.
-            %
-            % it should not be used in the configuration classes as allows to
-            % create orphaned (not managed by config_store) configurations
-            fields = fieldnames(data);
-            for i=1:numel(fields)
-                field_name = fields{i};
-                this.([fname ,'_']) = data.(field_name);
-            end
-            % set up matlab search path for unit tests
-             process_unit_test_path(data.enable_unit_tests_);
-        end
         function fields = get_storage_field_names(this)
-            % helper function returns the list of the name of the structure,
-            % get_data_to_store returns
+            % helper function returns the list of the public names of the fields,
+            % which should be saved
             fields = this.saved_properties_list_;
         end
         function value = get_internal_field(this,field_name)

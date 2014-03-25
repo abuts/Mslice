@@ -30,16 +30,7 @@ addpath_message (rootpath,'applications');
 
 herbert_io('-off');
 % developer machine option
-if get(mslice_config,'enable_unit_tests')
-    if ~exist('herbert_init.m','file')
-        try
-            her_path=herbert_on('where');
-            % need to clear persistent variable
-            addpath_message (fullfile(her_path,'_test/matlab_xunit/xunit'));
-        catch
-            warning('MSLICE:init','can not initate unit tests framework requested by configuration');
-        end
-    end
+if get(mslice_config,'init_unit_tests')
     addpath_message(rootpath,'_test');
 end
 
