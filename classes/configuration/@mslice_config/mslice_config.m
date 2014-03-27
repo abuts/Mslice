@@ -21,7 +21,7 @@ classdef mslice_config<config_base
         force_mex_if_use_mex=false % fail if mex files do not work
         
         % if to set on Matlab path Herbert/Maltab unit test harness
-        init_unit_tests=false;
+        init_tests=false;
         % the path to the unit tests folders used last time when unit tests
         % were enabled.
         last_unittest_path;
@@ -35,19 +35,20 @@ classdef mslice_config<config_base
         DataDir_    % data files (spe files)
         PhxDir_     % phx files (detector angular positions)
         cut_OutputDir_   % defauld folder to save cuts -- defaults calculated by constructor from Mslice path
-        init_unit_tests_  =  false
+
         slice_font_size_  =  10
         cut_font_size_    =  10
         use_mex_          =  true    % try to use mex if found
         force_mex_if_use_mex_=false % fail if mex files do not work
         %
+        init_tests_  =  false        
         last_unittest_path_=''
         
     end
     properties(Constant,Access=private)
         saved_properties_list_={'MspDir','MspFile','DataDir','PhxDir',...
-            'cut_OutputDir','init_unit_tests','slice_font_size','cut_font_size'...
-            'use_mex','force_mex_if_use_mex','last_unittest_path'};
+            'cut_OutputDir','slice_font_size','cut_font_size'...
+            'use_mex','force_mex_if_use_mex','init_tests','last_unittest_path'};
     end
     
     methods
@@ -96,8 +97,8 @@ classdef mslice_config<config_base
         function use = get.cut_OutputDir(this)
             use = get_or_restore_field(this,'cut_OutputDir');
         end
-        function use = get.init_unit_tests(this)
-            use = get_or_restore_field(this,'init_unit_tests');
+        function use = get.init_tests(this)
+            use = get_or_restore_field(this,'init_tests');
         end
         function use = get.slice_font_size(this)
             use = get_or_restore_field(this,'slice_font_size');
@@ -164,16 +165,28 @@ classdef mslice_config<config_base
             config_store.instance().store_config(this,'force_mex_if_use_mex',use);
         end
         
-        function this = set.init_unit_tests(this,val)
-            process_xunit_tests_path(this,val);
-        end        
-        function this = set.last_unittest_path(this,val)
-            % no checks here as user ususally do not need to set this path
-            % (unless one wants to) The path is set automatically when 
+        function this = set.init_tests(this,val)
+            [enable,xunit_path]=process_xunit_tests_path(this,val);
+            if enable
+                config_store.instance().store_config(this,'init_tests',enable,...
+                    'last_unittest_path',xunit_path);
+            else
+                config_store.instance().store_config(this,'init_tests',enable);
+            end
+            
+        end
+        function this = set.last_unittest_path(this,path)
+            % The path is set automatically when
             % enable_unit_tests is executed and herbert is present on the
             % path (at least once);
-            if ~isempty(val)
-                config_store.instance().store_config(this,'last_unittest_parh',val);
+            % this function is to set a path to unit tests without touching
+            % herbert 
+            if ~isempty(path)
+                if exist(fullfile(path,'assertEqual.m'),'file')
+                    config_store.instance().store_config(this,'last_unittest_parh',path);
+                else
+                    warning('MSLICE_CONFIG:set_last_unittest_path',' path %s is not a path to unit tests. nothing has been set',path);
+                end
             end
         end
         

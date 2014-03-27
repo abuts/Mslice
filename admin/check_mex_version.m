@@ -42,7 +42,7 @@ if nargout>2 && n_errors==0
         if ver>maxVer;       
             maxVer=ver;
             al=regexp(ver_str,'\(','split');
-            compilation_date  = al{2};
+            compilation_date  = al{3};
         end
         if ver<minVer;       minVer=ver;
         end

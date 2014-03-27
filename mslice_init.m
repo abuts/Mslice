@@ -29,17 +29,30 @@ addpath_message (rootpath,'applications');
 % temporary option used during debugging and transition to herbert io
 
 herbert_io('-off');
-% developer machine option
-if get(mslice_config,'init_unit_tests')
-    addpath_message(rootpath,'_test');
-end
+[application,Matlab_code,mexMinVer,mexMaxVer,date] = mslice_version();
+
+mc = [Matlab_code(1:48),'$)'];
+
+
 
 disp('!==================================================================!')
 disp('!                      MSLICE                                      !')
 disp('!------------------------------------------------------------------!')
-disp('!  Radu Coldea    1998-2001                                        !')
-disp('!  Various ISIS modifications and enhancements added               !')
-disp('!  Last ISIS substantial modifications date: 01/05/2014            !')
+disp('! Radu Coldea    1998-2001                                         !')
+disp('! Various ISIS modifications and enhancements added                !')
+if isempty(mexMaxVer)
+    disp('! Mex code:    Disabled  or not supported on this platform         !')
+else
+    if mexMinVer==mexMaxVer
+        mess=sprintf('! Mex files  : $Revision::%4d  $ (%s$)  !',mexMaxVer,date(1:28));
+    else
+        mess=sprintf(...
+            '! Mex files  : $Revisions::%4d-%3d(%s$) !',mexMinVer,mexMaxVer,date(1:28));
+        
+    end
+    disp(mess)
+end
+disp('! Matlab code: Last ISIS substantial modifications date: 01/05/2014!')
 disp('!------------------------------------------------------------------!')
 
 

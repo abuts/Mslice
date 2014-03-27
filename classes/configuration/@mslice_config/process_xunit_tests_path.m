@@ -1,4 +1,4 @@
-function  process_xunit_tests_path(this, enable )
+function   [enable,xunit_path]=process_xunit_tests_path(this, enable )
 % Function processes Mslice unit tests path and enable Mslice to use unit
 % test harness
 %
@@ -37,15 +37,5 @@ else
     rmpath(xunit_path)
     enable = false;
     warning(warn_state);    % return warnings to initial state
-end
-
-if enable
-    config_store.instance().store_config(this,'init_unit_tests',enable,...
-                                              'last_unittest_path',xunit_path);    
-else
-    config_store.instance().store_config(this,'init_unit_tests',enable);    
-end
-
-
 end
 
