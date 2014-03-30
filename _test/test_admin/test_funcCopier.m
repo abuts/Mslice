@@ -12,20 +12,21 @@ classdef test_funcCopier<TestCase
         end
         
         function test_save_restore_list(this)
-            fc=funcCopier();
-            fc.files_2copy_list = containers.Map;
+            fc=funcCopier('test');
+            fc.files_2copy_list =struct();
             testFile = fullfile(this.out_folder,'test_save_restore_list_file.txt');
-            fc.files_2copy_list('fun1.m')={256,'here1','there1'};
-            fc.files_2copy_list('fun2.m')={326,'here2','there2'};            
+            fc.files_2copy_list.fun1=struct('checksum',256,'source','here1','dest','there1','copy',false);
+            fc.files_2copy_list.fun2=struct('checksum',326,'source','here2','dest','there2','copy',false);
             fc.save_list(testFile);
             
-            fc1=funcCopier();
+            fc1=funcCopier('test');
             fc1=fc1.load_list(testFile);
-            nStrings = fc1.files_2copy_list.Count;
-            keys = fc1.files_2copy_list.keys;
+            keys = fieldnames(fc1.files_2copy_list);
+            
+            nStrings = numel(keys);
             for i=1:nStrings
                 key = keys{i};
-                assertEqual(fc.files_2copy_list(key),fc1.files_2copy_list(key ));
+                assertEqual(fc.files_2copy_list.(key),fc1.files_2copy_list.(key ));
             end
             if exist(testFile,'file')
                 delete(testFile);
@@ -33,8 +34,54 @@ classdef test_funcCopier<TestCase
         end
         
         function test_add_hfun(this)
-            %works only if herbert is 
+            
+            fc=funcCopier('test');
+            fc.mslice_folder = this.out_folder;
+            fc.herbert_folder = fileparts(mfilename('fullpath'));
+            test_target='ttt_folder';
+            target_folder = fullfile(this.out_folder,test_target);
+            if ~exist(target_folder,'dir')
+                outcome = mkdir(target_folder);
+            end
+            
+            fc=fc.add_dependency('test_funcCopier',test_target);
+            
+            assertTrue(isfield(fc.files_2copy_list,'test_funcCopier'));
+            dataList= fc.files_2copy_list.test_funcCopier;
+            assertEqual(test_target,dataList.dest);
+            
+            fc.copy_dependencies();
+            
+            file = fullfile(fc.mslice_folder,test_target,'test_funcCopier.m');
+            assertTrue(exist(file,'file')==2);
+            outcome=rmdir(target_folder,'s');
         end
+        
+        function test_add_hfolder(this)
+            
+            fc=funcCopier('test');
+            fc.mslice_folder = this.out_folder;
+            fc.herbert_folder = fileparts(mfilename('fullpath'));
+            fc.herbert_folder = fileparts(fc.herbert_folder);
+            test_target='ttt_folder';
+            target_folder = fullfile(this.out_folder,test_target);
+            if ~exist(target_folder,'dir')
+                outcome = mkdir(target_folder);
+            end
+            
+            fc=fc.add_dependency('test_herbert_IO',test_target);
+            
+            assertTrue(isfield(fc.files_2copy_list,'test_funcCopier'));
+            dataList= fc.files_2copy_list.test_funcCopier;
+            assertEqual(test_target,dataList.dest);
+            
+            fc.copy_dependencies();
+            
+            file = fullfile(fc.mslice_folder,test_target,'test_funcCopier.m');
+            assertTrue(exist(file,'file')==2);
+            outcome=rmdir(target_folder,'s');
+        end
+        
         
     end
     

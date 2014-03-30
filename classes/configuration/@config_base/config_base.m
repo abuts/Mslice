@@ -4,7 +4,7 @@ classdef config_base
     % config_storage class
     %
     %
-    % all derived classes used with configuration have to define two
+    % All derived classes used with configuration have to define two
     % abstract methods of this class (see below) and specify the setters
     % and getters for all stored properties in the following form:
     %
@@ -14,7 +14,11 @@ classdef config_base
     %     stored_poperty
     % end
     %
-    % b) it has default value, which is differs from the property iteslt
+    % b) It has default value, which is differs from the property iteslt.
+    %    Overloaded function get_internal_field from the interface below 
+    %    should be able to return the default value of this property given 
+    %    public name of the property (see example of such function in the
+    %    abstract interface below. 
     % properties(Access=private)
     %    stored_poperty_=default_value
     % end
@@ -25,7 +29,7 @@ classdef config_base
     %end
     % d) Its setter has the form:
     %function this = set.stored_poperty(this,val)
-    %       config_store.instance().store_config(this,'stored_poperty',use);
+    %       config_store.instance().store_config(this,'stored_poperty',val);
     %end
     %
     %

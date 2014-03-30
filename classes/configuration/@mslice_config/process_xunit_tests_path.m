@@ -10,7 +10,7 @@ function   [enable,xunit_path]=process_xunit_tests_path(this, enable )
 %
 % Unit test harness is taken from Herbert. First time this function is
 % deployed, Herbert has to be present on the matlab search path. 
-% All following 
+% Later it can be taken from stored configuration file.
 %
 % $Revision: 278 $ ($Date: 2013-11-01 20:07:58 +0000 (Fri, 01 Nov 2013) $)
 %
