@@ -6,7 +6,7 @@ classdef config_store < handle
     %
     %
     %
-    % $Revision: 313 $ ($Date: 2013-12-02 11:31:41 +0000 (Mon, 02 Dec 2013) $)
+    % $Revision$ ($Date$)
     %
     properties(Dependent)
         % the full path to the folder where the configuration is stored
@@ -124,7 +124,7 @@ classdef config_store < handle
             % class_to_restore -- the class instance of which should to be
             % restored from the hdd
             %
-            % if class_to_restore has option return_defaults==true,
+            % if class_to_restore has option returns_defaults==true,
             % default class configuration is returned
             %
             % if varargin is present, method returns not the clas itself, but

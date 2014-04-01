@@ -20,7 +20,7 @@ function par=load_ASCII_phx_as_par(filename)
 
 % Original author: T.G.Perring
 %
-% $Revision: 323 $ ($Date: 2014-01-10 19:52:56 +0000 (Fri, 10 Jan 2014) $)
+% $Revision$ ($Date$)
 
 % Remove blanks from beginning and end of filename
 

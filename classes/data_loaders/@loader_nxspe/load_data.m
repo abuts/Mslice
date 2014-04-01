@@ -14,7 +14,7 @@ function [varargout]=load_data(this,new_file_name)
 %
 %
 %
-% $Revision: 340 $ ($Date: 2014-01-20 13:15:37 +0000 (Mon, 20 Jan 2014) $)
+% $Revision$ ($Date$)
 %
 
 if exist('new_file_name','var')

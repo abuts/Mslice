@@ -3,7 +3,7 @@ classdef memfile_fs < Singleton
     % in memory
     %
     %
-    % $Revision: 334 $ ($Date: 2014-01-16 13:40:57 +0000 (Thu, 16 Jan 2014) $)
+    % $Revision$ ($Date$)
     %
     
     properties(Access=private) %

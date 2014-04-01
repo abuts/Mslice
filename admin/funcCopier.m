@@ -3,7 +3,7 @@ classdef funcCopier
     % mslice
     %
     %
-    %   $Rev: 268 $ ($Date: 2014-03-13 14:11:31 +0000 (Thu, 13 Mar 2014) $)
+    %   $Rev$ ($Date$)
     %
     properties
         % target root folder
@@ -96,10 +96,10 @@ classdef funcCopier
             end
             
             full_name = fullfile(this.herbert_folder,function_name);
-            if exist(function_name,'file')==2
-                source = which(function_name);
-            elseif exist(full_name,'file')==2
+            if exist(full_name,'file')==2
                 source = full_name;
+            elseif exist(function_name,'file')==2
+                source = which(function_name);                
             elseif exist(full_name,'dir')==7
                 files=gen_files_list(full_name,function_name);
                 [fp,fn]=fileparts(function_name);

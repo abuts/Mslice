@@ -37,7 +37,7 @@ application.name='mslice';
 
 application.version=2;
 
-Matlab_SVN='$Revision:: 839  $ ($Date:: 2014-03-25 11:39:36 +0000 (Tue, 25 Mar 2014) $)';
+Matlab_SVN='$Revision::      $ ($Date::                                              $)';
 
 % Information about name and version of application
 mexMinVer     = [];

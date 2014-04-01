@@ -11,7 +11,7 @@ classdef asciipar_loader
     % both with ASCII par files and the detector information containing in
     % the main data file (if the later intended to be used)
     %
-    % $Revision: 340 $ ($Date: 2014-01-20 13:15:37 +0000 (Mon, 20 Jan 2014) $)
+    % $Revision$ ($Date$)
     %
     % the properties common for all data loaders.
     properties(Dependent)

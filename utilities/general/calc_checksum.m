@@ -5,7 +5,7 @@ function summm = calc_checksum(filename)
 % It also omits the srting where svn keyword Revision can be found;
 %
 %
-% $Revision: 313 $ ($Date: 2013-12-02 11:31:41 +0000 (Mon, 02 Dec 2013) $)
+% $Revision$ ($Date$)
 %
 
 fileID = fopen(filename,'r');

@@ -2,7 +2,7 @@ classdef mslice_config<config_base
     % Class holds Mslice saveable configuration -- child of config_base
     %
     %
-    % $Revision: 313 $ ($Date: 2013-12-02 11:31:41 +0000 (Mon, 02 Dec 2013) $)
+    % $Revision$ ($Date$)
     %
     
     properties(Dependent,SetAccess=private)

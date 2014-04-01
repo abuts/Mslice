@@ -4,7 +4,7 @@ classdef loader_nxspe < a_loader
     %
     % $Author: Alex Buts; 20/10/2011
     %
-    % $Revision: 340 $ ($Date: 2014-01-20 13:15:37 +0000 (Mon, 20 Jan 2014) $)
+    % $Revision$ ($Date$)
     %
     properties
         % incident energy

@@ -3,7 +3,7 @@ classdef loaders_factory < Singleton
     % demand
     %
     %
-    % $Revision: 340 $ ($Date: 2014-01-20 13:15:37 +0000 (Mon, 20 Jan 2014) $)
+    % $Revision$ ($Date$)
     %
     
     

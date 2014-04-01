@@ -13,7 +13,7 @@ function config_data=get_config_internal(this,class_to_restore)
 % the list of values of the class_to_restore fields with names specified in
 %            varargin
 %
-% $Revision: 278 $ ($Date: 2013-11-01 20:07:58 +0000 (Fri, 01 Nov 2013) $)
+% $Revision$ ($Date$)
 %
 
 class_name = class_to_restore.class_name;

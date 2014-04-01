@@ -2,7 +2,7 @@ function setup_data_folders(varargin)
 % function sets up default folders for msp, par and spe files
 % if varargin is present it can choose some of the folders;
 %
-% $Revision: 268 $ ($Date: 2014-03-13 14:11:31 +0000 (Thu, 13 Mar 2014) $)
+% $Revision$ ($Date$)
 %
 select_msp=false;
 select_spe=false;

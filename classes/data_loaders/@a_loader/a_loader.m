@@ -21,7 +21,7 @@ classdef a_loader < asciipar_loader;
     % $Author: Alex Buts; 05/01/2014
     %
     %
-    % $Revision: 348 $ ($Date: 2014-03-05 20:30:22 +0000 (Wed, 05 Mar 2014) $)
+    % $Revision$ ($Date$)
     %
     % the properties common for all data loaders.
     properties(Dependent)

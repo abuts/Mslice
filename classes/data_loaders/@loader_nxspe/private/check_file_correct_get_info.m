@@ -6,7 +6,7 @@ function [n_detectors,en,full_file_name,nexus_dir,ei,psi,nxspe_version]= check_f
 %
 % $Author: Alex Buts; 20/10/2011
 %
-% $Revision: 323 $ ($Date: 2014-01-10 19:52:56 +0000 (Fri, 10 Jan 2014) $)
+% $Revision$ ($Date$)
 %
 
 

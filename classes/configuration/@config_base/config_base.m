@@ -4,7 +4,7 @@ classdef config_base
     % config_storage class
     %
     %
-    % All derived classes used with configuration have to define two
+    % all derived classes used with configuration have to define two
     % abstract methods of this class (see below) and specify the setters
     % and getters for all stored properties in the following form:
     %
@@ -14,11 +14,13 @@ classdef config_base
     %     stored_poperty
     % end
     %
-    % b) It has default value, which is differs from the property iteslt.
-    %    Overloaded function get_internal_field from the interface below 
-    %    should be able to return the default value of this property given 
-    %    public name of the property (see example of such function in the
-    %    abstract interface below. 
+    % b) it has default value, which differs from the property itself.
+    % 
+    %    If user supposes to use suggested abstract methods implementations,
+    %    the name of the internal property with defaults 
+    %    has to be different from the public property name a) by the underscore 
+    %    at the end of its name
+    %
     % properties(Access=private)
     %    stored_poperty_=default_value
     % end
@@ -34,7 +36,7 @@ classdef config_base
     %
     %
     %
-    % $Revision: 313 $ ($Date: 2013-12-02 11:31:41 +0000 (Mon, 02 Dec 2013) $)
+    % $Revision$ ($Date$)
     %
     
     properties(Dependent)
@@ -44,14 +46,15 @@ classdef config_base
         % property specifies if changes to the class should be stored on
         % hdd to restore them later
         saveable;
-        % if property is set to true, method returns default configurations
-        return_defaults;
+        % if this property is set to true, class getters return default configurations 
+        % instead of saved configurations
+        returns_defaults;
     end
     properties(Access=protected)
         % the name of the derived class with provides information to store
         class_name_ ;
         is_saveable_ = true;
-        return_defaults_=false;
+        returns_defaults_=false;
     end
     %
     methods(Abstract)
@@ -79,7 +82,7 @@ classdef config_base
     end
     methods
         function obj=config_base(class_name)
-            % constructor Assept input parameter which should be
+            % constructor accepts input parameter which should be
             % the derived class name.
             %
             %Parameters:
@@ -111,25 +114,25 @@ classdef config_base
             config_store.instance().set_saveable(this,val);
         end
         %------------------------------------------------------------------
-        function is = get.return_defaults(this)
-            is = this.return_defaults_;
+        function is = get.returns_defaults(this)
+            is = this.returns_defaults_;
         end
         %
-        function this=set.return_defaults(this,val)
+        function this=set.returns_defaults(this,val)
             if val > 0
-                this.return_defaults_=true;
+                this.returns_defaults_=true;
             else
-                this.return_defaults_=false;
+                this.returns_defaults_=false;
             end
         end
         %------------------------------------------------------------------
         function value =get_or_restore_field(this,field_name)
-            % method to restore value from config_store if availible or
+            % method to restore value from config_store if available or
             % take default value from the class defaults if not
             
             % the method is used as the part of a standard derived class getter.
             
-            if this.return_defaults
+            if this.returns_defaults
                 value = get_internal_field(this,field_name);
             else
                 % get actual configuration
@@ -157,7 +160,7 @@ classdef config_base
             % names of the class setters
             %
             % it can be used to load data from config store to config class
-            % instance thourh such usage is not standard and should be used
+            % instance though such usage is not standard and should be used
             % for testing and debugging purposes only
             %
             fields = fieldnames(data);
