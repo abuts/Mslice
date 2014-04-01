@@ -6,9 +6,14 @@ classdef funcCopier
     %   $Rev: 268 $ ($Date: 2014-03-13 14:11:31 +0000 (Thu, 13 Mar 2014) $)
     %
     properties
+        % target root folder
         mslice_folder;
+        % source root folder
         herbert_folder;
+        % structure containing information about the dependent files to
+        % copy/check
         files_2copy_list;
+        % where the file with the information above is normally stored
         config_file_path;
     end
     
@@ -47,13 +52,18 @@ classdef funcCopier
             for i=1:nStrings
                 func = func_names{i};
                 data2save = this.files_2copy_list.(func);
-                fprintf(fh,'%s;%s,%d;%s;%s\n',func,data2save.fname,data2save.checksum,data2save.source,data2save.dest);
+                if isfield(data2save,'fext')
+                    fext = data2save.fext;
+                else
+                    fext='.m';
+                end
+                fprintf(fh,'%s;%s;%d;%s;%s;%s\n',func,data2save.fname,data2save.checksum,data2save.source,data2save.dest,fext);
             end
             fclose(fh);
         end
         %------------------------------------------------------------------
         function this=load_list(this,filename)
-            full_file = fullfile(this.config_file_path,filename);            
+            full_file = fullfile(this.config_file_path,filename);
             fh=fopen(full_file,'r');
             if fh<0;
                 warning('FUNC_COPIER:save_list',' can not open file %s to read data. Nothing loaded',filename);
@@ -67,55 +77,68 @@ classdef funcCopier
             while ischar(line)
                 rez = strsplit(line,';');
                 rez{3} = str2double(rez{3});
-                this.files_2copy_list.(rez{1})=struct('fname',rez{2},'checksum',rez{3},...
+                descriptor = struct('fname',rez{2},'checksum',rez{3},...
                     'source',rez{4},'dest',rez{5},'copy',false);
+                if ~strcmpi(rez{6},'.m')
+                    descriptor.fext = rez{6};
+                end
+                this.files_2copy_list.(rez{1})=descriptor;
                 line=fgetl(fh);
             end
             fclose(fh);
         end
         %------------------------------------------------------------------
-        function this=add_dependency(this,function_name,target_folder)
+        function this=add_dependency(this,function_name,target_folder,source_subpath)
             % method to add new dependency to the dependencies list.
             %
+            if ~exist('source_subpath','var')
+                source_subpath = '';
+            end
+            
             full_name = fullfile(this.herbert_folder,function_name);
             if exist(function_name,'file')==2
-                source = function_name;
+                source = which(function_name);
             elseif exist(full_name,'file')==2
                 source = full_name;
             elseif exist(full_name,'dir')==7
-                files=gen_files_list(full_name,full_name);
+                files=gen_files_list(full_name,function_name);
                 [fp,fn]=fileparts(function_name);
                 if fn(1) == '@'
-                    targ_ext =fn;
+                    source_subpath_base = fp;
                 else
-                   targ_ext ='';
+                    source_subpath_base = function_name;
                 end
+                
                 for i=1:numel(files)
                     the_file=files{i};
-                    tf = fullfile(target_folder,targ_ext);
-                    this=this.add_dependency(the_file,tf);
+                    [fp,fn,fext]=fileparts(the_file);
+                    source_subpath = this.extract_base(source_subpath_base,fp);
+                    this=this.add_dependency(the_file,target_folder,source_subpath);
                 end
                 return
             else
                 error('FUNC_COPIER:add_dependency',' can not find function %s ',function_name);
             end
-           
+            
             checksum = calc_checksum(source);
-             
-            [source_path,fname]=fileparts(source);
-            sourcePathLength = numel(this.herbert_folder);
-            if strncmp(source_path,this.herbert_folder,sourcePathLength)
-                source_path=source_path(sourcePathLength+1:end);
-            else
-                error('FUNC_COPIER:add_dependency','Source path %s is not within source folder %s',source_path,this.herbert_folder)
-            end
-            func_name = this.flatten(source_path,fname);
+            
+            [source_path,fname,fext]=fileparts(source);
+            % extract root herbert folder from the source path
+            source_path = this.extract_base(this.herbert_folder,source_path);
+            % 
+            key_name = this.build_key_name(source_subpath,[fname,fext]);
             %
-            if isfield(this.files_2copy_list,func_name)
-                descriptor = this.files_2copy_list.(func_name);
-                this.files_2copy_list.(func_name) = this.check_for_changes(func_name,descriptor);
+            if isfield(this.files_2copy_list,key_name)
+                descriptor = this.files_2copy_list.(key_name);
+                this.files_2copy_list.(key_name) = this.check_for_changes(descriptor);
             else
-                this.files_2copy_list.(func_name)=struct('fname',fname,'checksum',checksum,'source',source_path,'dest',target_folder,'copy',true);
+                targ = fullfile(target_folder,source_subpath);
+                descriptor = struct('fname',fname,'checksum',checksum,'source',source_path,'dest',targ,'copy',true);
+                if ~strcmpi(fext,'.m')
+                    descriptor.fext=fext;
+                end
+                this.files_2copy_list.(key_name)=descriptor;
+                
             end
         end
         %------------------------------------------------------------------
@@ -128,8 +151,8 @@ classdef funcCopier
                 if ~descriptor.copy
                     continue;
                 end
-                fsource = fullfile(this.herbert_folder,descriptor.source,[names{i},'.m']);
-                fdest = fullfile(this.mslice_folder,descriptor.dest,[names{i},'.m']);
+                fsource = this.source_path(descriptor);
+                fdest   = this.target_path(descriptor);
                 funcCopier.check_or_make_target_folder(fdest);
                 copyfile(fsource,fdest)
             end
@@ -153,8 +176,8 @@ classdef funcCopier
             %
             newDescr = descriptor;
             
-            fsource = fullfile(this.herbert_folder,descriptor.source,[descriptor.fname,'.m']);
-            fdest   = fullfile(this.mslice_folder,descriptor.dest,[descriptor.fname,'.m']);
+            fsource = this.source_path(descriptor);
+            fdest   = this.target_path(descriptor);
             checksum= calc_checksum(fsource);
             % target has been deleted.
             if ~exist(fdest,'file')
@@ -175,7 +198,7 @@ classdef funcCopier
             if descriptor.checksum ~=trg_sum
                 newDescr.copy = true;
                 newDescr.checksum = checksum;
-                fbackup=fullfile(this.mslice_folder,descriptor.dest,[fname,'_mslice_back.m']);
+                fbackup=this.target_path(descriptor,'_mslice_back.m');
                 movefile(fdest,fbackup,'f')
             end
             
@@ -183,6 +206,38 @@ classdef funcCopier
             newDescr.checksum = checksum;
             
             return;
+        end
+        %
+        function path =target_path(this,descriptor,fname,fext)
+            fbase = descriptor.dest;
+            if ~exist('fext','var')
+                if isfield(descriptor,'fext')
+                    fext = descriptor.fext;
+                else
+                    fext = '.m';
+                end
+            end
+            if ~exist('fname','var')
+                fname = descriptor.fname;
+            end
+            path = fullfile(this.mslice_folder,fbase,[fname,fext]);
+        end
+        %
+        function path =source_path(this,descriptor,fname,fext)
+            fbase = descriptor.source;
+            if ~exist('fext','var')
+                if isfield(descriptor,'fext')
+                    fext = descriptor.fext;
+                else
+                    fext = '.m';
+                end
+                
+            end
+            if ~exist('fname','var')
+                fname = descriptor.fname;
+            end
+            
+            path = fullfile(this.herbert_folder,fbase,[fname,fext]);
         end
         
     end
@@ -201,16 +256,30 @@ classdef funcCopier
                 end
             end
         end
-        function func_name = flatten(source_path,fname)
+        function func_name = build_key_name(source_path,fname)
+            % function takes the path and function name provided as
+            % input arguments and generates form them the string
+            % which can be used as valid field name of a matlab structure.
+            %
             func_name = fullfile(source_path,fname);
             if ispc
-                func_name = regexprep(func_name,'[\\,@]','_');
+                func_name = regexprep(func_name,'[\\,@,\.]','_');
             else
-                func_name = regexprep(func_name,'[/,@]','_');                
+                func_name = regexprep(func_name,'[/,@,\.]','_');
             end
             if func_name(1)=='_'
                 func_name(1)='a';
             end
+        end
+        %
+        function path = extract_base(herbert_folder,source_path)
+            path_len = numel(herbert_folder);
+            if strncmpi(herbert_folder,source_path,path_len)
+                path = source_path(path_len+1:end);
+            else
+                error('FUNC_COPIER:extract_base',' the folder %s is not under the path %s',source_path,source_path);
+            end
+            
         end
         
     end
