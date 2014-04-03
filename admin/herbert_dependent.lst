@@ -48,3 +48,7 @@ a_config_store_private_get_config_internal_m;get_config_internal;124849;\configu
 a_config_store_private_load_config_from_file_m;load_config_from_file;72282;\configuration\@config_store\private;classes\configuration\@config_store\private;.m
 a_config_store_private_make_config_folder_m;make_config_folder;90130;\configuration\@config_store\private;classes\configuration\@config_store\private;.m
 a_config_store_private_save_config_m;save_config;34285;\configuration\@config_store\private;classes\configuration\@config_store\private;.m
+Singleton_m;Singleton;250281;\classes;Classes\Singleton;.m
+a_loader_ascii_load_data_m;load_data;39172;\classes\data_loaders\@loader_ascii;classes\data_loaders\@loader_ascii;.m
+a_loader_ascii_loader_ascii_m;loader_ascii;416558;\classes\data_loaders\@loader_ascii;classes\data_loaders\@loader_ascii;.m
+a_loader_ascii_private_get_spe_matlab_m;get_spe_matlab;179292;\classes\data_loaders\@loader_ascii\private;classes\data_loaders\@loader_ascii\private;.m
