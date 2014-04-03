@@ -183,7 +183,7 @@ classdef mslice_config<config_base
             % herbert 
             if ~isempty(path)
                 if exist(fullfile(path,'assertEqual.m'),'file')
-                    config_store.instance().store_config(this,'last_unittest_parh',path);
+                    config_store.instance().store_config(this,'last_unittest_path',path);
                 else
                     warning('MSLICE_CONFIG:set_last_unittest_path',' path %s is not a path to unit tests. nothing has been set',path);
                 end

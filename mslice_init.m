@@ -38,8 +38,7 @@ mc = [Matlab_code(1:48),'$)'];
 disp('!==================================================================!')
 disp('!                      MSLICE                                      !')
 disp('!------------------------------------------------------------------!')
-disp('! Radu Coldea    1998-2001                                         !')
-disp('! Various ISIS modifications and enhancements added                !')
+disp('! Radu Coldea: 1998-2001 & ISIS addons and enhancements: 2001-2014 !')
 if isempty(mexMaxVer)
     disp('! Mex code:    Disabled  or not supported on this platform         !')
 else
