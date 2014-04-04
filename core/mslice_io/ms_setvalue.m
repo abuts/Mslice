@@ -1,4 +1,4 @@
-function ms_setvalue(field_name,value,highlight)
+function ms_setvalue(field_name,value,highlight,h_cw)
 % Set values in the Mslice ControlWindow from the command line
 %
 %   >> ms_setvalue(field_name,value)
@@ -16,12 +16,13 @@ function ms_setvalue(field_name,value,highlight)
 %
 
 % === return if Mslice ControlWindow not opened 
-h_cw=findobj('Tag','ms_ControlWindow');
-if isempty(h_cw),
-   disp('No Control widow opened, can not set parameter value');
-   return;
+if ~exist('h_cw','var')
+    h_cw=findobj('Tag','ms_ControlWindow');
+    if isempty(h_cw),
+        disp('No Control widow opened, can not set parameter value');
+        return;
+    end
 end
-
 % === locate handle to field object
 h=findobj(h_cw,'Tag',['ms_' field_name]);
 if isempty(h)||~isnumeric(h)||(numel(h)~=1)||~ishandle(h),
@@ -92,8 +93,7 @@ else
     else
         set(h,'String',val);                
     end
-
-   
+  
    	%disp(['ms_' field_name ' gets ''String'' property ' val]); 
 end    
 eval(get(h,'Callback'));

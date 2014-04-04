@@ -13,10 +13,10 @@
       implicit NONE
 #include "fintrf.h"
      character*(40) :: PROG_NAME="Fortran AveragePixels (avpix_df.F90)    "
-     character*(70) :: PROG_REV
-     character*(120):: REVISION
-     DATA PROG_REV /"$Rev::      $ ($Date::                                              $)"/
-!                    1234567890123456789012345678901234567890123456789012345678901234567890
+!     character*(70) :: PROG_REV
+     character*(75):: REVISION                         
+     DATA REVISION /"$Revision::      $ ($Date::                                              $)"/
+!                    123456789012345678901234567890123456789012345678901234567890123456789010123
 !                    1         2         3         4         5         6         7         8   
       mwpointer :: plhs(*), prhs(*)
       integer*4 :: nrhs, nlhs,complex_flag
@@ -31,7 +31,7 @@
       
       ! Returns code SVN version
       if(nrhs==0 .AND. nlhs==1)then
-        REVISION =  PROG_NAME//PROG_REV
+!        REVISION =  PROG_NAME//PROG_REV
         one=1
         plhs(1) = mxCreateCharMatrixFromStrings(one,REVISION);
         return

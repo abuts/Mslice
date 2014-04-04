@@ -4,7 +4,7 @@ classdef loader_ascii < a_loader
     %
     % $Author: Alex Buts; 20/10/2011
     %
-    % $Revision: 340 $ ($Date: 2014-01-20 13:15:37 +0000 (Mon, 20 Jan 2014) $)
+    % $Revision$ ($Date$)
     %
     
     methods(Static)
@@ -65,7 +65,7 @@ classdef loader_ascii < a_loader
                 error('LOAD_ASCII:get_data_info',' has to be called with valid file name');
             end
             
-            if isstring(file_name)
+            if ischar(file_name)
                 [ok,mess,full_file_name] = check_file_exist(file_name,{'.spe'});
                 if ~ok
                     error('LOAD_ASCII:get_data_info',mess);

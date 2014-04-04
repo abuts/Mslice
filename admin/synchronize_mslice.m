@@ -20,5 +20,7 @@ end
 
 fc=fc.check_dependencies();
 fc=fc.copy_dependencies();
+fc.save_list('herbert_dependent.lst');
+
 
 

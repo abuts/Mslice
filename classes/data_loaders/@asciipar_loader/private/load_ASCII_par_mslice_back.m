@@ -20,7 +20,7 @@ function par=load_ASCII_par(filename)
 
 % Original author: T.G.Perring
 %
-% $Revision$ ($Date$)
+% $Revision: 323 $ ($Date: 2014-01-10 19:52:56 +0000 (Fri, 10 Jan 2014) $)
 
 % If no input parameter given, return
 if ~exist('filename','var')

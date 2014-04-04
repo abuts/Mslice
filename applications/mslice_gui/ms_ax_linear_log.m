@@ -1,5 +1,6 @@
 function ms_ax_linear_log(h,scale)
-
+% Method to change linear/log scale in Mslice 
+%
 % function ms_ax_linear_log(h,scale)
 % calling syntax : ms_ax_linear_log(findobj(gcf,'Tag','Log_y_axis'),'YScale');
 

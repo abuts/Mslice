@@ -96,4 +96,3 @@ else
    cut_title='unknown';
 end
 set(findobj(hmf_data,'Tag','mf_text_title'),'String',cut_title,'FontSize',11);
-

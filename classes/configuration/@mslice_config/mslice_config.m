@@ -25,6 +25,8 @@ classdef mslice_config<config_base
         % the path to the unit tests folders used last time when unit tests
         % were enabled.
         last_unittest_path;
+        % for compartibility with mslice log level
+        log_level;
     end
     
     properties(Access=protected)
@@ -35,20 +37,20 @@ classdef mslice_config<config_base
         DataDir_    % data files (spe files)
         PhxDir_     % phx files (detector angular positions)
         cut_OutputDir_   % defauld folder to save cuts -- defaults calculated by constructor from Mslice path
-
+        
         slice_font_size_  =  10
         cut_font_size_    =  10
         use_mex_          =  true    % try to use mex if found
         force_mex_if_use_mex_=false % fail if mex files do not work
         %
-        init_tests_  =  false        
+        init_tests_  =  false
         last_unittest_path_=''
-        
+        log_level_ = 0;
     end
     properties(Constant,Access=private)
         saved_properties_list_={'MspDir','MspFile','DataDir','PhxDir',...
             'cut_OutputDir','slice_font_size','cut_font_size'...
-            'use_mex','force_mex_if_use_mex','init_tests','last_unittest_path'};
+            'use_mex','force_mex_if_use_mex','init_tests','last_unittest_path','log_level'};
     end
     
     methods
@@ -115,6 +117,10 @@ classdef mslice_config<config_base
         function path=get.last_unittest_path(this)
             path = get_or_restore_field(this,'last_unittest_path');
         end
+        function path=get.log_level(this)
+            path = get_or_restore_field(this,'log_level');
+        end
+        
         %-----------------------------------------------------------------
         % overloaded setters
         function this = set.MspDir(this,val)
@@ -180,7 +186,7 @@ classdef mslice_config<config_base
             % enable_unit_tests is executed and herbert is present on the
             % path (at least once);
             % this function is to set a path to unit tests without touching
-            % herbert 
+            % herbert
             if ~isempty(path)
                 if exist(fullfile(path,'assertEqual.m'),'file')
                     config_store.instance().store_config(this,'last_unittest_path',path);
@@ -188,6 +194,12 @@ classdef mslice_config<config_base
                     warning('MSLICE_CONFIG:set_last_unittest_path',' path %s is not a path to unit tests. nothing has been set',path);
                 end
             end
+        end
+        function this = set.log_level(this,val)
+            if ~isnumeric(val)
+                error('MSLICE_CONFIG:log_level',' log level has to be a number ')
+            end
+            config_store.instance().store_config(this,'log_level',val);
         end
         
         

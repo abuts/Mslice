@@ -53,7 +53,11 @@ end
 spe_filename=check_file_existence(spe_filename,'spe','DataDir','ms_DataFile');
 % now phx may not be present so check should be in load_spe
 %phx_filename=check_file_existence(phx_filename,'phx','PhxDir','ms_PhxFile');
-data=buildspe(spe_filename,phx_filename);
+
+% get data processing mode (crystal or powder)
+h_mode=findobj(h_cw,'Tag','ms_sample');
+data_mode =get(h_mode,'Value');
+data=buildspe(spe_filename,phx_filename,data_mode);
 if ~isempty(data),
    set(h_cw,'UserData',data);
 end
@@ -62,20 +66,13 @@ end
 if isfield(data,'Ei')
     Ei=data.Ei;
     if ~isnan(Ei)
-        h_en=findobj('Tag','ms_efixed');
-        if ~isempty(h_en)
-            set(h_en,'String',num2str(Ei),'ForegroundColor','g');         
-        end
+        ms_setvalue('efixed',Ei,'highlight',h_cw);
     end
 end
 if isfield(data,'psi')
     psi = data.psi;
     if ~isnan(psi)
-        h_psi=findobj('Tag','ms_psi_samp');
-        if ~isempty(h_psi)
-            set(h_psi,'String',num2str(psi),'ForegroundColor','g');
-            %drawnow expose;
-        end
+        ms_setvalue('psi_samp',psi,'highlight',h_cw);        
     end
     
 end

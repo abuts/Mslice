@@ -24,12 +24,9 @@ C-----------------------------------------------------------------------
       implicit NONE
 C declares the pointer and integer sizes for current os and platform
 #include "fintrf.h"
-      character*(120)::REVISION=
-C                1         2         3         4         5
-     1 "Fortran Slice_full (slice_df_full.F)    "//
-     2 "$Rev::      $ " //
-     3 "($Date::                                              $)"
-C       123456789012345678901234567890123456789012345678901234567890      
+      character*(75):: REVISION =
+     c "$Revision::      $ " //
+     c "($Date::                                              $)"
 
       mwpointer :: plhs(*), prhs(*)
 	integer*4 :: nrhs, nlhs,cpfg

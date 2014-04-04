@@ -16,6 +16,11 @@ classdef funcCopier
         % where the file with the information above is normally stored
         config_file_path;
     end
+    properties(Constant,Access=private)
+        % fields to modify in Herbert class to work in mslice class
+        fields_to_modify_={'herbert_config','use_mex_C'};
+        modify_with_={'mslice_config','use_mex'};
+    end
     
     methods
         function obj=funcCopier(varargin)
@@ -57,7 +62,13 @@ classdef funcCopier
                 else
                     fext='.m';
                 end
-                fprintf(fh,'%s;%s;%d;%s;%s;%s\n',func,data2save.fname,data2save.checksum,data2save.source,data2save.dest,fext);
+                if isfield(data2save,'modified')
+                    modify = data2save.modified;
+                else
+                    modify = false;
+                end
+                
+                fprintf(fh,'%s;%s;%d;%s;%s;%s;%d\n',func,data2save.fname,data2save.checksum,data2save.source,data2save.dest,fext,modify);
             end
             fclose(fh);
         end
@@ -82,6 +93,11 @@ classdef funcCopier
                 if ~strcmpi(rez{6},'.m')
                     descriptor.fext = rez{6};
                 end
+                if numel(rez)==7
+                    descriptor.modified=logical(str2double(rez{7}));
+                else
+                    descriptor.modified=true;
+                end
                 this.files_2copy_list.(rez{1})=descriptor;
                 line=fgetl(fh);
             end
@@ -99,7 +115,7 @@ classdef funcCopier
             if exist(full_name,'file')==2
                 source = full_name;
             elseif exist(function_name,'file')==2
-                source = which(function_name);                
+                source = which(function_name);
             elseif exist(full_name,'dir')==7
                 files=gen_files_list(full_name,function_name);
                 [fp,fn]=fileparts(function_name);
@@ -120,12 +136,12 @@ classdef funcCopier
                 error('FUNC_COPIER:add_dependency',' can not find function %s ',function_name);
             end
             
-            checksum = calc_checksum(source);
+            [checksum,modified] = calc_checksum(source,true);
             
             [source_path,fname,fext]=fileparts(source);
             % extract root herbert folder from the source path
             source_path = this.extract_base(this.herbert_folder,source_path);
-            % 
+            %
             key_name = this.build_key_name(source_subpath,[fname,fext]);
             %
             if isfield(this.files_2copy_list,key_name)
@@ -133,7 +149,8 @@ classdef funcCopier
                 this.files_2copy_list.(key_name) = this.check_for_changes(descriptor);
             else
                 targ = fullfile(target_folder,source_subpath);
-                descriptor = struct('fname',fname,'checksum',checksum,'source',source_path,'dest',targ,'copy',true);
+                descriptor = struct('fname',fname,'checksum',checksum,'source',source_path,'dest',...
+                    targ,'copy',true,'modified',modified);
                 if ~strcmpi(fext,'.m')
                     descriptor.fext=fext;
                 end
@@ -154,39 +171,68 @@ classdef funcCopier
                 fsource = this.source_path(descriptor);
                 fdest   = this.target_path(descriptor);
                 funcCopier.check_or_make_target_folder(fdest);
-                copyfile(fsource,fdest)
+                if descriptor.modified
+                    funcCopier.copyAndModify(fsource,fdest);
+                else
+                    copyfile(fsource,fdest)
+                end
             end
         end
         %------------------------------------------------------------------
-        function this=check_dependencies(this)
+        function this=check_dependencies(this,varargin)
             %  method checks existing dependencies and mark them for
             %  copying if the dependency contents have changed.
+            if nargin>1
+                force_modified=varargin{1};
+            else
+                force_modified=false;
+            end
             
             names = fieldnames(this.files_2copy_list);
             for i=1:numel(names)
                 descriptor = this.files_2copy_list.(names{i});
                 this.files_2copy_list.(names{i}) = ...
-                    this.check_for_changes(descriptor);
+                    this.check_for_changes(descriptor,force_modified);
             end
             
         end
-        function newDescr= check_for_changes(this,descriptor)
+        function newDescr= check_for_changes(this,descriptor,varargin)
             % method check if the file defimed by the descriptor have
             % changed and needs copying.
             %
+            %
             newDescr = descriptor;
+            if nargin>2
+                force_modified=varargin{1};
+            else
+                force_modified=false;
+            end
+            
             
             fsource = this.source_path(descriptor);
             fdest   = this.target_path(descriptor);
-            checksum= calc_checksum(fsource);
+            if descriptor.modified || force_modified
+                [checksum,modified]= calc_checksum(fsource,true);
+            else
+                checksum= calc_checksum(fsource);
+                modified=false;
+            end
             % target has been deleted.
             if ~exist(fdest,'file')
                 newDescr.copy = true;
                 newDescr.checksum=checksum;
+                newDescr.modified=true;
                 return;
             end
             
-            trg_sum = calc_checksum(fdest);
+            if isfield(descriptor,'modified')
+                target_is_modified=modified;
+            else
+                target_is_modified=false;
+            end            
+            newDescr.modified = target_is_modified;            
+            
+            trg_sum = calc_checksum(fdest,target_is_modified);
             if trg_sum == checksum
                 newDescr.copy = false;
                 newDescr.checksum = checksum;
@@ -198,7 +244,7 @@ classdef funcCopier
             if descriptor.checksum ~=trg_sum
                 newDescr.copy = true;
                 newDescr.checksum = checksum;
-                fbackup=this.target_path(descriptor,'_mslice_back.m');
+                fbackup=this.target_path(descriptor,[descriptor.fname,'_mslice_back']);
                 movefile(fdest,fbackup,'f')
             end
             
@@ -280,6 +326,37 @@ classdef funcCopier
                 error('FUNC_COPIER:extract_base',' the folder %s is not under the path %s',source_path,source_path);
             end
             
+        end
+        function fields=fieldsToModify()
+            %
+            fields = funcCopier.fields_to_modify_;
+        end
+        
+        function copyAndModify(fsource,fdest)
+            % copy file contents replacing specified strings by its
+            % replacements
+            %
+            
+            fs=fopen(fsource,'r');
+            if fs<=0
+                error('FUNC_COPIER:copyAndModify',' error opening source file %s',fsource);
+            end
+            ft= fopen(fdest,'w');
+            if ft<=0
+                error('FUNC_COPIER:copyAndModify',' error opening target file file %s',fdest);
+            end
+            
+            line = fgets(fs);
+            while(line>-1)
+                
+                for i=1:numel(funcCopier.fields_to_modify_)
+                    line = strrep(line,funcCopier.fields_to_modify_{i},funcCopier.modify_with_{i});
+                end
+                fprintf(ft,'%s',line);
+                line = fgets(fs);
+            end
+            fclose(ft);
+            fclose(fs);
         end
         
     end

@@ -13,9 +13,11 @@ subroutine mexFunction(nlhs, plhs, nrhs, prhs)
 ! declares the pointer and integer sizes for current os and platform
 #include "fintrf.h"
   character*(40) :: PROG_NAME= 'Fortran SPE in mslice (load_spe_df.F90) '
-  character*(70) :: PROG_REV
-  character*(110):: REVISION
-  DATA PROG_REV/'$Rev::      $ ($Date::                                              $)'/
+  !character*(70) :: PROG_REV
+  !character*(110):: REVISION
+  !DATA PROG_REV/'$Rev::      $ ($Date::                                              $)'/
+  character*(75):: REVISION                         
+  DATA REVISION /"$Revision::      $ ($Date::                                              $)"/
   
   mwpointer :: plhs(*), prhs(*)
   integer*4 :: nrhs, nlhs,complex_flag
@@ -37,7 +39,7 @@ subroutine mexFunction(nlhs, plhs, nrhs, prhs)
    ! Returns code SVN version
   if(nrhs==0 .AND. nlhs==1)then
         one=1
-        REVISION =  PROG_NAME//PROG_REV
+   !     REVISION =  PROG_NAME//PROG_REV
         plhs(1) = mxCreateCharMatrixFromStrings(one,REVISION)
         return
   end if

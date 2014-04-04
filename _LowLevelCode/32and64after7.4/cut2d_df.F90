@@ -16,9 +16,10 @@ subroutine mexFunction(nlhs, plhs, nrhs, prhs)
    character*(40) :: PROG_NAME= "Fortran Cut2D    (cut2d_df.F90)        "
 !123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678
 !         1         2         3         4         5         6         7         8         9         0
-   character*(71) :: PROG_REV 
-   character*(111):: REVISION
-   DATA PROG_REV/"$Rev::      $ ($Date::                                              $)"/
+!   character*(71) :: PROG_REV 
+    character*(75):: REVISION                         
+    DATA REVISION /"$Revision::      $ ($Date::                                              $)"/
+!   DATA PROG_REV/"$Rev::      $ ($Date::                                              $)"/
    
   
   !     <temp> will be temporary mxArray in place of plhs(1),plhs(2),...
@@ -38,7 +39,7 @@ subroutine mexFunction(nlhs, plhs, nrhs, prhs)
   ! Returns code SVN version
   if(nrhs==0 .AND. nlhs==1)then
     one = 1
-  	REVISION =  PROG_NAME//PROG_REV
+!  	REVISION =  PROG_NAME//PROG_REV
 	plhs(1) = mxCreateCharMatrixFromStrings(one,REVISION)
     return
    end if

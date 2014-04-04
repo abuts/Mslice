@@ -1,18 +1,14 @@
 function ms_load_msp(file)
+% function reads mslice msp file and sets msp parameters values into GUI
 
-% function ms_load_msp(file);
 
-% ==== return if ControlWindow not openend or if MspDir and MspFile objects could not be located
+% ==== return if ControlWindow not opened or if MspDir and MspFile objects could not be located
 h_cw=findobj('Tag','ms_ControlWindow');
 if isempty(h_cw),
    disp('No MSlice Control widow opened, no parameter file loaded.');
    return;
 end
-% h_file=findobj(h_cw,'Tag','ms_MspFile');
-% if isempty(h_file),
-%   	disp('Could not associate objects to .msp filename. Parameter file not read.');
-%   	return;
-% end
+%
 % if the file is example file
 is_read_only=false;
 %=== SELECT .MSP PARAMETER FILE 
@@ -130,7 +126,7 @@ while (ischar(t))&(~isempty(t(~isspace(t))))
             set(h,'String',value);
         end
             
-       % To avoid the use of eval set the sample mode implicity everytime and execute ms_sample to
+       % To avoid the use of eval set the sample mode implicitly every time and execute ms_sample to
        % generate the correct fields in the main window.
        % The code
        %    switch field
@@ -168,14 +164,6 @@ while (ischar(t))&(~isempty(t(~isspace(t))))
             otherwise
         end
        % drawnow;
-%         lw = warning('query','last');
-%         if numel(lw)>0 && strcmpi(lw.identifier,'MATLAB:hg:uicontrol:ParameterValuesMustBeValid')
-%             menu = get(h,'String');
-%             val   = str2double(get(h,'Value'));
-%             if val> numel(menu)
-%                 set(h,'Value',1);
-%             end
-%         end
      else % it is possible that the field is defined in configuration now. This field is a path then
         if isfield(msl_conf,field) 
             % this is a path which may be specified either in the file

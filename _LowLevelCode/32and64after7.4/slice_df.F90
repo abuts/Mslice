@@ -15,9 +15,12 @@ subroutine mexFunction(nlhs, plhs, nrhs, prhs)
   character*(40) :: PROG_NAME= 'Fortran Slice (slice_df.F90)            '
 !123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678
 !         1         2         3         4         5         6         7         8         9         0
-  character*(70) :: PROG_REV
-  character*(110):: REVISION
-  DATA PROG_REV /'$Rev::      $ ($Date::                                              $)'/
+  !character*(70) :: PROG_REV
+  !character*(110):: REVISION
+  !DATA PROG_REV /'$Rev::      $ ($Date::                                              $)'/
+  character*(75):: REVISION                         
+  DATA REVISION /"$Revision::      $ ($Date::                                              $)"/
+  
   
   mwpointer :: plhs(*), prhs(*)
   integer*4 :: nrhs, nlhs
@@ -34,7 +37,7 @@ subroutine mexFunction(nlhs, plhs, nrhs, prhs)
        vy_min, vy_max, bin_vy, vz_min, vz_max
       ! Returns code SVN version
   if(nrhs==0 .AND. nlhs==1)then
-       REVISION =  PROG_NAME//PROG_REV
+       !REVISION =  PROG_NAME//PROG_REV
        plhs(1) = mxCreateCharMatrixFromStrings(1,REVISION)
        return
    end if
