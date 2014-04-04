@@ -43,10 +43,10 @@ if isempty(mexMaxVer)
     disp('! Mex code:    Disabled  or not supported on this platform         !')
 else
     if mexMinVer==mexMaxVer
-        mess=sprintf('! Mex files  : $Revision::%4d  $ (%s$)  !',mexMaxVer,date(1:28));
+        mess=sprintf('! Mex files  : $Revision::%4d  $ (%s $)  !',mexMaxVer,date(1:end-7));
     else
         mess=sprintf(...
-            '! Mex files  : $Revisions::%4d-%3d(%s$) !',mexMinVer,mexMaxVer,date(1:28));
+            '! Mex files  : $Revisions::%4d-%3d(%s $)   !',mexMinVer,mexMaxVer,date(1:end-7));
         
     end
     disp(mess)

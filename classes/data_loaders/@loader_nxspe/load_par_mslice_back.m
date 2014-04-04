@@ -33,7 +33,7 @@ function [det,this]=load_par(this,varargin)
 %                     this file name refers to ascii par file
 %
 %
-% $Revision: 348 $ ($Date: 2014-03-05 20:30:22 +0000 (Wed, 05 Mar 2014) $)
+% $Revision: 285 $ ($Date: 2014-04-04 15:57:36 +0100 (Fri, 04 Apr 2014) $)
 %
 
 options = {'-nohorace','-array','-horace'}; % if options changes, parse_par_file_arg should also change
