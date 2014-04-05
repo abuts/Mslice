@@ -42,8 +42,8 @@ if ~win_fs
     spe_ext1 = strcat({'*'},upper(ext0));
     spe_ext = [spe_ext0;spe_ext1]';
 else
-    spe_ext = strcat({'*'},lower(ext0));
-    spe_ext0=spe_ext';
+    spe_ext = strcat({'*'},lower(ext0))';
+    spe_ext0=spe_ext;
 end
 if full_form
     ext_base = strcat(spe_ext0,{';'});

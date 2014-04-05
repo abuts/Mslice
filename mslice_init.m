@@ -28,7 +28,7 @@ addpath_message (rootpath,'applications');
 % compatibility and interpackage dependencies directory
 % temporary option used during debugging and transition to herbert io
 
-herbert_io('-off');
+herbert_io('-on');
 [application,Matlab_code,mexMinVer,mexMaxVer,date] = mslice_version();
 
 mc = [Matlab_code(1:48),'$)'];

@@ -1,7 +1,10 @@
-function rez=check_file_existence(file_name,ext,dir_field,file_field,set_non_existent)
+function file=check_file_existence(file_name,ext,dir_field,file_field,set_non_existent)
 % function verifies if the file exists and pops the gui requesting to provide 
 % a file if the file has not been found
-% if the set_non_existent field is set to true
+%
+% if the set_non_existent field is set to true, and file not-found,
+% function not pops up gui but sets up resulting file name eqial
+% non-existent file
 %
 %
 if ~exist(file_name,'file')
@@ -29,17 +32,14 @@ if ~exist(file_name,'file')
 
         full_msp=fullfile(msp_dir,msp_file);
 
-        set_key_value(full_msp,file_field(4:end),file_name)
-   %     perl('set_key_value.pl',full_msp,file_field(4:end),file_name);
+        set_key_value(full_msp,file_field(4:end),file_name)        
         
-        
-        %h_file
-        rez = fullfile(path_name,file_name);                
+        file = fullfile(path_name,file_name);                
     else        
-        rez = '';        
+        file = '';        
     end
 else    
-    rez = file_name;                
+    file = file_name;                
 end
 
 
