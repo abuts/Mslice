@@ -37,6 +37,7 @@ use_mex = get(mslice_config,'use_mex');
 if use_mex
     try     %using C routine
         phx=get_ascii_file(filename,'phx');
+        phx=[phx(1,:);phx(3:7,:)];
     catch   %using matlab routine
         force_mex = get(mslice_config,'force_mex_if_use_mex');
         if ~force_mex

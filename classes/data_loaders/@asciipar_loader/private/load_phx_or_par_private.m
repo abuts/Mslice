@@ -28,7 +28,7 @@ if ~isempty(loader.det_par_stor) &&(~force_reload)
     end
     if strcmp(fullfile(loader.det_par_stor.filepath,loader.det_par_stor.filename),sample)
         if return_array
-            det=get_hor_format(load.det_par);
+            det=get_hor_format(loader.det_par);
         else
             det = loader.det_par;
         end
@@ -49,7 +49,7 @@ end
 %
 size_par = size(par);
 ndet=size_par(2);
-if get(herbert_config,'log_level')>0
+if get(mslice_config,'log_level')>0
     disp(['ASCIIPAR_LOADER:load_ascii_par::loaded ' num2str(ndet) ' detector(s)']);
 end
 %

@@ -57,7 +57,7 @@ spe_filename=check_file_existence(spe_filename,'spe','DataDir','ms_DataFile');
 % get data processing mode (crystal or powder)
 h_mode=findobj(h_cw,'Tag','ms_sample');
 data_mode =get(h_mode,'Value');
-data=buildspe(spe_filename,phx_filename,data_mode);
+data=buildspe(spe_filename,phx_filename,'',data_mode);
 if ~isempty(data),
    set(h_cw,'UserData',data);
 end
