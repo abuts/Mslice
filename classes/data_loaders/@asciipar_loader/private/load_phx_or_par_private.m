@@ -49,7 +49,7 @@ end
 %
 size_par = size(par);
 ndet=size_par(2);
-if get(mslice_config,'log_level')>0
+if get(herbert_config,'log_level')>0
     disp(['ASCIIPAR_LOADER:load_ascii_par::loaded ' num2str(ndet) ' detector(s)']);
 end
 %

@@ -86,7 +86,7 @@ classdef funcCopier
             fgetl(fh);
             line = fgetl(fh);
             while ischar(line)
-                rez = strsplit(line,';');
+                rez = regexp(line,';','split');
                 rez{3} = str2double(rez{3});
                 descriptor = struct('fname',rez{2},'checksum',rez{3},...
                     'source',rez{4},'dest',rez{5},'copy',false);
@@ -102,6 +102,10 @@ classdef funcCopier
                 line=fgetl(fh);
             end
             fclose(fh);
+            nDependencies = numel(fieldnames(this.files_2copy_list));
+            fprintf('****** loaded  %d Herbert dependencies\n',nDependencies);
+            
+            
         end
         %------------------------------------------------------------------
         function this=add_dependency(this,function_name,target_folder,source_subpath)
@@ -163,7 +167,10 @@ classdef funcCopier
             % method copies source functions into target functions if
             % such functions are marked as need copying by another methods
             names = fieldnames(this.files_2copy_list);
-            for i=1:numel(names)
+            nCopied =0;
+            nCopiedAndModified=0;
+            nDependencies = numel(names);
+            for i=1:nDependencies
                 descriptor = this.files_2copy_list.(names{i});
                 if ~descriptor.copy
                     continue;
@@ -173,10 +180,14 @@ classdef funcCopier
                 funcCopier.check_or_make_target_folder(fdest);
                 if descriptor.modified
                     funcCopier.copyAndModify(fsource,fdest);
+                    nCopiedAndModified=nCopiedAndModified+1;
                 else
                     copyfile(fsource,fdest)
+                    nCopied=nCopied+1;
                 end
             end
+            fprintf('****** Copied %d Herbert files out ot %d dependencies\n',nCopied,nDependencies);
+            fprintf('****** Moidified %d files out ot %d copied\n ',nCopiedAndModified,nCopiedAndModified+nCopied);
         end
         %------------------------------------------------------------------
         function this=check_dependencies(this,varargin)
@@ -187,22 +198,23 @@ classdef funcCopier
             else
                 force_modified=false;
             end
-            
+            nBackedUp=0;
             names = fieldnames(this.files_2copy_list);
             for i=1:numel(names)
                 descriptor = this.files_2copy_list.(names{i});
-                this.files_2copy_list.(names{i}) = ...
-                    this.check_for_changes(descriptor,force_modified);
+                [this.files_2copy_list.(names{i}),nBackedUp] = ...
+                    this.check_for_changes(descriptor,nBackedUp,force_modified);
             end
+            fprintf('****** Backed up %d files changed in Mslice\n',nBackedUp);
             
         end
-        function newDescr= check_for_changes(this,descriptor,varargin)
+        function [newDescr,nBackedUp]= check_for_changes(this,descriptor,nBackedUp,varargin)
             % method check if the file defimed by the descriptor have
             % changed and needs copying.
             %
             %
             newDescr = descriptor;
-            if nargin>2
+            if nargin>3
                 force_modified=varargin{1};
             else
                 force_modified=false;
@@ -229,8 +241,8 @@ classdef funcCopier
                 target_is_modified=modified;
             else
                 target_is_modified=false;
-            end            
-            newDescr.modified = target_is_modified;            
+            end
+            newDescr.modified = target_is_modified;
             
             trg_sum = calc_checksum(fdest,target_is_modified);
             if trg_sum == checksum
@@ -246,6 +258,7 @@ classdef funcCopier
                 newDescr.checksum = checksum;
                 fbackup=this.target_path(descriptor,[descriptor.fname,'_mslice_back']);
                 movefile(fdest,fbackup,'f')
+                nBackedUp=nBackedUp+1;
             end
             
             newDescr.copy = true;
@@ -330,6 +343,9 @@ classdef funcCopier
         function fields=fieldsToModify()
             %
             fields = funcCopier.fields_to_modify_;
+        end
+        function fields=fieldsModified()
+            fields = funcCopier.modify_with_;
         end
         
         function copyAndModify(fsource,fdest)

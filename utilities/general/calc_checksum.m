@@ -7,8 +7,8 @@ function [summm,changes_present] = calc_checksum(filename,varargin)
 %>>[summ,changes_present] = calc_checksum(filename,check_changes)
 %
 % filename      -- the name of the file to process
-% check_changes -- if present, excludes number of specific rows which 
-%                  changes when copying from Herbert to Mslice (e.g. 
+% check_changes -- if present, excludes number of specific rows which
+%                  changes when copying from Herbert to Mslice (e.g.
 %                  mslice_config instead of herbert_config)
 %
 %Returns:
@@ -30,8 +30,16 @@ if nargin>1
 else
     check_changes=false;
 end
+already_modified=false;
+if nargin == 3
+    already_modified=true;
+end
 changes_present=false;
-changes_to_check = funcCopier.fieldsToModify();
+if already_modified
+    changes_to_check = funcCopier.fieldsToModify();
+else
+    changes_to_check = funcCopier.fieldsModified();
+end
 
 fileID = fopen(filename,'r');
 if fileID<0
@@ -41,7 +49,7 @@ warn = warning('off','MATLAB:strrep:InvalidInputType');
 summm = 0;
 line = 0;
 while(line>-1)
-    line = fgetl(fileID);    
+    line = fgetl(fileID);
     line = strrep(line,' ','');
     if isempty(line)
         line=0;
@@ -58,8 +66,8 @@ while(line>-1)
         for i=1:numel(changes_to_check)
             if ~isempty(strfind(line,changes_to_check{i}))
                 contin=true;
-                changes_present = true;              
-                break;                
+                changes_present = true;
+                break;
             end
         end
         if contin
