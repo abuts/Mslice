@@ -55,6 +55,7 @@ else
     [path,filename,fext] = fileparts(loader.file_name);
     data.filename=[filename,fext];
     data.filedir=path;
+    data.total_ndet = loader.n_detectors;
     
     en =loader.en;
     ne = numel(en)-1;
@@ -78,8 +79,8 @@ else
     data.S  = data.S(line_notmasked,:);
     data.ERR= data.ERR(line_notmasked,:);
     phx = phx(line_notmasked,:);
-  
-        
+    
+    
     dthet =abs(phx(end,2)-phx(1,2))/size(phx,2);
     phx(:,4)=dthet;
     

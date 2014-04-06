@@ -4,14 +4,14 @@ function data=load_spe(spe_filename)
 %
 %   >> data = load_spe(file)
 %
-%   file    Name of a single spe file to be loaded, incluiding the path, e.g. c:\temp\my_file.spe 
+%   file    Name of a single spe file to be loaded, incluiding the path, e.g. c:\temp\my_file.spe
 %         *OR*
 %           String that gives two file names, in which case load difference between two spe files
 %           The format is:
 %               <path>diff(<file1>,<file2>)
 %
 %            or <path>diff(<file1>,<file2>,ebar_opt)
-%           
+%
 %           where
 %            <path>      Optional path if both files are in the same folder (in which case do not
 %                       give the path as part of the file names <file1> and <file2>
@@ -21,23 +21,23 @@ function data=load_spe(spe_filename)
 %                        = [0,1]    error bars taken from second file only
 %                        = [1,1]    error bars added in quadrature
 %
-%           e.g. 'c:\temp\diff(hello.spe,there.spe)' => 
+%           e.g. 'c:\temp\diff(hello.spe,there.spe)' =>
 %               f1='c:\temp\hello.spe', f2='c:\temp\there.spe', ebar_opt=[]
 %
-%           e.g. '\diff('c:\temp\hello.spe,'d:\blobby\there.spe,[1,0])' => 
-%               f1='c:\temp\hello.spe', f2='d:\blobby\there.spe', ebar_opt=[1,0]         
+%           e.g. '\diff('c:\temp\hello.spe,'d:\blobby\there.spe,[1,0])' =>
+%               f1='c:\temp\hello.spe', f2='d:\blobby\there.spe', ebar_opt=[1,0]
 %
 %   >> data = load_spe
-%   
 %
-% returns data.en (1,ne)[meV]    
-%             .det_group (ndet,1) 
-%             .det_theta (ndet,1)[radians] total scattering angle of each detector 
+%
+% returns data.en (1,ne)[meV]
+%             .det_group (ndet,1)
+%             .det_theta (ndet,1)[radians] total scattering angle of each detector
 %             (to be superseded by angles from the .phx file if using function builspe(spe_filename,phx_filename,...))
-%             .S (ndet,ne)[intensity in units as given by data.axislabel(4,:)] 
+%             .S (ndet,ne)[intensity in units as given by data.axislabel(4,:)]
 %             .ERR (ndet,ne) [errors of .S, same units]
 %             .filename [string] = spe_filename
-%             where ne = number of points along the energy axis, 
+%             where ne = number of points along the energy axis,
 %                   ndet = number of detector groups
 
 % R.C. 24-July-1998
@@ -47,9 +47,9 @@ function data=load_spe(spe_filename)
 % TGP April 2008
 %    Allow file input of form <path>diff(<file1>,<file2>) or <path>diff(<file1>,<file2>,ebar_opt)
 %    to be interpreted as difference between two spe files
-% 
+%
 % MODIFIED TO WORK WITH HERBERT:
-%  
+%
 % $Revision: 225 $ ($Date: 2012-03-09 19:35:46 +0000 (Fri, 09 Mar 2012) $)
 %
 %
@@ -57,8 +57,8 @@ function data=load_spe(spe_filename)
 
 % === if no input parameter given, return
 if ~exist('spe_filename','var'),
-   help load_spe;
-   return
+    help load_spe;
+    return
 end
 
 % Determine if a single file or file difference to be read
@@ -95,21 +95,30 @@ if ~isempty(spe_filename2)   % must be a difference that is required
     end
 end
 %
-%% Load single SPE file in any format supported
-% 
+% Load single SPE file in any format supported
+%
 filename=strtrim(spe_filename);
+
 loader   = loaders_factory.instance().get_loader(filename);
+defines = loader.defined_fields();
+
 ndet     = loader.n_detectors;
 [data.S,data.ERR,data.en]=loader.load_data();
-% this may be necessary?
-%     ind = isinf(data.S);
-%     data.S(ind)  =NaN;
-%     data.ERR(ind)=0;
+
+
+[path,filename,fext] = fileparts(loader.file_name);
+data.filename=[filename,fext];
+data.filedir=path;
+
 data.det_group=(1:ndet)';
 data.det_theta=ones(ndet,1);
 
-[fdir,fname,fext]=fileparts(spe_filename);
-data.filedir=fdir;
-data.filename=[fname,fext];
+if ismember('psi',defines)
+    data.psi = loader.psi;
+end
+if ismember('Ei',defines)
+    data.Ei = loader.Ei;
+end
+
 data.total_ndet=ndet;
 %
