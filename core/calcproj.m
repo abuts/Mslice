@@ -61,7 +61,7 @@ if use_mex
         if force_mex 
             error('MSLICE:calcproj',' can not use mex when forced to do it');
         end
-        use_mex = false
+        use_mex = false;
         warning('mslice:calcproj',['Fortran optimised routine failed with error: ',lasterr()]);
     end
 end    

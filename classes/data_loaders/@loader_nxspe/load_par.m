@@ -70,7 +70,7 @@ lext = this.get_file_extension();
 return_array=false;
 
 if numel(varargin)>0
-    log_level = get(herbert_config,'log_level');
+    log_level = get(mslice_config,'log_level');
     [ok,mess,return_array1,return_array2,hor_format_deprecated,file_name]=parse_char_options(varargin,options);
     if ~ok
         if log_level >0

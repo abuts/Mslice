@@ -30,7 +30,7 @@ if ~exist('phx_filename','var')
 end
 
 
-if strncmpi('obtainedfromnxspefile',phx_filename,21) ||strncmpi(' obtained from nxspe file',phx_filename,25)
+if isempty(phx_filename) || strncmpi('obtainedfromnxspefile',phx_filename,21) ||strncmpi(' obtained from nxspe file',phx_filename,25)
     phx_filename='';
 else
     phx_filename=check_file_existence(phx_filename,'.phx','PhxDir','ms_PhxFile',true);
@@ -87,8 +87,8 @@ else
     if ismember('psi',defines)
         data.psi = loader.psi;
     end
-    if ismember('Ei',defines)
-        data.Ei = loader.Ei;
+    if ismember('efix',defines)
+        data.Ei = loader.efix;
     end
 end
 %---------------------------------------------------------------------------------
