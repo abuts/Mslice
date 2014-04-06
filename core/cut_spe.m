@@ -303,7 +303,7 @@ if to_cut_file
     if isfield(data,'altx'),
         v=data.altx(cut.perm);
     else
-        v=data.v(:,:,x); % x-xalues to be binned
+        v=data.v(:,:,ix); % x-xalues to be binned
         v=v(cut.perm);
     end
     % === if plotting other property than intensity individual pixels have zero error bar

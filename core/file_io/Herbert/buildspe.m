@@ -33,7 +33,7 @@ end
 if strncmpi('obtainedfromnxspefile',phx_filename,21) ||strncmpi(' obtained from nxspe file',phx_filename,25)
     phx_filename='';
 else
-    phx_filename=check_file_existence(phx_filename,'phx','PhxDir','ms_PhxFile',true);
+    phx_filename=check_file_existence(phx_filename,'.phx','PhxDir','ms_PhxFile',true);
 end
 
 loader = loaders_factory.instance().get_loader(spe_filename,phx_filename);
@@ -50,9 +50,16 @@ else
     end
     loader = loader.load();
     
-    data.S = loader.S;
-    data.ERR=loader.ERR;
-    data.en =loader.en;
+    data.S = loader.S';
+    data.ERR=loader.ERR';
+    [path,filename,fext] = fileparts(loader.file_name);
+    data.filename=[filename,fext];
+    data.filedir=path;
+    
+    en =loader.en;
+    ne = numel(en)-1;
+    data.en=((en(2:ne+1)+en(1:ne))/2)'; % take median values, centres of bins
+    
     
     %  par(1,:)   -- sample-to-detector distance
     %  par(2,:)   -- 2-theta (polar angle)
@@ -63,11 +70,17 @@ else
     %                so it is angular width
     %  par(6,:)   -- detector ID (number)
     phx=loader.load_par('-nohor'); % is not doung actual loading.
-    
+    phx=phx';
     % remove masks!
     %
-    
-    dthet =abs(phx(end,2)-phx(1,2))/loader.n_detectors;
+    index_masked = (isnan(data.S)|(isinf(data.S))); % masked pixels
+    line_notmasked= ~any(index_masked,2);           % masked detectors (for any energy)
+    data.S  = data.S(line_notmasked,:);
+    data.ERR= data.ERR(line_notmasked,:);
+    phx = phx(line_notmasked,:);
+  
+        
+    dthet =abs(phx(end,2)-phx(1,2))/size(phx,2);
     phx(:,4)=dthet;
     
     if ismember('psi',defines)
@@ -80,7 +93,7 @@ end
 %---------------------------------------------------------------------------------
 
 %=== load sum file with white vanadium integrals, if sum_filename given
-if exist('sum_filename','var'),
+if exist('sum_filename','var') && ~isempty(sum_filename)
     sum_spec=load_sum(sum_filename);	% [spec_num,int,err] (ndet,3)
 else
     sum_spec=[];
@@ -111,9 +124,11 @@ data.det_theta=phx(:,2)*pi/180;
 data.det_psi=phx(:,3)*pi/180;
 data.det_dtheta=phx(:,4)*pi/180;
 data.det_dpsi=phx(:,5)*pi/180;
+data.det_group=phx(:,6);
 [name,pathname]=stripath(phx_filename);
 data.detfilename=name;
 data.detfiledir=pathname;
+
 if ~isempty(sum_spec),
     sum_det=sum2det(phx(:,1),sum_spec);	% extract white vanadium integrals for the unmasked detectors
     data.det_whitevan_int=sum_det(:,2);

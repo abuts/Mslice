@@ -5,13 +5,16 @@ function rez=check_file_existence(file_name,ext,dir_field,file_field,set_non_exi
 %
 %
 
-try
-    file_name = check_file_exist(file_name,ext);
-    rez = file_name;
+
+[ok,mess,file_name,fext] = check_file_exist(file_name,ext);
+rez = file_name;
+if ok
     return;
-catch exception;
-    if ~strcmp(exception.identifier,'CHECK_FILE_EXIST:wrong_argument') % file not found       
-        rethrow(exception);
+else
+    if strncmp(' can not find file:',mess,19)
+        file_name='';
+    else
+        error('MSLICE:check_file_existence',mess);
     end
 end
 

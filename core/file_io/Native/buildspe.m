@@ -1,4 +1,4 @@
-function data=buildspe(spe_filename,phx_filename,sum_filename)
+function data=buildspe(spe_filename,phx_filename,sum_filename,varargin)
 
 % function data=buildspe(spe_filename,phx_filename,sum_filename)
 % constructs data structure 	.en  (1,ne)[meV]	energy grid
