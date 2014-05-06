@@ -40,6 +40,7 @@ if Value
         if ~strcmpi(fext,'.nxspe')
             warning('ms_select_from_nxspe:not_nxspe',' the file %s does not have nxspe extension, so probably is not nxspe file; can not load par data from it',data_file);
             set(h_checkbox,'Value',0);
+            return;
         end
       
     end
