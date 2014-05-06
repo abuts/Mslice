@@ -99,8 +99,9 @@ shading(shad);
 figure(fig);
 font_size=get(mslice_config,'slice_font_size');
 set(gca,'FontSize',font_size);
-if (~isempty(findstr(slice_data.axis_label(1,:),'Å^{-1}')))&...
-      (~isempty(findstr(slice_data.axis_label(2,:),'Å^{-1}'))),
+A= char(197);
+if (~isempty(strfind(slice_data.axis_label(1,:),[A,'^{-1}'])))&&...
+      (~isempty(strfind(slice_data.axis_label(2,:),[A,'^{-1}']))),
    set(gca,'DataAspectRatioMode','manual');
    a=get(gca,'DataAspectRatio');
    l1=slice_data.axis_unitlength(1);
@@ -120,8 +121,11 @@ YLim=get(gca,'YLim');
 pos=get(h,'Position');
 set(h,'Position',[pos(1) YLim(2)+0*pos(3) pos(3)]);
 
+%xlabel(deblank(slice_data.axis_label(1,:)),'FontName','Courier New');
+%ylabel(deblank(slice_data.axis_label(2,:)),'FontName','Courier New');
 xlabel(deblank(slice_data.axis_label(1,:)));
 ylabel(deblank(slice_data.axis_label(2,:)));
+
 
 % === adjust colorbar height, determine real height of graph, after adjustment of units  
 h=colorbar;

@@ -30,7 +30,7 @@ if ischar(filename),
    set(mslice_config,hdir,pathname);
    
    if ishandle(hfile)
-        set(hfile,'String',filename);
+        set(hfile,'String',filename,'ForegroundColor','k');
    elseif ischar(hfile)
         set(mslice_config,hfile,filename);       
    else
@@ -44,6 +44,9 @@ if ischar(filename),
     h_checkbox=findobj(h_cw,'Tag','ms_usePhxFromNXSPE'); 
    if strcmpi(fext,'.nxspe')
        set(h_checkbox,'Value',true);
+       h_phxfile=findobj(h_cw,'Tag','ms_PhxFile');
+       set(h_phxfile,'ForegroundColor','w');        
+       
    else
        set(h_checkbox,'Value',false);
    end

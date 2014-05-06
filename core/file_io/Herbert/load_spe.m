@@ -1,12 +1,14 @@
 function data=load_spe(spe_filename)
 % function data=load_spe(spe_filename)
-% Load data from any supported data file
+% Load data from any supported data file, or difference of two data files ,
+% if diff is the first part of the input file name
 %
-%   >> data = load_spe(file)
+%Usage:
+%>> data = load_spe(spe_filename)
 %
-%   file    Name of a single spe file to be loaded, incluiding the path, e.g. c:\temp\my_file.spe
-%         *OR*
-%           String that gives two file names, in which case load difference between two spe files
+% spe_filename    Name of a single spe file to be loaded, incluiding the path, e.g. c:\temp\spe_filename.spe
+%   *OR*
+%                 String that gives two file names, in which case load difference between two spe files
 %           The format is:
 %               <path>diff(<file1>,<file2>)
 %

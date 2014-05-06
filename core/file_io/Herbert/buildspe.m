@@ -1,23 +1,36 @@
 function data=buildspe(spe_filename,phx_filename,sum_filename,data_mode)
-% function data=buildspe(spe_filename,phx_filename,sum_filename)
-% constructs data structure 	.en  (1,ne)[meV]	energy grid
-%										.S   (ndet,ne)		S(unmasked detector group,energy_index)
-%										.ERR (ndet,ne)		ERR
-%                         (if phx_filename exists then add fields)
-%										.det_num 			number associated with each detector group
-%										.spec_num			spectrum number - || -
-% 										.det_theta(ndet,1)[rad]	theta(deg)=average scattering angle of each detector group
-% 										.det_psi(ndet,1)[rad] average azimuthal (psi(deg)) angle - || -
-%								  (if sum_fileneme exists then add fields)
-% 										.det_whitevan_int	= white vanadium integral of each detector group
-% 										.det_whitevan_err
-% R.C. 24-July-1998, 25-Oct-2000
+% Function reads spe data from any supported file format and returns spe
+% data structure in the form:
+% 
+%  data.en  (1,ne)          -- [meV] energy grid
+%  data.S   (ndet,ne)       --  S(unmasked detector group,energy_index)
+%  data.ERR (ndet,ne)		--  ERR
+% 
+%  If the data file has psi or Ei valies, the following fields are returned
+%  data.psi                 -- crystall rotation angle 
+%  data.Ei                  -- incident energy for direct instrument or
+%                              analyzer energy for indirect.
+%
+% If phx_filename exists, or file contains the detectors data, the
+% following fields are also defined:
+%	data.det_num 			-- number associated with each detector group
+%	data.spec_num			-- spectrum number - || -
+%	data.det_theta(ndet,1)[rad]	theta(deg)=average scattering angle of each detector group
+%	data.det_psi(ndet,1)[rad] average azimuthal (psi(deg)) angle - || -
+%
+% If sum_fileneme exists the following fields are also returned:
+%  data.det_whitevan_int	= white vanadium integral of each detector group
+%  data.det_whitevan_err
+%
+% $Revision: 376 $ ($Date: 2014-04-06 20:22:55 +0100 (Sun, 06 Apr 2014) $)
+
 
 % === return if no parameters passed
 if ~exist('spe_filename','var'),
     help buildspe;
     return
 end
+
 % by default
 if ~exist('data_mode','var')
     h_cw     =findobj('Tag','ms_ControlWindow');
@@ -70,7 +83,7 @@ else
     %  par(5,:)   -- detector height -- NO transformation currently occurs
     %                so it is angular width
     %  par(6,:)   -- detector ID (number)
-    phx=loader.load_par('-nohor'); % is not doung actual loading.
+    phx=loader.load_par('-nohor'); % is not doung actual loading, the loading has been done earlier
     phx=phx';
     % remove masks!
     %

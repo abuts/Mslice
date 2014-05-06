@@ -41,7 +41,10 @@ if Value
             warning('ms_select_from_nxspe:not_nxspe',' the file %s does not have nxspe extension, so probably is not nxspe file; can not load par data from it',data_file);
             set(h_checkbox,'Value',0);
         end
+      
     end
+    set(h_file,'String',phx_file,'ForegroundColor','w');        
+    
 else
     
     if phx_nxspe_tag  % not a file, but nxspe identifier;
@@ -71,8 +74,7 @@ else
         set_key_value(full_msp,'PhxDir',path_name)
         %perl('set_key_value.pl',full_msp,'PhxDir', path_name)
     end
-    
-    
+    set(h_file,'String',phx_file,'ForegroundColor','k');           
     
 end
 

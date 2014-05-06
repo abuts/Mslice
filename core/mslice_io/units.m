@@ -10,7 +10,8 @@ if all(U(1:3)==0)&(U(4)~=0),% Energy axis
    unitlabel=['(meV)'];   
 elseif any(U(1:3)~=0)&(U(4)==0),	% Wavevector direction
    unitlength=norm(U);
-   unitlabel=[' in ' num2str(unitlength,'%5.3f') ' Å^{-1}' ];   
+   A= char(197);
+   unitlabel=[' in ',num2str(unitlength,'%5.3f'),A,'^{-1}' ];   
 else
    unitlength=NaN;
    unitlabel='mixed units';

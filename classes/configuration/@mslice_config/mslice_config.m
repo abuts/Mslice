@@ -57,6 +57,8 @@ classdef mslice_config<config_base
         function obj=mslice_config()
             % constructor
             obj=obj@config_base(mfilename('class'));
+            % set default values for internal properties which depend on
+            % Mslice&Mslice data location
             if isdeployed
                 obj.MSliceDir_=pwd;
                 obj.SampleDir=fullfile(obj.MSliceDir_,'Data');
