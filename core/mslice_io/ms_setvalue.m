@@ -1,8 +1,14 @@
 function ms_setvalue(field_name,value,highlight,h_cw,colour)
 % Set values in the Mslice ControlWindow from the command line
 %
-%   >> ms_setvalue(field_name,value)
+%   >> ms_setvalue(field_name,value,[highlight,[h_cw,[colour]]])
 %
+% highlight  -- if present, mark set values with color, different from the
+%               default one
+% h_cw        -- if present, use this handle instead of default handle to
+%                ms_ControlWindow
+% colour     -- if present, highlight with colour provided instead of
+%               default highight code (currently 'b');
 % Field_name is the same name as in an msp parameter file
 % For a list of field names, type >> ms_getfields
 %

@@ -1,4 +1,4 @@
-function slice_d=slice_spe(data,z,vz_min,vz_max,vx_min,vx_max,bin_vx,vy_min,vy_max,bin_vy,i_min,i_max,shad,noplot,varargin)
+function [slice_d,autointensity,i_min,i_max]=slice_spe(data,z,vz_min,vz_max,vx_min,vx_max,bin_vx,vy_min,vy_max,bin_vy,i_min,i_max,shad,noplot,varargin)
 % function slice_d=slice_spe(data,z,vz_min,vz_max,vx_min,vx_max,bin_vx,vy_min,vy_max,bin_vy,i_min,i_max,shad,noplot)
 % required inputs:
 % data structure
@@ -13,9 +13,16 @@ function slice_d=slice_spe(data,z,vz_min,vz_max,vx_min,vx_max,bin_vx,vy_min,vy_m
 %     shad= shading option 'flat'(default), 'faceted' or 'interp'
 %     uses binning routine in Digital FORTRAN 5.0B
 %     compile on local hard disk (not remote diks) with >> mex c:\matlab5\extern\examples\refbook\bin2d_df.for
-
+%
+%Returns:
+% slice_d       -- slice with data
+% autointensity -- true if automatic limits for intensity were used
+% i_min         -- min intensity of the slice
+% i_max         -- max intensity of the slice
+%
+%
 % === check presence of required input parameters
-if ~exist('z','var')|isempty(z)|~isnumeric(z)|(length(z)~=1)
+if ~exist('z','var')||isempty(z)||~isnumeric(z)||(length(z)~=1)
     disp('Slice cannot be performed if plane is not specified.');
     slice_d=[];
     return;
@@ -31,35 +38,23 @@ if flag,
     slice_d=[];
     return;
 end
-
+autointensity = false;
 % ==============================================================================
 % Establish orientation of cutting plane with respect to the viewing axes u1,u2,u3
 % ==============================================================================
-if (vx_min>vx_max)|(vy_min>vy_max)|(vz_min>vz_max),
+if (vx_min>vx_max)||(vy_min>vy_max)||(vz_min>vz_max),
     disp('Warning: Range x, y or z with lower_limit > upper_limit. Slice not performed.');
     slice_d=[];
     return
 end
-if z==1,
-    x=2;
-    y=3;
-elseif z==2,
-    x=3;
-    y=1;
-elseif z==3,
-    x=1;
-    y=2;
-else
-    disp(['Warning: Cannot perform slice perpendicular to axis number ' num2str(z)]);
-    slice_d=[];
-    return
-end
+%
+[x,y,z]=get3DDirection(z);
 
 disp_names=(1<0);	% TRUE if name of cut algorithm is to be displayed in the command line
 
 use_mex = get(mslice_config,'use_mex');
 %TESTING AND DEBUGGING: algorithm can be set to 3 to use slow but very
-%simple version. 
+%simple version.
 algorithm=2;
 if nargin>14
     algorithm=varargin{1};
@@ -69,28 +64,29 @@ if nargin>14
 end
 if use_mex
     try
-    % ==============================================================================================
-    % call slice_df.dll, a mex FORTRAN slicing/binning routine
-    % input: pixel coordinates, intensity error and 2d grid information
-    % output: matrices with intensity and error on the 2d grid (error subsequently not used)
-    % compile with >> mex slice_df.f
-    % ==============================================================================================
-    if disp_names,
-        disp(sprintf('fortran binning routine slice_df.f'));
-    end
-    
-    grid=[vx_min vx_max bin_vx vy_min vy_max bin_vy vz_min vz_max];	% 2d grid information (1,8)
-    [intensity,error_int]=slice_df(data.v(:,:,x),data.v(:,:,y),data.v(:,:,z),data.S,data.ERR,grid);
-    clear mex slice_df ; 	% ensures clearing up of memory after binning
-    if isempty(intensity),
-        slice_d=[];
-        return;
-    end
-    [m,n]=size(intensity);
-    index=(intensity<=-1e+30);	% in bins with nulldata put NaN
-    intensity(index)=NaN;
-    error_int(index)=NaN;
+        % ==============================================================================================
+        % call slice_df.dll, a mex FORTRAN slicing/binning routine
+        % input: pixel coordinates, intensity error and 2d grid information
+        % output: matrices with intensity and error on the 2d grid (error subsequently not used)
+        % compile with >> mex slice_df.f
+        % ==============================================================================================
+        if disp_names,
+            disp(sprintf('fortran binning routine slice_df.f'));
+        end
+        
+        grid=[vx_min vx_max bin_vx vy_min vy_max bin_vy vz_min vz_max];	% 2d grid information (1,8)
+        [intensity,error_int]=slice_df(data.v(:,:,x),data.v(:,:,y),data.v(:,:,z),data.S,data.ERR,grid);
+        clear mex slice_df ; 	% ensures clearing up of memory after binning
+        if isempty(intensity),
+            slice_d=[];
+            return;
+        end
+        [m,n]=size(intensity);
+        index=(intensity<=-1e+30);	% in bins with nulldata put NaN
+        intensity(index)=NaN;
+        error_int(index)=NaN;
     catch
+        warning('MSLICE:slice_spe',' Error invoking Fortran slice_df routine. Mex files disabled');
         set('use_mex',0);
         use_mex = false;
     end
@@ -130,7 +126,7 @@ if ~use_mex
         % distribute all points in bins, cummulate intensities and errors^2, then do the averaging
         % ===============================================================================================
         if disp_names,
-            disp(sprintf('matlab 2D binning routine'));
+            disp('using Matlab 2D binning routine');
         end
         
         intensity=zeros(m,n);
@@ -156,7 +152,7 @@ if ~use_mex
         % typical execution time for the test slice (phoenix) 1 min
         % =======================================================================================================
         if disp_names,
-            disp(sprintf('very slow matlab 2D binning routine'));
+            disp('using very slow Matlab 2D binning routine');
         end
         
         intensity=zeros(m,n);
@@ -214,11 +210,13 @@ else
 end
 
 % ==== establish limits for plot along intensity axis
-if ~exist('i_min','var')|isempty(i_min)|~isnumeric(i_min)|(length(i_min)~=1),
+if ~exist('i_min','var')||isempty(i_min)||~isnumeric(i_min)||(length(i_min)~=1),
     i_min=min(intensity(:));
+    autointensity = true;
 end
-if ~exist('i_max','var')|isempty(i_max)|~isnumeric(i_max)|(length(i_max)~=1),
+if ~exist('i_max','var')||isempty(i_max)||~isnumeric(i_max)||(length(i_max)~=1),
     i_max=max(intensity(:));
+    autointensity = true;    
 end
 
 % ==== establish shading option for the colour plot
