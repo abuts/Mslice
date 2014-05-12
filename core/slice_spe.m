@@ -1,5 +1,4 @@
-function slice_d=slice_spe(data,z,vz_min,vz_max,vx_min,vx_max,bin_vx,vy_min,vy_max,bin_vy,i_min,i_max,shad,noplot)
-
+function slice_d=slice_spe(data,z,vz_min,vz_max,vx_min,vx_max,bin_vx,vy_min,vy_max,bin_vy,i_min,i_max,shad,noplot,varargin)
 % function slice_d=slice_spe(data,z,vz_min,vz_max,vx_min,vx_max,bin_vx,vy_min,vy_max,bin_vy,i_min,i_max,shad,noplot)
 % required inputs:
 % data structure
@@ -56,17 +55,20 @@ else
     return
 end
 
-a=version;
-if (a(1)<=5)&isvms,
-    algorithm=2; 	% use the matlab binning routine for a fast DEc alpha (vms)
-    % or if problems with array size too big for the fortran code
-else
-    algorithm=1;	% by default (on PC/unix/linux) use the faster fortran slicing/binning routine,
-end
-
 disp_names=(1<0);	% TRUE if name of cut algorithm is to be displayed in the command line
-%algorithm=2;
-if algorithm==1,
+
+use_mex = get(mslice_config,'use_mex');
+%TESTING AND DEBUGGING: algorithm can be set to 3 to use slow but very
+%simple version. 
+algorithm=2;
+if nargin>14
+    algorithm=varargin{1};
+    if algorithm <2 || algorithm >3
+        error('MSLICE:slice_spe',' cut sqw currently supports only version 2 or 3, got %d',algorithm);
+    end
+end
+if use_mex
+    try
     % ==============================================================================================
     % call slice_df.dll, a mex FORTRAN slicing/binning routine
     % input: pixel coordinates, intensity error and 2d grid information
@@ -88,12 +90,16 @@ if algorithm==1,
     index=(intensity<=-1e+30);	% in bins with nulldata put NaN
     intensity(index)=NaN;
     error_int(index)=NaN;
-    
-elseif algorithm>=2,
+    catch
+        set('use_mex',0);
+        use_mex = false;
+    end
+end
+if ~use_mex
     % ==================================================================================================
     % Extract data contained within the boundaries of the thick cut plane, to be binned onto the 2d grid
     % ==================================================================================================
-    v=reshape(data.v,prod(size(data.v(:,:,1))),3);   % matrix (ndet*ne,3) with projections
+    v=reshape(data.v,numel(data.v(:,:,1)),3);   % matrix (ndet*ne,3) with projections
     int=data.S(:);
     err=data.ERR(:);
     index=((v(:,z)>=vz_min)&(v(:,z)<=vz_max));	% include [] on the boundaries to agree with Phoenix 4.1
