@@ -93,9 +93,11 @@ else
     data.ERR= data.ERR(line_notmasked,:);
     phx = phx(line_notmasked,:);
     
-    %TODO: Why it is done that way?
-    dthet =abs(max(phx(:,2))-min(phx(:,2)))/size(phx,1);
-    phx(:,4)=dthet;
+    % redefine 
+    if any(phx(:,4)==0)
+        dthet =abs(max(phx(:,2))-min(phx(:,2)))/size(phx,1);
+        phx(:,4)=dthet;
+    end
     
     if ismember('psi',defines)
         data.psi = loader.psi;
