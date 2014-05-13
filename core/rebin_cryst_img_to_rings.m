@@ -88,7 +88,7 @@ S        = reshape(S,mm,1);
 ERR      = reshape(ERR,mm,1);
 
 % extend indexes to all energies, as every detector contributes in number
-% of energies;
+% of energies (e.g. make linear 2D index, (n_psi_bin,n_energy_bin)
 psi_ext  = repmat(psi_ind,1,rez_size(2));
 for i=1:rez_size(2)
     psi_ext(:,i)  = psi_ext(:,i)+(i-1)*ind_max;
@@ -99,10 +99,13 @@ n_hits    =   ones(numel(psi_ind),1);
 n_det     =   accumarray(psi_ind,n_hits);
 n_det_ex  =   reshape(repmat(n_det,1,rez_size(2)),ind_max*rez_size(2),1);
 
-%
+% signal over bins
 SS         = (accumarray(psi_ext,S)./n_det_ex);
-SE         = sqrt(accumarray(psi_ext,ERR.*ERR)./n_det_ex);
-nans       = isnan(SS); % make NaN sticky i.e any nan contributing to a cell invalidates cell.
+% error over bins
+SE         = sqrt(accumarray(psi_ext,ERR.*ERR)./(n_det_ex.^2));
+
+% make NaN sticky i.e any nan contributing to a cell invalidates cell.
+nans       = isnan(SS);
 SS(nans)=NaN;
 SE(nans)=0;
 
