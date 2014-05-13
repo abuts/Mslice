@@ -93,8 +93,8 @@ else
     data.ERR= data.ERR(line_notmasked,:);
     phx = phx(line_notmasked,:);
     
-    
-    dthet =abs(phx(end,2)-phx(1,2))/size(phx,2);
+    %TODO: Why it is done that way?
+    dthet =abs(max(phx(:,2))-min(phx(:,2)))/size(phx,1);
     phx(:,4)=dthet;
     
     if ismember('psi',defines)

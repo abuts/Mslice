@@ -1,12 +1,12 @@
-function data=rebin_cryst_img_to_rings(data)
-% function rebins spe data (signals and errors), obtained as function theta&phi of detectors into 
+function [data,range,has_changes]=rebin_cryst_img_to_rings(data)
+% function rebins spe data (signals and errors), obtained as function theta&phi of detectors into
 % rings of equal phi+dPhi values;
 %
 %>> data=rebin_cryst_img_to_rings(data);
 %  where data mast have fields:
 %  S, Err, (as in spe) and
 %  det_theta,det_psi,det_group,det_dtheta,det_dpsi as in phx file
-%  
+%
 
 fields_requested={'S','ERR','det_theta','det_psi','det_dtheta','det_dpsi','det_group'};
 % fields existing:
@@ -18,13 +18,13 @@ end
 if numel(data.det_theta) ~= size(data.S,1)
     error('MSLICE:rebin_cryst_img_to_rings','Signal dimension does not coincide with number of detectors');
 end
-
+has_changes = false;
 if ~isfield(data,'range')
     range.polar_min=[];
-    range.polar_max=[];    
+    range.polar_max=[];
     range.polar_delta=[];
 else
-   range = data.range;
+    range = data.range;
 end
 % verify rebininning ranges
 min_pol  = min(data.det_theta);
@@ -32,21 +32,24 @@ max_pol  = max(data.det_theta);
 pol_step = min(data.det_dtheta);
 if isempty(range.polar_min)||range.polar_min<min_pol   % if limits changed, the GUI values have to change too.
     range.polar_min = min_pol;
-    ms_setvalue('polar_min',min_pol*180/pi,'highlight');    
+    range.polar_min_changed=true;
+    has_changes = true;
 else
     min_pol = range.polar_min;
 end
 if isempty(range.polar_max)||range.polar_max>max_pol;   % if limits changed, the GUI values have to change too.
-      range.polar_max = max_pol;
-      ms_setvalue('polar_max',max_pol*180/pi,'highlight');
+    range.polar_max = max_pol;
+    has_changes = true;
+    range.polar_max_changed=true;
 else
-      max_pol   = range.polar_max;
+    max_pol   = range.polar_max;
 end
 if isempty(range.polar_delta)||range.polar_delta<pol_step % if limits changed, the GUI values have to change too.
     range.polar_delta = pol_step;
-    ms_setvalue('polar_delta',pol_step*180/pi,'highlight');    
-else    
-    pol_step = range.polar_delta;    
+    has_changes = true;
+    range.polar_delta_changed=true;
+else
+    pol_step = range.polar_delta;
 end
 if (range.polar_min>max_pol)||(range.polar_max<min_pol)
     error('MSLICE:rebin_cryst_img_to_rings','no detectors in angular range from %d to %d, no remapping performed',range.polar_min,range.polar_max);
@@ -61,7 +64,7 @@ data.cash.ERR       = data.ERR;
 data.cash.det_theta = data.det_theta;
 data.cash.det_dtheta= data.det_dtheta;
 data.cash.det_psi   = data.det_psi;
-data.cash.det_dpsi  = data.det_dpsi; 
+data.cash.det_dpsi  = data.det_dpsi;
 data.cash.det_group = data.det_group;
 %-----------------------------------------------------------------
 data.range = range;
@@ -72,7 +75,7 @@ data.range = range;
 %
 % calculate indexes of old psi-s wrt the new bins
 psi_ind = floor((data.det_theta-min_pol)/pol_step)+1;
-ind_max = floor((max_pol-min_pol)/pol_step)+1; % 
+ind_max = floor((max_pol-min_pol)/pol_step)+1; %
 %
 valid       = psi_ind>0 & psi_ind<=ind_max;
 % select  arrays elements which fit into the angular range requested;
@@ -99,13 +102,13 @@ n_det_ex  =   reshape(repmat(n_det,1,rez_size(2)),ind_max*rez_size(2),1);
 %
 SS         = (accumarray(psi_ext,S)./n_det_ex);
 SE         = sqrt(accumarray(psi_ext,ERR.*ERR)./n_det_ex);
-nans       = isnan(SS); % make NaN sticky i.e any nan contributing to a cell invalidates cell. 
+nans       = isnan(SS); % make NaN sticky i.e any nan contributing to a cell invalidates cell.
 SS(nans)=NaN;
 SE(nans)=0;
 
 data.S    = reshape(SS,ind_max,rez_size(2));
 data.ERR  = reshape(SE,ind_max,rez_size(2));
-% redefine new detectors, which correspond to valid values; 
+% redefine new detectors, which correspond to valid values;
 data.det_theta = (min_pol:pol_step:max_pol)';
 data.det_dtheta= ones(ind_max,1)*pol_step;
 data.det_psi   = zeros(ind_max,1);
