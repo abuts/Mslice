@@ -41,7 +41,7 @@ if version_number<7.04
         version_string);
     matlab_dirname='_R2007a';
     
-elseif(version_number>8) % tested up to R2012b
+elseif(version_number>8.02) % tested up to R2012b
     warning(['This mslice mex-files have not been tested with Matlab version %s \n',...
         'Trying to use the files tested with Matlab 7.14 (2012a) but they may not work'],...
         version_string);

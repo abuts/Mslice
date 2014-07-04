@@ -49,22 +49,10 @@ else 	% powder analysis mode
   
  position  = pos;
  %position(3)=position(3)/0.82;
- msui_powder_menu(fig,position,white,analmode,sample); 
+  det_trag_lines=msui_powder_menu(fig,position,white,analmode,sample); 
 
-%  	if psd==1,		% single crystal + PSD detectors
-%       strings={'Q_x','Q_y','Q_z','H','K','L','u1','u2','u3','Energy','|Q|','2Theta','Azimuth','Det Group Number'};
-%       lineoffset=0;
-% 	elseif psd==2,	% single crystal + conventional detectors
-%       strings={'Q_x','Q_y','Q_z','H','K','L','u1','u2','Energy','|Q|','2Theta','Azimuth','Det Group Number'};
-%       lineoffset=2;
-lineoffset=2;
- % === update detector trajectories axes lists
-strings={'Q_x','Q_y','Q_z','H','K','L','Energy','|Q|','2Theta','Azimuth','Det Group Number'};
-%  
-msui_detector_tragectories(fig,oneline,lineoffset,interlines,white,strings,sample) ;
-%   set(findobj(fig,'Tag','ms_plot_traj_x'),'Value',2,'String',strings);
-%   set(findobj(fig,'Tag','ms_plot_traj_y'),'Value',1,'String',strings);
-%   strings{length(strings)+1}='none';
-%   set(findobj(fig,'Tag','ms_plot_traj_z'),'String',strings,'Value',length(strings));
+  lineoffset=2;
+ % === update detector trajectories axes lists %  
+  msui_detector_tragectories(fig,oneline,lineoffset,interlines,white,det_trag_lines,sample) ;
 
 end

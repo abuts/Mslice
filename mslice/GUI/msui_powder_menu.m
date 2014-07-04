@@ -1,4 +1,4 @@
-function  msui_powder_menu(h_fig,position,white,analmode,sample)
+function  strings=msui_powder_menu(h_fig,position,white,analmode,sample)
 % Builds powder menu GUI
 %Inputs:
 % h_fig    -- the handler for the main picture, which keeps the menu
@@ -38,7 +38,7 @@ pos(3) = width;
 [pos,pos_u1step,pos_u2step]  = msui_powder_display(pos,h_fig,oneline,interlines,white,coltab);
 
 % build cut block;
-pos =ui_powder_cut(pos,h_fig,oneline,interlines,white,sample);
+[pos,strings] =ui_powder_cut(pos,h_fig,oneline,interlines,white,sample);
 
 % cut output block -- the same for crystall and powder mode, so does its
 % own existance check;
@@ -86,7 +86,7 @@ end
 
 %
 %
-function pos =ui_powder_cut(pos,h_fig,oneline,interlines,white,sample)
+function [pos,strings] =ui_powder_cut(pos,h_fig,oneline,interlines,white,sample)
 % function provides the interface to the powder Display menu
 % Outputs:
 % pos        -- position of the last row of this menu

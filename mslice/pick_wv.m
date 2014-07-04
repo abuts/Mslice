@@ -7,7 +7,7 @@ function u=pick_wv(x,n,psi_samp,u,ar,br,cr)
 % u=(2,4) ((3,4)if PSD) with the viewing axes
 % ar,br,cr (1,3) reciprocal lattice vectors (Angs^{-1})
 
-if n==9,	% single crystal and PSD detectors
+if n>=9,	% single crystal and PSD detectors
    viewing_axes={7,8,9};
 elseif n==8,	% single crystal and conventional detectors
    viewing_axes={7,8};
