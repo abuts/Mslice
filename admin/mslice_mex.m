@@ -31,7 +31,6 @@ end
 %  - mslice target directrory:
 mslice_mex_target_dir=fullfile(rootpath,'DLL');
 %  - mslice extras directory:
-mslice_extras_code_dir =fullfile(rootpath,'mslice_extras','_fortran');
 mslice_Ccode_dir_base  =fullfile(rootpath,'mslice','_LowLevelCode');
 
 % choose the code version
@@ -53,15 +52,11 @@ try
             % mex_single (mslice_fortcode_rel_dir, mslice_mex_target_dir, 'put_spe_fortran.f90')
             mex_single ('./', './', 'slice_df.F90')
             mex_single ('./','./', 'spe2proj_df.F90')
+            mex_single ('./', './', 'slice_df_full.F')            
 
 			copy_files_list(pwd,mslice_mex_target_dir,mexext);
             delete(['./*.',mexext]);
-            
-            cd(mslice_extras_code_dir);
-            mex_single ('./', './', 'slice_df_full.F')
-            copyfile([mslice_extras_code_dir,filesep,'*.',mexext],mslice_mex_target_dir);
-            delete(['./*.',mexext]);
-            
+                        
             cd(start_dir);
     end            
 

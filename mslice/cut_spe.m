@@ -112,6 +112,7 @@ if size(data.v,3)==3,   %=== single crystal data and PSD detectors
     end
     grid=[vx_min vx_max bin_vx vy_min vy_max vz_min vz_max];
     
+    [use_mex,force_mex] = get(mslice_config,'use_mex','force_mex_if_use_mex');
     % === if y-axis not intensity, then use standard deviation of the mean per bin as error
     if ~isfield(data,'ERR')||isempty(data.ERR),
         try

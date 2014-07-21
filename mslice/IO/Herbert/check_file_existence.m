@@ -5,14 +5,16 @@ function rez=check_file_existence(file_name,ext,dir_field,file_field,set_non_exi
 %
 %
 
-try
-    file_name = check_file_exist(file_name,ext);
-    rez = file_name;
-    return;
-catch exception;
-    if ~strcmp(exception.identifier,'CHECK_FILE_EXIST:wrong_argument') % file not found       
-        rethrow(exception);
-    end
+[ok,mess,file_name,lext]=check_file_exist(file_name,ext);
+if ok
+  rez = file_name;
+  return;
+else
+    if strncmp(' can not find file:',mess,19)
+        file_name = '';
+    else
+        error('CHECK_FILE_EXISTENCE:invalid_argument',mess);
+    end 
 end
 
 % if not found initial file, check another one. 
@@ -45,7 +47,6 @@ if(file_name ~=0)
         full_msp=fullfile(msp_dir,msp_file);
 
         set_key_value(full_msp,file_field(4:end),file_name)        
-    %    perl('set_key_value.pl',full_msp,file_field(4:end),file_name);
         
         
         %h_file

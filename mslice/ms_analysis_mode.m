@@ -47,8 +47,8 @@ if (analmode==1),	% === change analysis from powder to single crystal mode
      ms_disp_or_slice;
 else 	% powder analysis mode
   
- position  = pos;
- %position(3)=position(3)/0.82;
+  position  = pos;
+  %position(3)=position(3)/0.82;
   det_trag_lines=msui_powder_menu(fig,position,white,analmode,sample); 
 
   lineoffset=2;

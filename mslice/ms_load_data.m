@@ -5,7 +5,7 @@ function ms_load_data
 % === return if ControlWindow not opened 
 h_cw=findobj('Tag','ms_ControlWindow');
 if isempty(h_cw),
-   disp(['No Control widow opened, no .spe data to be loaded.']);
+   disp('No Control widow opened, no .spe data to be loaded.');
    return;
 end
 
