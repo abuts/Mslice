@@ -1,0 +1,2 @@
+Mslice application GUI
+Classes and functions which form GUI or directly accessible from GUI

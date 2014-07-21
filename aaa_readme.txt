@@ -50,48 +50,37 @@ NOTE:
  Contents of the three subfolders
 ===============================================================================
 
-\mslice
+/core
 ========================
-The code as distributed by Radu Coldea, but with a number of modifications
-to enhance functions or minor corrections. Some of these enhancements are
-required to use the mslice_extras functions (below)
+Core code, providing main mslice functionality as in classical mslice 
+distributed by Radu Coldea, but with a number of modifications
+to enhance functions or minor corrections. 
+
+Majority of its functions allow command line operations, though some 
+(and all in /core/mslice_io subfolder) work with mslice graphical window
 
 
 
-\mslice_extras
+/applications
 ==============
+contains mslice_gui -- the classical Radu Coldea mslice graphical interface
+and number of smaller applications&add-ons 
 
-New functions that add functionality to mslice. See the word document
-'mslice extra utilities.doc' in this sub-folder
+/utilities 
+small functions/methods which provide some complete piece of work useful separately
+or used by applications and core functions
 
+/classes 
+similar to utilities but oop-oriented
 
-
-\mslice_more_extras
-===================
-
-Further functions that add functionality to mslice, mostly easing the use
-of mslice from the command line when operating in single crystal PSD mode.
-The 3D viewing option requires that one of mgenie or Libisis is installed.
-
-\DLL 
-==================
-compiled mex files for different OS. After installing mslice you can delete 
-files, which are inappropriate for your OS. See output of mexext command 
-to obtain the extensions, corresponding to your OS.
-
-\Data
+/Data
 ==================
 Examples of data and mslice files, which demonstrate Mslice usage for different
 instruments. Keeps also msp templates for different data analysis modes. 
 
-\admin
+/admin
 ==================
 files mainly used for Mslice package initialization, mexing, testing and support. 
-
-\ISIS_utilites
-==================
-folder intended to support Libisis-mslice interoperability. Will become redundant 
-after Libisis is phased out. 
 
 
 

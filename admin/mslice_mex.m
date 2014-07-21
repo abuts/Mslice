@@ -29,15 +29,15 @@ if user_choice=='y'
 end
 % Source code directories, and output directories:
 %  - mslice target directrory:
-mslice_mex_target_dir=fullfile(rootpath,'DLL');
+mslice_mex_target_dir=fullfile(rootpath,'core','DLL');
 %  - mslice extras directory:
-mslice_Ccode_dir_base  =fullfile(rootpath,'mslice','_LowLevelCode');
+mslice_code_dir_base  =fullfile(rootpath,'_LowLevelCode');
 
 % choose the code version
 
 code_kind = '32and64after7.4';
-mslice_fortcode_rel_dir= fullfile('mslice','_LowLevelCode',code_kind);
-mslice_Ccode_dir       = fullfile(mslice_Ccode_dir_base ,code_kind);
+mslice_fortcode_rel_dir= fullfile(mslice_code_dir_base,code_kind);
+mslice_Ccode_dir       = fullfile(mslice_code_dir_base ,code_kind);
 
 try   
     
@@ -69,7 +69,9 @@ try
     if user_choice ~= 'f'
         cd(mslice_Ccode_dir);
         mex_single ('./', './', 'ffind.c')
-        copyfile([mslice_Ccode_dir,filesep,'*.',mexext],mslice_mex_target_dir);
+        mex_single ('./', './', 'get_ascii_file.cpp','IIget_ascii_file.cpp')
+        
+        copyfile([mslice_Ccode_dir,filesep,'*.',mexext],mslice_mex_target_dir);        
         delete(['./*.',mexext]);
     end
     
