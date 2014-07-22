@@ -1,4 +1,4 @@
-function  msui_powder_menu(h_fig,position,white,analmode,sample)
+function  strings=msui_powder_menu(h_fig,position,white,analmode,sample)
 % Builds powder menu GUI
 %Inputs:
 % h_fig    -- the handler for the main picture, which keeps the menu
@@ -97,7 +97,9 @@ function [pos,strings] =ui_powder_cut(pos,h_fig,oneline,interlines,white,sample)
 this_name = 'powder_cut';
 mslice_gui = msui_collection(h_fig,'mslice_gui');
 if exist(mslice_gui,this_name)
-     pos = get_line_pos(get(mslice_gui,this_name)); 
+    pos = get_line_pos(get(mslice_gui,this_name));
+    det_traj=findobj(h_fig,'Tag','ms_plot_traj_x');
+    strings=get(det_traj,'String');
     return;
 end
 
