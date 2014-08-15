@@ -87,25 +87,69 @@ catch
    rethrow(lasterror)
 end
 
-%----------------------------------------------------------------
-function mex_single (in_dir, out_dir, flname)
-% mex a single file, with the input and output directories
-% relative to the current directory
-flname = fullfile(in_dir,flname);
-outdir = fullfile(out_dir,'');
-[f_path,f_name]=fileparts(flname);
-targ_file=fullfile(f_path,[f_name,'.',mexext]);
-if(exist(targ_file,'file'))
-    try
-        delete(targ_file)
-    catch
-        error([' file: ',f_name,mexext,' locked. deleteon error: ',lasterr()]);
+% %----------------------------------------------------------------
+% function mex_single (in_dir, out_dir, flname)
+% % mex a single file, with the input and output directories
+% % relative to the current directory
+% flname = fullfile(in_dir,flname);
+% outdir = fullfile(out_dir,'');
+% [f_path,f_name]=fileparts(flname);
+% targ_file=fullfile(f_path,[f_name,'.',mexext]);
+% if(exist(targ_file,'file'))
+%     try
+%         delete(targ_file)
+%     catch
+%         error([' file: ',f_name,mexext,' locked. deleteon error: ',lasterr()]);
+%     end
+% end
+% 
+% disp(['Mex file creation from ',flname,' ...'])
+% mex(flname,'-outdir',outdir);
+% %mex flname -v COMPFLAGS="\$COMPFLAGS -free" '-outdir' ./
+
+
+%%----------------------------------------------------------------
+function mex_single (in_rel_dir, out_rel_dir, varargin)
+% Usage:
+% mex_single (in_rel_dir, out_rel_dir, varargin)
+%
+% mex a set of files to produce a single mex file, the file with the mex
+% function has to be first in the  list of the files to compile
+%
+
+curr_dir = pwd;
+if(nargin<1)
+    error('MEX_SINGLE:invalid_arg',' request at leas one file name to process');
+end
+nFiles   = (nargin-2);  % files go in varargin
+nCells   = 2*nFiles-1;
+add_files=cell(nCells,1);
+add_fNames=cell(nCells,1);
+outdir = fullfile(curr_dir,out_rel_dir);
+for i=1:nCells
+    if((i/2-floor(i/2))>0) % fractional part
+        add_files{i} = fullfile(curr_dir,in_rel_dir,varargin{floor(i/2)+1});
+        add_fNames{i}=varargin{floor(i/2)+1};
+    else
+        add_files{i}  = ' ';
+        add_fNames{i} = ' ';
     end
 end
+short_fname = cell2str(add_fNames);
+disp(['Mex file creation from ',short_fname,' ...'])
 
-disp(['Mex file creation from ',flname,' ...'])
-mex(flname,'-outdir',outdir);
-%mex flname -v COMPFLAGS="\$COMPFLAGS -free" '-outdir' ./
+if ~check_access(outdir,add_files{1})
+    error('MEX_SINGLE:invalid_arg',' can not get write access to new mex file: %s',fullfile(outdir,add_files{1}));
+end
+if(nFiles==1)
+    fname      = add_files{1};
+    mex(fname, '-outdir', outdir);
+else
+    flname1 = add_files{1};
+    flname2 =  cell2str(add_files{3:nCells});
+
+    mex(flname1,flname2, '-outdir', outdir);
+end
 
 function choice=disp_compiler_dialog()
 % -----------------------------------------------------
@@ -129,3 +173,67 @@ disp('!==================================================================!')
 if ~(choice=='y'||choice=='n'||choice=='c'||choice=='f')
     choice='e';
 end
+
+
+function str = cell2str(c)
+%CELL2STR Convert cell array into evaluable string.
+%
+%   See also MAT2STR
+
+
+if ~iscell(c)
+
+   if ischar(c)
+      str = c;
+   elseif isnumeric(c)
+      str = mat2str(c);
+   else
+      error('Illegal array in input.')
+   end
+
+else
+
+   N = length(c);
+   if N > 0
+      if ischar(c{1})
+         str = c{1};
+         for ii=2:N
+            if ~ischar(c{ii})
+               error('Inconsistent cell array');
+            end
+            str = [str,c{ii}];
+         end
+      else
+         error(' char cells requested');
+      end
+   else
+      str = '';
+   end
+
+end
+
+function access =check_access(outdir,filename)
+
+[spath,sfname] = fileparts(filename);
+fname = fullfile(outdir,[sfname,'.',mexext()]);
+
+if exist(fname,'file')
+    try
+        delete(fname);
+        access = true;               
+    catch
+        access = false;       
+    end    
+else
+    h=fopen(fname,'w+');
+    if h<3
+        access = false;
+    else
+        if fclose(h)~=0
+            error('MEX_SINGLE:invalid_arg',' can not close opened test file: %s',fname);
+        end
+        delete(fname);
+        access = true;
+    end
+end
+

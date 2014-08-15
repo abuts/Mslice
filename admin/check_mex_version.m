@@ -51,5 +51,6 @@ if nargout>2 && n_errors==0
 else
     minVer=[];
     maxVer=[];
+    compilation_date='';
 end
 
