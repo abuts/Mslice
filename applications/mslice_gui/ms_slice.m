@@ -168,6 +168,7 @@ else
         [slice_d,autointensity,i_min,i_max]=slice_spe(data,z,vz_min,vz_max,vx_min,vx_max,bin_vx,vy_min,vy_max,bin_vy,...
             i_min,i_max,shad,'noplot');
     else
+        autointensity = false;
         % disp('Use stored slice data.')
     end
 end
