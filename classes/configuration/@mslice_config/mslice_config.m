@@ -7,7 +7,7 @@ classdef mslice_config<config_base
     
     properties(Dependent,SetAccess=private)
         MSliceDir  % -- calculated: Mslice folder
-        SampleDir  % -- calculated: folder with msp configuration files which define GUI
+        SampleDir  % -- calculated: folder with default msp configuration files which define GUI
     end
     properties(Dependent)
         MspDir     % folder with msp files which describe mslice configurations
@@ -64,7 +64,7 @@ classdef mslice_config<config_base
                 obj.SampleDir=fullfile(obj.MSliceDir_,'Data');
             else
                 obj.MSliceDir_  = fullfile(fileparts(which('mslice_init.m')),'applications','mslice_gui');
-                obj.SampleDir_  = fullfile(fileparts(which('mslice_init.m')),'Data');
+                obj.SampleDir_  = fullfile(fileparts(which('mslice_init.m')),'Data',filesep);
             end
             obj.DataDir_      = obj.SampleDir_;
             obj.PhxDir_       = obj.SampleDir_;

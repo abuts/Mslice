@@ -49,6 +49,9 @@ if ischar(filename),
        
    else
        set(h_checkbox,'Value',false);
+       h_phxfile=findobj(h_cw,'Tag','ms_PhxFile');
+       set(h_phxfile,'ForegroundColor','k');        
+       
    end
 else
    cancel=1;

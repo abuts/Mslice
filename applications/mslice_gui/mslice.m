@@ -33,7 +33,7 @@ if ~exist('MspFile','var')||isempty(MspFile)||~ischar(MspFile),
 % === start by default in the mode of the previous session; at first start
 %     it would be Crystal PSD mode if no MspFile given, all following --
 %     the modes you were working with. 
-    MspFile=fullfile(get(mslice_config,'MspDir'),get(mslice_config,'MspFile'));   
+    MspFile=get(mslice_config,'MspFile');   
 else
   if isempty(findstr(MspFile,'.msp')),
       MspFile=[MspFile '.msp'];
