@@ -9,18 +9,24 @@ function fc=synchronize_mslice(varargin)
 
 fc=funcCopier();
 
-fc=fc.load_list('herbert_dependent.lst');
+
 
 if nargin>0
-    herbert_prog = varargin{1};
-    mslice_folder = varargin{2};
-    fc=fc.add_dependency(herbert_prog,mslice_folder);
-    fc.save_list('herbert_dependent.lst');
+  fc = build_dependencies_list(fc);
+else
+   fc=fc.load_list('herbert_dependent.lst');    
 end
 
-fc=fc.check_dependencies();
 fc=fc.copy_dependencies();
-fc.save_list('herbert_dependent.lst');
+fc.save_list('herbert_dependent1.lst');
+
+function fc=build_dependencies_list(fc)
 
 
-
+fd = file_descriptor('equal_to_tol.m');
+fd.short_dest_path = 'utilities/general';
+fc=fc.add_dependency(fd);
+% herbert_prog = varargin{1};
+% mslice_folder = varargin{2};
+% fc=fc.add_dependency(herbert_prog,mslice_folder);
+% fc.save_list('herbert_dependent.lst');

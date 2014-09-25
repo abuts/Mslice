@@ -1,4 +1,4 @@
-function c=source_1_test(arg)
+function c=source_2_tester(arg)
 %
 %  Function to test herbert to mslcie synchronization
 %
@@ -6,6 +6,6 @@ function c=source_1_test(arg)
 %
 
 a=arg;
-b=get(mslice_config,'use_mex');
+b=get(herbert_config,'use_mex_C');
 c=a+b;
 end
