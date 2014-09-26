@@ -9,7 +9,7 @@ function config_data=get_config_internal(this,class_to_restore)
 % the object with its fields loaded from storage if varargin is empty
 %
 %
-% $Revision$ ($Date$)
+% $Revision: 278 $ ($Date: 2013-11-01 20:07:58 +0000 (Fri, 01 Nov 2013) $)
 %
 
 class_name = class_to_restore.class_name;
@@ -38,12 +38,12 @@ else
     if isempty(config_data) % get defaults
         config_data = class_to_restore.get_data_to_store();
     end
-     this.config_storage_.(class_name) = config_data;
-     % this returns current state of saveable property and if it is not
-     % set, returns default state of the object.
-      if ~this.saveable_.isKey(class_name)
-          this.saveable_(class_name)=class_to_restore.get_saveable_default();
-      end
-     
+    this.config_storage_.(class_name) = config_data;
+    % this returns current state of saveable property and if it is not
+    % set, returns default state of the object.
+    if ~this.saveable_.isKey(class_name)
+        this.saveable_(class_name)=class_to_restore.get_saveable_default();
+    end
+    
 end
 

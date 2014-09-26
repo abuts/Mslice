@@ -1,4 +1,4 @@
-classdef config_base
+classdef config_bas_msl
     % Base class for configurations, which have single instance for the whole
     % package and can be automatically stored/restored from hdd using
     % config_storage class
@@ -31,12 +31,12 @@ classdef config_base
     %end
     % d) Its setter has the form:
     %function this = set.stored_poperty(this,val)
-    %       config_store.instance().store_config(this,'stored_poperty',val);
+    %       config_stor_msl.instance().store_config(this,'stored_poperty',val);
     %end
     %
     %
     %
-    % $Revision$ ($Date$)
+    % $Revision: 313 $ ($Date: 2013-12-02 11:31:41 +0000 (Mon, 02 Dec 2013) $)
     %
     
     properties(Dependent)
@@ -86,7 +86,7 @@ classdef config_base
         %end
     end
     methods
-        function obj=config_base(class_name)
+        function obj=config_bas_msl(class_name)
             % constructor accepts input parameter which should be
             % the derived class name.
             %
@@ -96,7 +96,7 @@ classdef config_base
             if ischar(class_name)
                 obj.class_name_ = class_name;
             else
-                error('CONFIG_BASE:constructor','first config_base variable has to be a string, providing the derived class name');
+                error('CONFIG_BASE:constructor','first config_bas_msl variable has to be a string, providing the derived class name');
             end
         end
         %
@@ -104,7 +104,7 @@ classdef config_base
             name = this.class_name_;
         end
         function folder = get.config_folder()
-            folder = config_store.instance().config_folder;
+            folder = config_stor_msl.instance().config_folder;
         end
         %-----------------------------------------------------------------
         function is = get_saveable_default(this)
@@ -115,11 +115,11 @@ classdef config_base
             is = this.is_saveable_;
         end
         function is=get.saveable(this)
-            is = config_store.instance().get_saveable(this);
+            is = config_stor_msl.instance().get_saveable(this);
         end
         %
         function this=set.saveable(this,val)
-            config_store.instance().set_saveable(this,val);
+            config_stor_msl.instance().set_saveable(this,val);
         end
         %------------------------------------------------------------------
         function is = get.returns_defaults(this)
@@ -135,7 +135,7 @@ classdef config_base
         end
         %------------------------------------------------------------------
         function value =get_or_restore_field(this,field_name)
-            % method to restore value from config_store if available or
+            % method to restore value from config_stor_msl if available or
             % take default value from the class defaults if not
             
             % the method is used as the part of a standard derived class getter.
@@ -146,7 +146,7 @@ classdef config_base
                 % get actual configuration
                 % if class have never been stored in configuration, it
                 % will return defaults
-                value = config_store.instance().get_config_field(this,field_name);
+                value = config_stor_msl.instance().get_config_field(this,field_name);
             end
         end
         %

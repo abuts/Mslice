@@ -1,12 +1,12 @@
-classdef config_store < handle
+classdef config_stor_msl < handle
     % Class provides single storage point for various configuration
     % classes.
     %
-    % it stores/restores the classes, inheriting from config_base class
+    % it stores/restores the classes, inheriting from config_bas_msl class
     %
     %
     %
-    % $Revision$ ($Date$)
+    % $Revision: 313 $ ($Date: 2013-12-02 11:31:41 +0000 (Mon, 02 Dec 2013) $)
     %
     properties(Dependent)
         % the full path to the folder where the configuration is stored
@@ -29,9 +29,9 @@ classdef config_store < handle
         % Guard the constructor against external invocation.  We only want
         % to allow a single instance of this class.  See description in
         % Singleton superclass.
-        function newStore = config_store()
+        function newStore = config_stor_msl()
             % Initialise config folder path
-            newStore.config_folder_ = make_config_folder(config_store.config_folder_name);
+            newStore.config_folder_ = make_config_folder(config_stor_msl.config_folder_name);
             % initialize configurations storage.
             newStore.config_storage_ = struct();
             newStore.saveable_ = containers.Map();
@@ -42,17 +42,17 @@ classdef config_store < handle
         function obj = instance(varargin)
             % Instance function concrete implementation.
             %
-            persistent unique_config_store_;
+            persistent unique_store_;
             if nargin>0
-                unique_config_store_ = [];
+                unique_store_ = [];
                 obj = [];
                 return;
             end
-            if isempty(unique_config_store_)
-                obj = config_store();
-                unique_config_store_ = obj;
+            if isempty(unique_store_)
+                obj = config_stor_msl();
+                unique_store_ = obj;
             else
-                obj = unique_config_store_;
+                obj = unique_store_;
             end
         end
     end
@@ -71,7 +71,7 @@ classdef config_store < handle
             if ~ok
                 error('CONFIG_STORE:store_config',mess);
             end
-            config_store_internal(this,config_class,force_save,other_options{:});
+            store_internal(this,config_class,force_save,other_options{:});
         end
         %
         function  [val,varargout] = get_config_field(this,class_to_restore,varargin)
@@ -145,7 +145,7 @@ classdef config_store < handle
             % execute class setters.
             
             % Important!!!
-            % Despite we are not returning the resulting configuratio,
+            % Despite we are not returning the resulting configuration,
             % executing this allows to set up global dependent fields (e.g.
             % set up unit test directories. But this can not set up
             % internal privated dependent fields so a configuration can not
@@ -180,11 +180,11 @@ classdef config_store < handle
             if clear_files
                 this.delete_all_files();
             end
-            config_store.instance('clear');
+            config_stor_msl.instance('clear');
         end
         function isit=is_configured(this,class_instance,varargin)
             % method checks if the class class_instance is
-            % stored within the config_store
+            % stored within the config_stor_msl
             %
             % if option -in_mem provided, it checks only if such configuration
             % is loaded in the memory

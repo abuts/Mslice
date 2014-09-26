@@ -1,9 +1,9 @@
 function isit = check_isconfigured(this,class_instance,check_mem_only)
-% Method checks if the specific class is stored in config_store either in
+% Method checks if the specific class is stored in config_stor_msl either in
 % memory or still on HDD
 %
 
-% $Revision$ ($Date$)
+% $Revision: 313 $ ($Date: 2013-12-02 11:31:41 +0000 (Mon, 02 Dec 2013) $)
 
 
 

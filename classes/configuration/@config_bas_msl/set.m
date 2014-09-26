@@ -34,7 +34,7 @@ function this=set(this,varargin)
 %   Note: a subsequent change that does explicitly accumulate in the buffer will
 %   save all changes in the buffer as well.
 
-% $Revision$ ($Date$)
+% $Revision: 287 $ ($Date: 2013-11-08 18:47:25 +0000 (Fri, 08 Nov 2013) $)
 
 options = {'defaults','saved','-buffer','-save'};
 [ok,mess,set_defaults,set_saved,save_to_buffer,save_to_file,other_options]=parse_char_options(varargin,options);
@@ -44,10 +44,10 @@ saveable = ~save_to_buffer || save_to_file;
 this.saveable = saveable;
 
 if set_saved
-    config_store.instance().clear_config(this);
+    config_stor_msl.instance().clear_config(this);
 end
 if set_defaults
-   config_store.instance().clear_config(this,'-file');
+   config_stor_msl.instance().clear_config(this,'-file');
 end
 
 % transform other options into standard form

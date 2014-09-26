@@ -1,5 +1,5 @@
-classdef mslice_config<config_base
-    % Class holds Mslice saveable configuration -- child of config_base
+classdef mslice_config<config_bas_msl
+    % Class holds Mslice savable configuration -- child of config_base
     %
     %
     % $Revision$ ($Date$)
@@ -10,11 +10,11 @@ classdef mslice_config<config_base
         SampleDir  % -- calculated: folder with default msp configuration files which define GUI
     end
     properties(Dependent)
-        MspDir     % folder with msp files which describe mslice configurations
+        MspDir     % folder with msp files which describe Mslice configurations
         MspFile='crystal_psd.msp' % default msp file
         DataDir    % data files (spe files)
         PhxDir     % phx files (detector angular positions)
-        cut_OutputDir   % defauld folder to save cuts.
+        cut_OutputDir   % default folder to save cuts.
         slice_font_size=10
         cut_font_size=10
         use_mex=true    % try to use mex if found
@@ -25,18 +25,18 @@ classdef mslice_config<config_base
         % the path to the unit tests folders used last time when unit tests
         % were enabled.
         last_unittest_path;
-        % for compartibility with mslice log level
+        % for compatibility with Mslice log level
         log_level;
     end
     
     properties(Access=protected)
         MSliceDir_=[] % -- calculated: Mslice folder
         SampleDir_=[] % -- sealed: folder with msp configuration files
-        MspDir_     % folder with msp files which describe mslice configurations
+        MspDir_     % folder with msp files which describe Mslice configurations
         MspFile_='crystal_psd.msp' % default msp file
         DataDir_    % data files (spe files)
         PhxDir_     % phx files (detector angular positions)
-        cut_OutputDir_   % defauld folder to save cuts -- defaults calculated by constructor from Mslice path
+        cut_OutputDir_   % default folder to save cuts -- defaults calculated by constructor from Mslice path
         
         slice_font_size_  =  10
         cut_font_size_    =  10
@@ -56,7 +56,7 @@ classdef mslice_config<config_base
     methods
         function obj=mslice_config()
             % constructor
-            obj=obj@config_base(mfilename('class'));
+            obj=obj@config_bas_msl(mfilename('class'));
             % set default values for internal properties which depend on
             % Mslice&Mslice data location
             if isdeployed
@@ -127,33 +127,33 @@ classdef mslice_config<config_base
         % overloaded setters
         function this = set.MspDir(this,val)
             if ~ischar(val), error('MSLICE_CONFIG:set_MspDir',' folder name to store msp files has to be a string'), end
-            config_store.instance().store_config(this,'MspDir',val);
+            config_stor_msl.instance().store_config(this,'MspDir',val);
         end
         function this = set.MspFile(this,val)
             if ~ischar(val), error('MSLICE_CONFIG:set_MspFile',' msp files name  has to be a string'), end
-            config_store.instance().store_config(this,'MspFile',val);
+            config_stor_msl.instance().store_config(this,'MspFile',val);
         end
         function this = set.DataDir(this,val)
             if ~ischar(val), error('MSLICE_CONFIG:set_DataDir',' folder name to store data files has to be a string'), end
-            config_store.instance().store_config(this,'DataDir',val);
+            config_stor_msl.instance().store_config(this,'DataDir',val);
         end
         function this = set.PhxDir(this,val)
             if ~ischar(val), error('MSLICE_CONFIG:set_PhxDir',' folder name to store PhxDir files has to be a string'), end
-            config_store.instance().store_config(this,'PhxDir',val);
+            config_stor_msl.instance().store_config(this,'PhxDir',val);
         end
         function this = set.cut_OutputDir(this,val)
             if ~ischar(val), error('MSLICE_CONFIG:set_cut_OutputDir',' folder name to store cut files has to be a string'), end
-            config_store.instance().store_config(this,'cut_OutputDir',val);
+            config_stor_msl.instance().store_config(this,'cut_OutputDir',val);
         end
         
         function this = set.slice_font_size(this,val)
             if val<4 || val > 44; error('MSLICE_CONFIG:set_slice_font_size',' slice font size should be in range 4-44 points'); end
-            config_store.instance().store_config(this,'slice_font_size',val);
+            config_stor_msl.instance().store_config(this,'slice_font_size',val);
         end
         
         function this = set.cut_font_size(this,val)
             if val<4 || val > 44; error('MSLICE_CONFIG:set_cut_font_size',' cut font size should be in range 4-44 points'); end
-            config_store.instance().store_config(this,'cut_font_size',val);
+            config_stor_msl.instance().store_config(this,'cut_font_size',val);
         end
         
         function this = set.use_mex(this,val)
@@ -162,7 +162,7 @@ classdef mslice_config<config_base
             else
                 use = false;
             end
-            config_store.instance().store_config(this,'use_mex',use);
+            config_stor_msl.instance().store_config(this,'use_mex',use);
         end
         function this = set.force_mex_if_use_mex(this,val)
             if val>0
@@ -170,16 +170,16 @@ classdef mslice_config<config_base
             else
                 use = false;
             end
-            config_store.instance().store_config(this,'force_mex_if_use_mex',use);
+            config_stor_msl.instance().store_config(this,'force_mex_if_use_mex',use);
         end
         
         function this = set.init_tests(this,val)
             [enable,xunit_path]=process_xunit_tests_path(this,val);
             if enable
-                config_store.instance().store_config(this,'init_tests',enable,...
+                config_stor_msl.instance().store_config(this,'init_tests',enable,...
                     'last_unittest_path',xunit_path);
             else
-                config_store.instance().store_config(this,'init_tests',enable);
+                config_stor_msl.instance().store_config(this,'init_tests',enable);
             end
             
         end
@@ -191,7 +191,7 @@ classdef mslice_config<config_base
             % herbert
             if ~isempty(path)
                 if exist(fullfile(path,'assertEqual.m'),'file')
-                    config_store.instance().store_config(this,'last_unittest_path',path);
+                    config_stor_msl.instance().store_config(this,'last_unittest_path',path);
                 else
                     warning('MSLICE_CONFIG:set_last_unittest_path',' path %s is not a path to unit tests. nothing has been set',path);
                 end
@@ -201,7 +201,7 @@ classdef mslice_config<config_base
             if ~isnumeric(val)
                 error('MSLICE_CONFIG:log_level',' log level has to be a number ')
             end
-            config_store.instance().store_config(this,'log_level',val);
+            config_stor_msl.instance().store_config(this,'log_level',val);
         end
         
         

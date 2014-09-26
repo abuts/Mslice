@@ -19,10 +19,10 @@ unit_test_base = fileparts(which('herbert_init.m'));
 xunit_path  = fullfile(unit_test_base,'_test','matlab_xunit','xunit');
 if enable>0
     if isempty(unit_test_base)
-        xunit_path=config_store.instance().get_config_field(this,'last_unittest_path');
+        xunit_path=config_stor_msl.instance().get_config_field(this,'last_unittest_path');
         if isempty(xunit_path);
             warning('MSLICE_CONFIG:enable_unit_tests',[' Mslice unit test rely on Herbert being installed and identified by Mslice at least once\n.'...
-                                                        'Apparebly it was not. Unit tests are not enabled. Initialize Herbert and run enable tests with Herbert at least once\n']);
+                                                        'Apparently it was not. Unit tests are not enabled. Initialize Herbert and run enable tests with Herbert at least once\n']);
             enable = false;
         else
             addpath(xunit_path);

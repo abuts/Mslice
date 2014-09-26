@@ -23,12 +23,12 @@ function S=get_all(this,opt)
 %
 
 
-% $Revision$ ($Date$)
+% $Revision: 278 $ ($Date: 2013-11-01 20:07:58 +0000 (Fri, 01 Nov 2013) $)
 
 if nargin==1
-    S=config_store(false);
+    S=config_stor_msl(false);
 elseif nargin==2 && ischar(opt) && ~isempty(opt) && size(opt,1)==1 && strncmpi(opt,'defaults',length(opt))
-    S=config_store(true);
+    S=config_stor_msl(true);
 else
     error('Check input arguments')
 end

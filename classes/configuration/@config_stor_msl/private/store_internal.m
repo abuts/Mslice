@@ -1,5 +1,5 @@
-function config_store_internal(this,config_class,force_save,varargin)
-% Function stores the configutation class - child of a config_base class
+function store_internal(this,config_class,force_save,varargin)
+% Function stores the configutation class - child of a config_bas_msl class
 % in single memory place and
 % in a special file in the configurations location folder.
 %
@@ -12,7 +12,7 @@ function config_store_internal(this,config_class,force_save,varargin)
 % defaults. 
 %
 %
-% $Revision$ ($Date$)
+% $Revision: 278 $ ($Date: 2013-11-01 20:07:58 +0000 (Fri, 01 Nov 2013) $)
 %
 class_name = config_class.class_name;
 if nargin>3 % we need to set some fields before storing the configuration. 
