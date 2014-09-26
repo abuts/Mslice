@@ -7,7 +7,7 @@ function [copy_source,store_destination,this]=is_modified(this)
 % the file assumed modified when its checksum is changed
 %
 %
-%   $Rev: 288 $ ($Date: 2014-04-05 21:48:22 +0100 (Sat, 05 Apr 2014) $)
+%   $Rev$ ($Date$)
 %
 
 old_dest_chksum = this.dest_checksum;

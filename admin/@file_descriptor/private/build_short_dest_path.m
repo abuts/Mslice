@@ -2,7 +2,7 @@ function this = build_short_dest_path(this,path)
 % Build target path within the target folder
 
 %
-%   $Rev: 285 $ ($Date: 2014-04-04 15:57:36 +0100 (Fri, 04 Apr 2014) $)
+%   $Rev$ ($Date$)
 %
 
 root_path = this.root_dest_path();

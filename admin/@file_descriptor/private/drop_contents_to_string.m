@@ -2,7 +2,7 @@ function str = drop_contents_to_string(this)
 % store contents of file descriptor in a comma separated string of special
 % values
 %
-%   $Rev: 285 $ ($Date: 2014-04-04 15:57:36 +0100 (Fri, 04 Apr 2014) $)
+%   $Rev$ ($Date$)
 %
 
 n_fields=numel(this.fields_to_write_);

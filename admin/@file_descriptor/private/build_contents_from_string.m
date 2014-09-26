@@ -3,7 +3,7 @@ function this = build_contents_from_string(this,string)
 % comma-separated values in specified sequence and format
 %
 %
-%   $Rev: 288 $ ($Date: 2014-04-05 21:48:22 +0100 (Sat, 05 Apr 2014) $)
+%   $Rev$ ($Date$)
 %
 
 rez = regexp(string,';','split');

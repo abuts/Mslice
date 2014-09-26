@@ -3,7 +3,7 @@ function this=copy_and_modify(this)
 % replacing specified strings by its replacements
 %
 %
-%   $Rev: 285 $ ($Date: 2014-04-04 15:57:36 +0100 (Fri, 04 Apr 2014) $)
+%   $Rev$ ($Date$)
 %
 
 

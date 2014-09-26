@@ -2,7 +2,7 @@ classdef file_descriptor
     % the class to describe a file, which should be copied
     % from Herbert to MSLICE
     %
-    %   $Rev: 285 $ ($Date: 2014-04-04 15:57:36 +0100 (Fri, 04 Apr 2014) $)
+    %   $Rev$ ($Date$)
     %
     
     properties(Dependent)
