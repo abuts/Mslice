@@ -10,13 +10,13 @@ classdef file_descriptor
         source_name='';
         % the name of the file within mslice. Usually it is the same name
         % as source_name, unless specified otherwise.
-        target_fname;
+        dest_fname;
         % name of the target file withour extension
-        target_name;
+        dest_name;
         % file checksum
         checksum=0;
         % taret file checksum. Different if the file is modified at copying
-        targ_checksum;
+        dest_checksum;
         %
         % full path of the sourñe file within Herbert
         source_path
@@ -39,13 +39,13 @@ classdef file_descriptor
         % short source file name
         source_name_='';
         % short target file name
-        target_name_='';
+        dest_name_='';
         % source file checksum. Used to verify if source file have changed
         checksum_=0;
         % target file checksum. Used to verify if target file has been
         % changed and needs backing up. If no fields were provided to
         % modify, source checksum has to be equal to target checksum.
-        targ_checksum_=[];
+        dest_checksum_=[];
         % source path within the herbert folder
         source_path_=''
         % destination path within the mslice folder
@@ -58,11 +58,14 @@ classdef file_descriptor
         modify_with_ = {};
         % internal sign of folder class id
         is_folder_class_=false;
+        % the field contains the paris which were successfully modified
+        % during copy and modify process
+        mod_success_ = struct();
     end
     properties(Constant,Access=protected)
         % the names of the fields which always written to file
         fields_to_write_={'source_name_','checksum_','source_path_','is_folder_class_',...
-            'dest_path_','target_name_','targ_checksum_','fext_'};
+            'dest_path_','dest_name_','dest_checksum_','fext_'};
         % format of these fields
         fields_format_={'%s','%lu','%s','%d','%s','%s','%lu','%s'};
     end
@@ -110,30 +113,30 @@ classdef file_descriptor
             this=build_from_file(this,full_name);
         end
         %----------------------------------------------------
-        function name=get.target_fname(this)
+        function name=get.dest_fname(this)
             % the name of a file in a mslice folder (usually equal to the
-            % name in a herbert folder)            
-            name = [this.target_name,this.fext_];
+            % name in a herbert folder)
+            name = [this.dest_name,this.fext_];
         end
-        function name=get.target_name(this)
+        function name=get.dest_name(this)
             % the name of a file in a mslice folder (usually equal to the
             % name in a herbert folder withour extension)
-            if isempty(this.target_name_)
+            if isempty(this.dest_name_)
                 name = this.source_name_;
             else
-                name = this.target_name_;
+                name = this.dest_name_;
             end
-
+            
         end
         
-        function this=set.target_name(this,filename)
+        function this=set.dest_name(this,filename)
             % set a name of the file in the mslice folder different
             % from the name in a herbert folder.
             [path,name,ext]=fileparts(filename);
             if strcmp(name,this.source_name_)
-                this.target_name_ ='';
+                this.dest_name_ ='';
             else
-                this.target_name_ = name;
+                this.dest_name_ = name;
             end
             if ~isempty(ext)
                 this.fext_  = ext;
@@ -172,13 +175,13 @@ classdef file_descriptor
         end
         
         function cksm = get.checksum(this)
-            cksm = int32(this.checksum_);
+            cksm = int64(this.checksum_);
         end
-        function cksm = get.targ_checksum(this)
-            if isempty(this.targ_checksum_)
-                cksm = int32(this.checksum_);
+        function cksm = get.dest_checksum(this)
+            if isempty(this.dest_checksum_)
+                cksm = int64(this.checksum_);
             else
-                cksm = int32(this.targ_checksum_);
+                cksm = int64(this.dest_checksum_);
             end
         end
         function dpath = get.dest_path(this)
@@ -200,9 +203,24 @@ classdef file_descriptor
             if mod(nvar,2)~=0
                 error('FILE_DESCRIPTOR:invalid_parameters','Odd number of modifiers. You should provide modifiers in the form key,value,key,value ...')
             end
-            this.fields_to_modify_ = varargin(1:2:nvar-1);
-            this.modify_with_ = varargin(2:2:nvar);
+            if numel(this.fields_to_modify_) == 0
+                this.fields_to_modify_ = varargin(1:2:nvar-1);
+                this.modify_with_ = varargin(2:2:nvar);
+            else
+                this.fields_to_modify_ ={this.fields_to_modify_{:}, varargin{1:2:nvar-1}};
+                this.modify_with_ = {this.modify_with_{:},varargin{2:2:nvar}};
+            end
             
+        end
+        function is_rep = fields_replaced(this)
+            % method reports on how many fields copy_and_modify function
+            % have modified if copying indeed happened.
+            rep_fields = fields(this.mod_success_);
+            if numel(rep_fields)>0
+                is_rep  = true;
+            else
+                is_rep  = false;
+            end
         end
     end
 end

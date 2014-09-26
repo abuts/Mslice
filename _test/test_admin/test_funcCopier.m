@@ -77,8 +77,8 @@ classdef test_funcCopier<TestCase
             assertTrue(isfield(fc.files_2copy_list,'atest_herbert_IO_MAP11014_nxspe'));
             descriptor = fc.files_2copy_list.atest_herbert_IO_MAP11014_nxspe;
             %assertEqual(test_target,descriptor.dest);
-            assertEqual('MAP11014',descriptor.target_name);
-            assertEqual('MAP11014.nxspe',descriptor.target_fname);
+            assertEqual('MAP11014',descriptor.dest_name);
+            assertEqual('MAP11014.nxspe',descriptor.dest_fname);
             
             cl = onCleanup(@()rmdir(target_folder,'s'));
             

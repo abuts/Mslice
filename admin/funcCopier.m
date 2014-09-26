@@ -82,9 +82,9 @@ classdef funcCopier
             fprintf(fh,'%s;',main_fields{:});
             fprintf(fh,'\n');
             for i=1:nStrings
-                descr= this.files_2copy_list(func_names{i});
+                descr= this.files_2copy_list.(func_names{i});
                 str = descr.to_string();
-                fprintf(fh,'%sn',str);
+                fprintf(fh,'%s\n',str);
             end
             fclose(fh);
         end
@@ -97,14 +97,13 @@ classdef funcCopier
                 return;
             end
             fd = file_descriptor();
-            this.files_2copy_list = struct();
             % scip header
             fgetl(fh);
             line = fgetl(fh);
             while ischar(line)
-                fd.from_string(line);
-                key_name = get_key_name(fd);
-                this.files_2copy_list.(key_name) = fd;
+                fd1=fd.from_string(line);
+                key_name = get_key_name(fd1);
+                this.files_2copy_list.(key_name) = fd1;
                 line=fgetl(fh);
             end
             fclose(fh);
@@ -117,31 +116,38 @@ classdef funcCopier
         function this=add_dependency(this,dep,varargin)
             % method to add new dependency to the dependencies list.
             %
+            if nargin>2
+                control = varargin{1};
+            else
+                control = struct();
+            end
             if isa(dep,'file_descriptor')
                 key_name = get_key_name(dep);
                 this.files_2copy_list.(key_name)=dep;
                 return
             else
                 full_name = fullfile(this.herbert_folder,dep);
-                if nargin>2
-                    target_folder = varargin{1};
+                
+                
+                if isfield(control,'dest_folder')
+                    target_folder = control.dest_folder;
                 else
                     target_folder = '';
                 end
+                
                 if exist(full_name,'file')==2
                     source = full_name;
                 elseif exist(dep,'file')==2
                     source = which(dep);
                 elseif exist(full_name,'dir')==7
                     files=gen_files_list(full_name,dep);
-                    if ~isempty(target_folder)
-                        target_folder = [target_folder,filesep,dep];
-                    else
-                        target_folder=dep;
-                    end
                     for i=1:numel(files)
                         the_file=files{i};
-                        this=this.add_dependency(the_file,target_folder);
+                        if ~isempty(target_folder)
+                            control.dest_folder=this.replace_path_cut_root(the_file,dep,target_folder);
+                        end
+                        
+                        this=this.add_dependency(the_file,control);
                     end
                     return
                 else
@@ -152,6 +158,18 @@ classdef funcCopier
             fd = file_descriptor(source);
             if ~isempty(target_folder)
                 fd.short_dest_path = target_folder;
+            end
+            if isfield(control,'modifiers')
+                mod = control.modifiers;
+                fd=fd.add_modifiers(mod{:});
+            end
+            if isfield(control,'rename_class')
+                % initially, destination name is equal to the source name
+                if strcmp(control.rename_class{1},fd.dest_name)
+                    fd.dest_name = control.rename_class{2};
+                else
+                    fd=fd.add_modifiers(control.rename_class{:});
+                end
             end
             
             key_name = get_key_name(fd);
@@ -169,26 +187,43 @@ classdef funcCopier
             nDependencies = numel(names);
             for i=1:nDependencies
                 descriptor = this.files_2copy_list.(names{i});
-                [source_modidied,target_modified]= descriptor.is_modified();
+                [source_modidied,target_modified,check]= descriptor.is_modified();
                 if source_modidied
                     if target_modified % make copy of the target file and tell about it
-                        targ_file = fullfile(descriptor.dest_path,descriptor.target_fname);
-                        backup    = fullfile(descriptor.dest_path,[descriptor.target_name,'.bak']);
-                        warning('FUNC_COPIED:copy_dependencies','Backing up changed targ file %s',targ_file);
+                        targ_file = fullfile(descriptor.dest_path,descriptor.dest_fname);
+                        backup    = fullfile(descriptor.dest_path,[descriptor.dest_name,'.bak']);
+                        fprintf('**** Backing up file: %s  at:-> %s\n',descriptor.dest_fname,descriptor.dest_path);
                         copyfile(targ_file,backup);
                         nBackedUp =nBackedUp +1;
                         
                     end
-                    descriptor.copy_and_modify();
+                    this.files_2copy_list.(names{i})=descriptor.copy_and_modify();
                     nCopied=nCopied+1;
+                    if this.files_2copy_list.(names{i}).fields_replaced()
+                        nCopiedAndModified=nCopiedAndModified+1;
+                    end
+                else
+                    this.files_2copy_list.(names{i}) = check;
                 end
                 
             end
-            fprintf('****** Copied %d Herbert files out ot %d dependencies\n',nCopied,nDependencies);
-            fprintf('****** Moidified %d files out ot %d copied\n ',nCopiedAndModified,nCopiedAndModified+nCopied);
+            fprintf('****** Copied    %d Herbert files out of %d dependencies\n',nCopied,nDependencies);
+            fprintf('****** Modified  %d files during the copying\n ',nCopiedAndModified);
+            fprintf('****** Backed up %d files changed in Mslice\n ',nBackedUp);
         end
         
         
+    end
+    methods(Static)
+        function path = replace_path_cut_root(fname,sample,replacement)
+            path = fileparts(fname);
+            path = regexprep(path,'\\','/');
+            sample=regexprep(sample,'\\','/');
+            
+            start = regexp(path,sample,'once');
+            path = [replacement,path(start+numel(sample):end)];
+            
+        end
     end
     
 end

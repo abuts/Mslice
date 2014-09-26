@@ -14,9 +14,9 @@ end
 sources = this.fields_to_modify_;
 modifiers = this.modify_with_;
 n_fields_to_modify = numel(sources);
-if ~strcmp(this.source_name,this.target_fname)
+if ~strcmp(this.source_name,this.dest_fname)
     sources = [sources,this.source_name_];
-    modifiers = [modifiers,this.target_name_];
+    modifiers = [modifiers,this.dest_name_];
     n_fields_to_modify = n_fields_to_modify+1;
 end
 
@@ -26,7 +26,7 @@ dest_name = this.dest_path;
 if ~(exist(dest_name ,'dir')==7)
     mkdir(dest_name );
 end
-fdest   = fullfile(dest_name,this.target_fname);
+fdest   = fullfile(dest_name,this.dest_fname);
 
 fs=fopen(fsource,'r');
 if fs<=0
@@ -36,12 +36,20 @@ ft= fopen(fdest,'w');
 if ft<=0
     error('FUNC_COPIER:copyAndModify',' error opening target file file %s',fdest);
 end
+% clear all previous information (got may be from loading) abour successfully replaced
+% modification fields.
+this.mod_success_=struct();
 
 line = fgets(fs);
 while(line>-1)
     
     for i=1:n_fields_to_modify
+        lineO = line;
         line = strrep(line,sources{i},modifiers{i});
+        if ~strcmp(line,lineO)
+            this.mod_success_.(sources{i})=modifiers{i};
+            %fprintf('File %s : modified line %s with %s ',this.source_name,lineO,line);
+        end
     end
     
     fprintf(ft,'%s',line);
@@ -50,9 +58,9 @@ end
 fclose(ft);
 fclose(fs);
 if n_fields_to_modify>0
-    this.targ_checksum_ = calc_checksum(fdest);
+    this.dest_checksum_ = calc_checksum(fdest);
 else
     % set target checksum equal to source checksum
-    this.targ_checksum_=[];
+    this.dest_checksum_=[];
 end
 

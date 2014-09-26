@@ -14,11 +14,20 @@ for i=2:n_fields
     str = [str,';',sprintf(form{i},this.(fields{i}))];
 end
 
+
 nmod = this.n_fields_to_modify;
 if nmod >0
-    modifiers = sprintf(';%d;%s;%s',nmod,this.fields_to_modify_{1},this.modify_with_{1});
+    if this.checksum == this.dest_checksum
+        return;   
+    end
+    fields = fieldnames(this.mod_success_);
+    nmod = numel(fields);
+    if nmod==0
+        return;
+    end
+    modifiers = sprintf(';%d;%s;%s',nmod,fields{1},this.mod_success_.(fields{1}));
     for i=2:nmod
-        modifiers = [modifiers,sprintf(';%s;%s',this.fields_to_modify_{i},this.modify_with_{i})];
+        modifiers = [modifiers,sprintf(';%s;%s',fields{i},this.mod_success_.(fields{i}))];
     end
     str=[str,modifiers];
 end

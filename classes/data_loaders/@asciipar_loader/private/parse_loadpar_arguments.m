@@ -47,7 +47,7 @@ file_name  = {};
 if numel(varargin)>0
     [ok,mess,return_array,return_array2,hor_format_deprecated,force_reload,file_name]=parse_char_options(varargin,options);
     if ~ok
-        if get(herbert_config,'log_level')>0
+        if get(mslice_config,'log_level')>0
             disp('Usage:');
             help asciipar_loader.load_par;
         end
@@ -63,7 +63,7 @@ if hor_format_deprecated
     warning('ASCIIPAR_LOADER:load_par','option -horace is deprecated, loader returns data in horace format by default')
 end
 if numel(file_name)>1
-    if get(herbert_config,'log_level')>0
+    if get(mslice_config,'log_level')>0
         disp('Usage:');
         help asciipar_loader.load_par;
     end

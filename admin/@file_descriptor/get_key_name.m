@@ -1,7 +1,8 @@
 function key_name = get_key_name(this)
 % get the string, which uniquely describes funcion within a package and
 % consists of a function name and partial function path.
-key_name = build_key_name(this.short_source_path,this.source_name);
+key_name = ['k', num2str(this.checksum,'%lu')];
+%build_key_name(this.short_source_path,this.source_name);
 end
 
 function func_name = build_key_name(source_path,fname)

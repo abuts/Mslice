@@ -5,7 +5,7 @@ function [par,this] = load_nxspe_par(this,return_array,varargin)
 %>>[par_data,nxspe_loader_instance]=nxspe_loader_instance.load_nxspe_par(return_array,[keep_existing]);
 %
 %
-% return_array  -- if true, return array rather then Horace structure
+% return_array -- if true, return array rather then Horace structure
 % keep_existing -- keep existing detector parameters if they have not been loaded in memory
 %
 root_folder=this.root_nexus_dir;

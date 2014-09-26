@@ -11,7 +11,7 @@ path = strrep(path,root_path,'');
 
 if this.is_folder_class
     % for folder class folder should have the name of the class with @ sign.
-    classname = this.target_name;
+    classname = this.dest_name;
     [rest_path,class_path]=fileparts(path);
     if class_path(1) ~= '@'
         path = fullfile(path,['@',classname]);

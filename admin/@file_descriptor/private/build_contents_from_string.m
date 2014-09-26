@@ -35,13 +35,13 @@ if numel(rez)>n_identified
     end
     
     if nmodifiers>0
-        modifiers = rez(n_identified+1:n_identified+1+2*nmodifiers);
+        modifiers = rez(n_identified+2:n_identified+1+2*nmodifiers);
         this.fields_to_modify_=modifiers(1:2:(2*nmodifiers-1));
         this.modify_with_     =modifiers(2:2:2*nmodifiers);
     end
 else
-    if isempty(this.target_name_)
-        this.targ_checksum_=[];
+    if isempty(this.dest_name_)
+        this.dest_checksum_=[];
     end    
 end
 

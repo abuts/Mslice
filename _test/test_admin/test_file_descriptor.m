@@ -23,7 +23,7 @@ classdef test_file_descriptor<TestCase
         function this=test_constructor(this)
             fd = file_descriptor();
             
-            assertEqual(fd.target_fname,'.m');
+            assertEqual(fd.dest_fname,'.m');
             assertEqual(fd.checksum,int32(0));
             
             %
@@ -43,13 +43,19 @@ classdef test_file_descriptor<TestCase
             assertTrue(mod);
             assertTrue(changed);
             
-            new_chksum = fd_new.checksum;
-            fd1=from_string(file_descriptor,sprintf('source_1_test;%lu;_test/test_admin;0;_test/test_admin;;0;',new_chksum));
-            [mod,changed,the_chksum]=is_modified(fd1);
+            new_chksum = fd_new.dest_checksum;
+            fd1=from_string(file_descriptor_tester,sprintf('source_1_test;%lu;_test/test_admin;0;_test/test_admin;;0;',new_chksum));
+            [mod,changed,new_fd]=is_modified(fd1);
+            assertTrue(mod);
+            assertTrue(~changed);
+            assertEqual(new_fd.checksum,new_chksum);
+            
+            cl1=onCleanup(@()rmdir(fd1.dest_path,'s'));
+            fd2=fd1.copy_and_modify();
+            %
+            [mod,changed]=is_modified(fd2);
             assertTrue(~mod);
             assertTrue(~changed);
-            assertEqual(the_chksum.checksum,new_chksum);
-            
         end
         
         
@@ -60,54 +66,54 @@ classdef test_file_descriptor<TestCase
             assertTrue(copy_source);
             assertTrue(~store_dest);
             
-            targ_file = fullfile(fd.dest_path,fd.target_fname);
-            cl1 = onCleanup(@()delete(targ_file));
+            dest_file = fullfile(fd.dest_path,fd.dest_fname);
+            cl1 = onCleanup(@()delete(dest_file));
             
             fd=fd.copy_and_modify();
-            assertEqual(exist(targ_file,'file'),2);
+            assertEqual(exist(dest_file,'file'),2);
             %
-            summm0 = calc_checksum(targ_file);
+            summm0 = calc_checksum(dest_file);
             assertEqual(fd.checksum,summm0);
-            assertEqual(fd.targ_checksum,summm0);
+            assertEqual(fd.dest_checksum,summm0);
             
             % modified file name
-            fd.target_name = 'other_file_name';
-            targ_file1 = fullfile(fd.dest_path,fd.target_fname);
-            cl1 = onCleanup(@()delete(targ_file1));
+            fd.dest_name = 'other_file_name';
+            dest_file1 = fullfile(fd.dest_path,fd.dest_fname);
+            cl1 = onCleanup(@()delete(dest_file1));
             
             fd=fd.copy_and_modify();
-            assertEqual(exist(targ_file1,'file'),2);
+            assertEqual(exist(dest_file1,'file'),2);
             
-            summm = calc_checksum(targ_file1);
+            summm = calc_checksum(dest_file1);
             assertEqual(fd.checksum,summm0);
             assertEqual(summm,int32(2147483647));
-            assertEqual(fd.targ_checksum,summm);
+            assertEqual(fd.dest_checksum,summm);
             
             % set fields to moidfy
             fd=fd.add_modifiers('mslice_config','other_c');
-            fd.target_name = 'other_file_name';
-            targ_file2 = fullfile(fd.dest_path,fd.target_fname);
-            cl1 = onCleanup(@()delete(targ_file2));
+            fd.dest_name = 'other_file_name';
+            dest_file2 = fullfile(fd.dest_path,fd.dest_fname);
+            cl1 = onCleanup(@()delete(dest_file2));
             
             fd=fd.copy_and_modify();
-            assertEqual(exist(targ_file2,'file'),2);
+            assertEqual(exist(dest_file2,'file'),2);
             
-            summm = calc_checksum(targ_file2);
+            summm = calc_checksum(dest_file2);
             assertEqual(summm,int32(547790443));
-            assertEqual(fd.targ_checksum,summm);
+            assertEqual(fd.dest_checksum,summm);
             
             % set the same name as initial source file
-            fd.target_name = '';
-            targ_file = fullfile(fd.dest_path,fd.target_fname);            
-            cl1 = onCleanup(@()delete(targ_file));
+            fd.dest_name = '';
+            dest_file = fullfile(fd.dest_path,fd.dest_fname);
+            cl1 = onCleanup(@()delete(dest_file));
             
             fd=fd.copy_and_modify();
-            assertEqual(exist(targ_file,'file'),2);
+            assertEqual(exist(dest_file,'file'),2);
             
-            summm = calc_checksum(targ_file);
+            summm = calc_checksum(dest_file);
             assertEqual(fd.checksum,summm0);
             assertEqual(summm,int32(1504720576));
-            assertEqual(fd.targ_checksum,summm);
+            assertEqual(fd.dest_checksum,summm);
             
             [source_changed,dest_changed]=is_modified(fd);
             assertTrue(~source_changed);
@@ -190,23 +196,23 @@ classdef test_file_descriptor<TestCase
             
             fd=file_descriptor_tester();
             
-            folder = this.test_folder;            
-            fd.source_name=fullfile(folder,'@source_2_tester','source_2_tester.m');            
+            folder = this.test_folder;
+            fd.source_name=fullfile(folder,'@source_2_tester','source_2_tester.m');
             
             cl1 = onCleanup(@()rmdir(fullfile(fd.root_dest_path,'_test'),'s'));
-            fd1=fd.copy_and_modify();            
-            assertEqual(exist(fullfile(fd1.dest_path,fd1.target_fname),'file'),2)
-            assertTrue(fd1.checksum==fd1.targ_checksum);            
+            fd1=fd.copy_and_modify();
+            assertEqual(exist(fullfile(fd1.dest_path,fd1.dest_fname),'file'),2)
+            assertTrue(fd1.checksum==fd1.dest_checksum);
             
             % check renaming
-            fd.target_name = 'other_1class_name';
+            fd.dest_name = 'other_1class_name';
             [folder_path,folder_name] = fileparts(fd.dest_path);
             assertEqual(folder_name,'@other_1class_name');
             
             cl1 = onCleanup(@()rmdir(fullfile(fd.root_dest_path,'_test'),'s'));
-            fd1=fd.copy_and_modify();            
-            assertEqual(exist(fullfile(fd1.dest_path,fd1.target_fname),'file'),2)
-            assertTrue(fd1.checksum~=fd1.targ_checksum);
+            fd1=fd.copy_and_modify();
+            assertEqual(exist(fullfile(fd1.dest_path,fd1.dest_fname),'file'),2)
+            assertTrue(fd1.checksum~=fd1.dest_checksum);
             
         end
         function test_fieldnames_to_write(this)
