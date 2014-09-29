@@ -33,13 +33,13 @@ classdef source_dest < handle
       
       function set_source_folder(obj, path)
          if ispc
-            path(1) = lower(path(1));
+            path = lower(path);
          end
          obj.source_folder_ = path;
       end
       function set_dest_folder(obj, path)
          if ispc
-            path(1) = lower(path(1));
+            path = lower(path);
          end
          obj.dest_folder_ = path;
       end
@@ -56,7 +56,7 @@ classdef source_dest < handle
                 path = upath(1:end-numel('_test\matlab_xunit\xunit'));
             end         
             if ispc
-                path(1) = lower(path(1));
+                path = lower(path);
             end
             
             newObj.source_folder_ = path;

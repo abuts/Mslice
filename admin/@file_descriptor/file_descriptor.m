@@ -88,7 +88,11 @@ classdef file_descriptor
     methods
         function this=file_descriptor(varargin)
             if nargin>0
-                this=this.build_from_file(varargin{1});
+                if isa(varargin{1},'file_descriptor')
+                    this=varargin{1};
+                else
+                    this=this.build_from_file(varargin{1});
+                end
             end
         end
         %

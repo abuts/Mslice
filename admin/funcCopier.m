@@ -101,9 +101,11 @@ classdef funcCopier
             fgetl(fh);
             line = fgetl(fh);
             while ischar(line)
-                fd1=fd.from_string(line);
-                key_name = get_key_name(fd1);
-                this.files_2copy_list.(key_name) = fd1;
+                if numel(line)> 0 && line(1)~= '#'
+                    fd1=fd.from_string(line);
+                    key_name = get_key_name(fd1);
+                    this.files_2copy_list.(key_name) = fd1;
+                end
                 line=fgetl(fh);
             end
             fclose(fh);
@@ -212,6 +214,21 @@ classdef funcCopier
             fprintf('****** Backed up %d files changed in Mslice\n ',nBackedUp);
         end
         
+        function this = check_new_dependencies(this,other_dependencies)
+            addnames = fieldnames(other_dependencies.files_2copy_list);
+            nDependencies = numel(addnames);
+            nNew = 0;
+            for i=1:nDependencies
+                if ~isfield(this.files_2copy_list,addnames{i})
+                    this.files_2copy_list.(addnames{i}) = other_dependencies.files_2copy_list.(addnames{i});
+                    nNew = nNew+1;
+                end
+            end
+            if nNew>0
+                fprintf('****** Added     %d new files to dependencies\n ',nNew);
+            end
+            
+        end
         
     end
     methods(Static)

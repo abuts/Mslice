@@ -1,4 +1,4 @@
-function [copy_source,store_destination,this]=is_modified(this)
+function [copy_source,store_destination,mod_targ]=is_modified(this)
 % method checks if the source file was modified
 %
 % if it was modified, the method also checks if the desrignation file
@@ -12,6 +12,7 @@ function [copy_source,store_destination,this]=is_modified(this)
 
 old_dest_chksum = this.dest_checksum;
 old_chksum = this.checksum;
+mod_targ  = file_descriptor(this);
 
 store_destination   = false;
 
@@ -36,13 +37,13 @@ else
                 sources = this.fields_to_modify_;
                 modifiers = this.modify_with_;
                 for i=1:this.n_fields_to_modify
-                    this.mod_success_.(sources{i})=modifiers{i};
+                    mod_targ.mod_success_.(sources{i})=modifiers{i};
                 end
             end
             %fprintf('File %s : modified line %s with %s ',this.source_name,lineO,line);
         else
             copy_source=true;
-            this.checksum_ = new_chksum;
+            mod_targ.checksum_ = new_chksum;
         end
         if copy_source
             % we need to check if destignation file was also changed independingtly
@@ -51,7 +52,7 @@ else
             if old_dest_chksum ~=new_dest_chksum
                 store_destination = true;
                 if new_dest_chksum ~=old_dest_chksum
-                    this.dest_checksum_ = new_dest_chksum;
+                    mod_targ.dest_checksum_ = new_dest_chksum;
                 end
             end
         end

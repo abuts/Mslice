@@ -11,20 +11,18 @@ function fc=synchronize_mslice(varargin)
 % HERBERT HAS TO BE INITIATED AFTER Mslice for this function to work
 % properly!
 
-fc=funcCopier();
+%fc_origin=funcCopier();
+%fc_list = funcCopier();
 
 
+fc_origin = build_dependencies_list(funcCopier);
+fc_list =funcCopier().load_list('herbert_dependent.lst');
 
-if nargin>0
-    fc = build_dependencies_list(fc);
-else
-    fc=fc.load_list('herbert_dependent1.lst');
-end
+fc_list = fc_list.check_new_dependencies(fc_origin);
 
 
-
-fc=fc.copy_dependencies();
-fc.save_list('herbert_dependent1.lst');
+fc_list =fc_list.copy_dependencies();
+fc_list.save_list('herbert_dependent1.lst');
 
 function fc=build_dependencies_list(fc)
 

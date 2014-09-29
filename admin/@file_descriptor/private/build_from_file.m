@@ -16,15 +16,13 @@ end
 
 if isempty(path)
     path = fileparts(which(filename));
-    if ispc
-        path(1) = lower(path(1));
-    end
 else
-    if ispc
-        path(1) = lower(path(1));
-    end
     
 end
+if ispc
+    path = lower(path);
+end
+
 hpath = this.root_source_path();
 path = strrep(path,hpath,'');
 
