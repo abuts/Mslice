@@ -1,14 +1,17 @@
 function key_name = get_key_name(this)
-% get the string, which uniquely describes funcion within a package and
-% consists of a function name and partial function path.
-key_name = ['k', num2str(this.checksum,'%lu')];
+% get the string, which uniquely describes funcion within a package 
+
+
+string = remove_os_dependency(this.short_source_path,this.source_name);
+chksum = calc_checksum(string,'S');
+key_name = ['k', num2str(chksum,'%lu')];
 %build_key_name(this.short_source_path,this.source_name);
 end
 
-function func_name = build_key_name(source_path,fname)
+function func_name = remove_os_dependency(source_path,fname)
 % function takes the path and function name provided as
 % input arguments and generates form them the string
-% which can be used as valid field name of a matlab structure.
+% which is OS independent to use as 
 %
 func_name = fullfile(source_path,fname);
 if ispc
