@@ -49,7 +49,7 @@ else
     phx_filename=check_file_existence(phx_filename,'.phx','PhxDir','ms_PhxFile',true);
 end
 
-loader = loaders_factory.instance().get_loader(spe_filename,phx_filename);
+loader = loaders_msl_factory.instance().get_loader(spe_filename,phx_filename);
 
 %=== load data file and find out which detectors are to be masked
 defines = loader.defined_fields();
