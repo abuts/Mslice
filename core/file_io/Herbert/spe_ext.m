@@ -36,7 +36,7 @@ if nargin>0
     end
 end
 
-ext0 = loaders_factory.instance().supported_file_extensions;
+ext0 = loaders_msl_factory.instance().supported_file_extensions;
 if ~win_fs
     spe_ext0 = strcat({'*'},lower(ext0));
     spe_ext1 = strcat({'*'},upper(ext0));
@@ -47,7 +47,7 @@ else
 end
 if full_form
     ext_base = strcat(spe_ext0,{';'});
-    descr=loaders_factory.instance().reader_descriptions;
+    descr=loaders_msl_factory.instance().reader_descriptions;
     nDescr=numel(descr);
     
     ext=cell(nDescr+1,2);

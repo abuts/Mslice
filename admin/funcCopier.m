@@ -105,6 +105,11 @@ classdef funcCopier
                     fd1=fd.from_string(line);
                     key_name = get_key_name(fd1);
                     this.files_2copy_list.(key_name) = fd1;
+%                     source_name = fd1.source_name;
+%                     if strcmp(source_name,'check_file_exist.m')
+%                         disp('  ');
+%                     end
+                    
                 end
                 line=fgetl(fh);
             end
@@ -179,7 +184,7 @@ classdef funcCopier
             
         end
         %------------------------------------------------------------------
-        function this=copy_dependencies(this)
+        function this=copy_dependencies(this,check_thoroughly)
             % method copies source functions into target functions if
             % such functions are marked as need copying by another methods
             names = fieldnames(this.files_2copy_list);
@@ -189,7 +194,11 @@ classdef funcCopier
             nDependencies = numel(names);
             for i=1:nDependencies
                 descriptor = this.files_2copy_list.(names{i});
-                [source_modidied,target_modified,check]= descriptor.is_modified();
+%                 source_name = descriptor.source_name;
+%                 if strcmp(source_name,'check_file_exist.m')
+%                     disp('  ');
+%                 end
+                [source_modidied,target_modified,check]= descriptor.is_modified(check_thoroughly);
                 if source_modidied
                     if target_modified % make copy of the target file and tell about it
                         targ_file = fullfile(descriptor.dest_path,descriptor.dest_fname);
@@ -199,7 +208,7 @@ classdef funcCopier
                         nBackedUp =nBackedUp +1;
                         
                     end
-                    this.files_2copy_list.(names{i})=descriptor.copy_and_modify();
+                    this.files_2copy_list.(names{i})=check.copy_and_modify();
                     nCopied=nCopied+1;
                     if this.files_2copy_list.(names{i}).fields_replaced()
                         nCopiedAndModified=nCopiedAndModified+1;
@@ -214,18 +223,32 @@ classdef funcCopier
             fprintf('****** Backed up %d files changed in Mslice\n ',nBackedUp);
         end
         
-        function this = check_new_dependencies(this,other_dependencies)
+        function this = check_new_dependencies(this,other_dependencies,check_thoroughly)
             addnames = fieldnames(other_dependencies.files_2copy_list);
             nDependencies = numel(addnames);
             nNew = 0;
+            nModified=0;
             for i=1:nDependencies
-                if ~isfield(this.files_2copy_list,addnames{i})
+%                 source_name = other_dependencies.files_2copy_list.(addnames{i}).source_name;
+%                 if strcmp(source_name,'check_file_exist.m')
+%                     disp('  ');
+%                 end
+                
+                if ~isfield(this.files_2copy_list,addnames{i})                    
                     this.files_2copy_list.(addnames{i}) = other_dependencies.files_2copy_list.(addnames{i});
                     nNew = nNew+1;
+                elseif check_thoroughly
+                    if this.files_2copy_list.(addnames{i}).n_fields_to_modify ~= other_dependencies.files_2copy_list.(addnames{i}).n_fields_to_modify;
+                        nModified=nModified+1;
+                        this.files_2copy_list.(addnames{i}) = other_dependencies.files_2copy_list.(addnames{i});                        
+                    end
                 end
             end
             if nNew>0
                 fprintf('****** Added     %d new files to dependencies\n ',nNew);
+            end
+            if nModified>0
+                fprintf('****** Modified  %d existing dependencies\n ',nModified);
             end
             
         end

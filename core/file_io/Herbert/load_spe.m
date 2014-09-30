@@ -101,7 +101,7 @@ end
 %
 filename=strtrim(spe_filename);
 
-loader   = loaders_factory.instance().get_loader(filename);
+loader   = loaders_msl_factory.instance().get_loader(filename);
 defines = loader.defined_fields();
 
 ndet     = loader.n_detectors;

@@ -43,10 +43,10 @@ end
 [ok,mess,full_file_name]=check_file_exist(file_name,{'.par','.phx'});
 if ok
     % create ascii loader object
-    rd = asciipar_loader(full_file_name);
+    rd = asciipar_msl_ldr(full_file_name);
 else     % it should be an hdf file with par data in it
-    rd = loaders_factory.instance().get_loader(file_name);
+    rd = loaders_msl_factory.instance().get_loader(file_name);
 end
 
-% return loaded par data from the rundata class
+% return loaded par data from specified loader instance
 par=rd.load_par(varargin{:});
