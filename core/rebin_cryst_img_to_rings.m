@@ -44,7 +44,7 @@ if isempty(range.polar_max)||range.polar_max>max_pol;   % if limits changed, the
 else
     max_pol   = range.polar_max;
 end
-if isempty(range.polar_delta)||range.polar_delta<pol_step % if limits changed, the GUI values have to change too.
+if isempty(range.polar_delta) %||range.polar_delta<pol_step % if limits changed, the GUI values have to change too.
     range.polar_delta = pol_step;
     has_changes = true;
     range.polar_delta_changed=true;
