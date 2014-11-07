@@ -20,7 +20,7 @@ function par=load_ASCII_par(filename)
 
 % Original author: T.G.Perring
 %
-% $Revision: 323 $ ($Date: 2014-01-10 19:52:56 +0000 (Fri, 10 Jan 2014) $)
+% $Revision: 406 $ ($Date: 2014-11-04 16:32:08 +0000 (Tue, 04 Nov 2014) $)
 
 % If no input parameter given, return
 if ~exist('filename','var')
@@ -53,6 +53,9 @@ end
 if ~use_mex
     par=get_par_matlab(filename);
 end
+
+par(3,:) = -par(3,:);
+
 
 
 

@@ -38,10 +38,9 @@ par(6,:)= 1:n_det;
 d_pol   = hdf5read(file_name,[root_folder,'/data/polar_width']);
 d_azim  = hdf5read(file_name,[root_folder,'/data/azimuthal_width']);
 
-% not clear what exactly this should be as there are no precize
-% correspondance between two without knowing detector's direction;
-par(4,:) = d_pol .*dist;
-par(5,:) = d_azim.*dist;
+
+par(4,:) = 2*dist.*tand(0.5*d_pol); % get detector's height according to Toby's definition
+par(5,:) = 2*dist.*sind(polar).*tand(0.5*d_azim); % get detecor's width according to Toby's definition
 
 if get(mslice_config,'log_level')>0
     disp(['LOADER_NXSPE:load_par::loaded ' num2str(n_det) ' detector(s)']);

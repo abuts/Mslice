@@ -212,6 +212,7 @@ end
 YLim=get(gca,'YLim');
 pos=get(h,'Position');
 set(h,'Position',[pos(1) YLim(2) pos(3)]);
+%
 hsamp=findobj('Tag','ms_sample');
 if ~isempty(hsamp),
     sample=get(hsamp,'Value');
