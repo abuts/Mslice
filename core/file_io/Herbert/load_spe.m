@@ -105,8 +105,11 @@ loader   = loaders_msl_factory.instance().get_loader(filename);
 defines = loader.defined_fields();
 
 ndet     = loader.n_detectors;
-[data.S,data.ERR,data.en]=loader.load_data();
+[S,ERR,en]=loader.load_data();
 
+data.S = S';
+data.ERR = ERR';
+data.en = (en(2:end)+en(1:end-1))'/2;
 
 [path,filename,fext] = fileparts(loader.file_name);
 data.filename=[filename,fext];
