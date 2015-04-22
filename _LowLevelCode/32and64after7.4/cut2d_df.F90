@@ -29,7 +29,7 @@ subroutine mexFunction(nlhs, plhs, nrhs, prhs)
   mwpointer:: pixel_err_pr, grid_pr,  temp1, temp2, temp3,temp
   mwpointer:: x_pr, intensity_pr, error_int_pr, perm_pr, number_pix_pr,temp_pr
   ! declare calling functions
-  mwpointer:: mxGetPr,mxCalloc,mxCreateCharMatrixFromStrings,mxCreatedoublematrix; 
+  mwpointer:: mxGetPr,mxCalloc,mxCreateCharMatrixFromStrings,mxCreateDoubleMatrix;   
   mwsize   :: mxGetM, mxGetN, mxIsNumeric 
   ! declare local operating variables of the interface funnction
   mwsize :: n, m,final_npixel,one,four
@@ -105,11 +105,12 @@ subroutine mexFunction(nlhs, plhs, nrhs, prhs)
 
   !     Create matrices for the return arguments (operating workspace for the subroutine cut2d_df)
   complex_flag  = 0
-  plhs(1)	    =mxCreatedoublematrix(one,n,complex_flag)
-  plhs(2)	    =mxCreatedoublematrix(one,n,complex_flag)
-  plhs(3)       =mxCreatedoublematrix(one,n,complex_flag)
-  plhs(4)       =mxCreatedoublematrix(ndet*ne,one,complex_flag)
-  plhs(5)       =mxCreatedoublematrix(one,n,complex_flag)
+  plhs(1)	    =mxCreateDoubleMatrix(one,n,complex_flag)
+  plhs(2)	    =mxCreateDoubleMatrix(one,n,complex_flag)
+  plhs(3)       =mxCreateDoubleMatrix(one,n,complex_flag)
+  plhs(4)       =mxCreateDoubleMatrix(ndet*ne,one,complex_flag)
+  plhs(5)       =mxCreateDoubleMatrix(one,n,complex_flag)
+  
   x_pr          =mxGetPr(plhs(1))
   intensity_pr  =mxGetPr(plhs(2))
   error_int_pr  =mxGetPr(plhs(3))
@@ -134,7 +135,7 @@ subroutine mexFunction(nlhs, plhs, nrhs, prhs)
 
   !     Reduce size of output arrays x,intensity,error_int,perm,number_pix to useful data only  
   ! deal with permutation matrix first
-  temp=mxCreatedoublematrix(final_npixel,1,0)
+  temp=mxCreateDoubleMatrix(final_npixel,1,0)
   temp_pr= mxGetPr(temp)
   call reduce_output(m,n,%val(perm_pr),%val(temp_pr))
   call mxDestroyArray(plhs(4))
@@ -142,31 +143,31 @@ subroutine mexFunction(nlhs, plhs, nrhs, prhs)
 
   if (m .lt. n) then
      ! deal with x,intensity,error,number_pix now
-     temp=mxCreatedoublematrix(1,m,0)
+     temp=mxCreateDoubleMatrix(one,m,complex_flag)
      temp_pr= mxgetpr(temp)
      call reduce_output(m,n,%val(x_pr),%val(temp_pr))
      call mxDestroyArray(plhs(1))
      plhs(1)=temp
 
-     temp=mxCreatedoublematrix(1,m,0)
+     temp=mxCreateDoubleMatrix(one,m,complex_flag)
      temp_pr= mxgetpr(temp)
      call reduce_output(m,n,%val(intensity_pr),%val(temp_pr))
      call mxDestroyArray(plhs(2))
      plhs(2)=temp         
 
-     temp=mxCreatedoublematrix(1,m,0)
+     temp=mxCreateDoubleMatrix(one,m,complex_flag)
      temp_pr= mxgetpr(temp)
      call reduce_output(m,n,%val(error_int_pr),%val(temp_pr))
      call mxDestroyArray(plhs(3))
      plhs(3)=temp 
 
-     temp=mxCreatedoublematrix(1,m,0)
+     temp=mxCreateDoubleMatrix(one,m,complex_flag)
      temp_pr= mxgetpr(temp)
      call reduce_output(m,n,%val(number_pix_pr),%val(temp_pr))
      call mxDestroyArray(plhs(5))
      plhs(5)=temp 
   end if
-  plhs(6)       =mxCreatedoublematrix(1,1,0)
+  plhs(6)       =mxCreateDoubleMatrix(1,1,0)
   call mxCopyReal8ToPtr(vvy,mxGetPr(plhs(6)),1)
 
 

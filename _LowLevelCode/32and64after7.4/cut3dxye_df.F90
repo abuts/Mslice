@@ -26,7 +26,7 @@ subroutine mexFunction(nlhs, plhs, nrhs, prhs)
   mwpointer :: vx_pr, vy_pr, vz_pr, pixel_int_pr, pixel_err_pr, grid_pr,temp_pr
   mwpointer :: x_pr, intensity_pr, error_int_pr
   ! declare calling functions
-  mwpointer :: mxGetPr,mxCalloc,mxCreateCharMatrixFromStrings,mxCreatedoublematrix
+  mwpointer :: mxGetPr,mxCalloc,mxCreateCharMatrixFromStrings,mxCreateDoubleMatrix
   mwsize    :: mxGetM, mxGetN, mxIsNumeric,longOne 
   mwpointer ::  temp1, temp2, temp3,temp  
  
@@ -117,9 +117,9 @@ subroutine mexFunction(nlhs, plhs, nrhs, prhs)
 
   !     Create matrices for the return arguments (operating workspace for the subroutine cut3dxye_df)
   complex_flag  = 0
-  plhs(1)	    =mxCreatedoublematrix(longOne,n,complex_flag) ! these are matlab pointers
-  plhs(2)	    =mxCreatedoublematrix(longOne,n,complex_flag)
-  plhs(3)       =mxCreatedoublematrix(longOne,n,complex_flag)
+  plhs(1)	    =mxCreateDoubleMatrix(longOne,n,complex_flag) ! these are matlab pointers
+  plhs(2)	    =mxCreateDoubleMatrix(longOne,n,complex_flag)
+  plhs(3)       =mxCreateDoubleMatrix(longOne,n,complex_flag)
   x_pr          = mxGetPr(plhs(1)) ! these are fortran pointers of the matlab mxArrays created above
   intensity_pr  = mxGetPr(plhs(2)) 
   error_int_pr  = mxGetPr(plhs(3))
@@ -132,17 +132,17 @@ subroutine mexFunction(nlhs, plhs, nrhs, prhs)
   !     Reduce size of output arrays x,intensity,error_int to useful data only  
   if (m .lt. n) then
      ! deal with x,intensity,error,number_pix now
-     temp=mxCreatedoublematrix(1,m,0)
+     temp=mxCreateDoubleMatrix(1,m,0)
      temp_pr= mxgetpr(temp)
      call reduce_output(m,n,%val(x_pr),%val(temp_pr))
      call mxDestroyArray(plhs(1))
      plhs(1)=temp
-     temp=mxCreatedoublematrix(1,m,0)
+     temp=mxCreateDoubleMatrix(1,m,0)
      temp_pr= mxgetpr(temp)
      call reduce_output(m,n,%val(intensity_pr),%val(temp_pr))
      call mxDestroyArray(plhs(2))
      plhs(2)=temp
-     temp=mxCreatedoublematrix(1,m,0)
+     temp=mxCreateDoubleMatrix(1,m,0)
      temp_pr= mxgetpr(temp)
      call reduce_output(m,n,%val(error_int_pr),%val(temp_pr))
      call mxDestroyArray(plhs(3))
@@ -150,8 +150,8 @@ subroutine mexFunction(nlhs, plhs, nrhs, prhs)
   end if
 
 
-  plhs(4)       =mxCreatedoublematrix(longOne,longOne,complex_flag)
-  plhs(5)       =mxCreatedoublematrix(longOne,longOne,complex_flag)
+  plhs(4)       =mxCreateDoubleMatrix(longOne,longOne,complex_flag)
+  plhs(5)       =mxCreateDoubleMatrix(longOne,longOne,complex_flag)
 
   call mxCopyReal8ToPtr(vvy,mxGetPr(plhs(4)),longOne)
   call mxCopyReal8ToPtr(vvz,mxGetPr(plhs(5)),longOne)
