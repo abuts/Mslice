@@ -208,8 +208,8 @@ else    %=== single crystal and conventional detectors, or powder data
             end
         end
     else
-        % this should be fixed 
-        if verLessThan('matlab','8.0')
+         % this should be fixed 
+        if ~verLessThan('matlab','8.0')
             use_mex = false;
         end
         if use_mex 

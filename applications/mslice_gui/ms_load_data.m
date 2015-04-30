@@ -50,7 +50,7 @@ if ~isempty(h_status)&&ishandle(h_status),
 end
 
 % === construct .spe data structure
-spe_filename=check_file_existence(spe_filename,'.spe','DataDir','ms_DataFile');
+spe_filename=check_file_existence(spe_filename,'spe','DataDir','ms_DataFile');
 % now phx may not be present so check should be in load_spe
 %phx_filename=check_file_existence(phx_filename,'phx','PhxDir','ms_PhxFile');
 

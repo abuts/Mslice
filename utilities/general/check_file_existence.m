@@ -17,6 +17,9 @@ if ~exist(file_name,'file')
         disp(['can not find file',file_name]);
         disp(['choose ',ext,' file location']); 
         path_name = fileparts(file_name);
+        if ext(1) == '.'
+            ext=ext(2:end);
+        end
         [file_name,path_name] = uigetfile([path_name,filesep,'*.',ext],['Select ',ext,' files to open']);   
     end
     % set the actual value of the filename and filepath to configuration

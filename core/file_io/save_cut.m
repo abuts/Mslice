@@ -38,7 +38,6 @@ end
 fid=fopen(filename,'wt');
 if fid==-1,
    disp([ 'Error opening file ' filename ]);
-   fclose(fid);
    return
 end
 
@@ -49,14 +48,14 @@ if ~exist('option','var')|isempty(option)|~ischar(option)|~isempty(findstr(optio
    % === check presence of required fields for the cut data structure
    if ~isfield(cut,'x')|~isfield(cut,'y')|~isfield(cut,'e')|~isfield(cut,'npixels')|...
          ~isfield(cut,'pixels'),
-      disp(['Do not have enough information to save cut in .cut format']);
+      disp('Do not have enough information to save cut in .cut format');
       fclose(fid);
       return;
    end
    
    % === save as a 'cut' file with full pixel information {default option}   
    disp(['Saving cut ( ' num2str(length(cut.x)) ' point(s) and ' num2str(size(cut.pixels,1)) ' pixel(s)) in .cut format to file : ']);
-   disp([filename]);
+   disp(filename);
 	drawnow;
 	n=length(cut.x);
    fprintf(fid,'%5d\n',n);

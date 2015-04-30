@@ -31,7 +31,7 @@ classdef mslice_config<config_bas_msl
     
     properties(Access=protected)
         MSliceDir_=[] % -- calculated: Mslice folder
-        SampleDir_=[] % -- sealed: folder with msp configuration files
+        SampleDir_=[] % -- sealed: folder with sample msp configuration files
         MspDir_     % folder with msp files which describe Mslice configurations
         MspFile_='crystal_psd.msp' % default msp file
         DataDir_    % data files (spe files)
