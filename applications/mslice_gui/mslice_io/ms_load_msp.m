@@ -194,8 +194,8 @@ while (ischar(t))&(~isempty(t(~isspace(t))))
                     modificators{nmodific}=file_name;
                 end
             elseif strncmp(value,'$.',2) % this is probably relative path to a sample data and the field is read only
-                full_dir=fullfile(get(mslice_config,'MspDir'),value(4:length(value)));
-                set(mslice_config,field,full_dir);
+                %full_dir=fullfile(get(mslice_config,'MspDir'),value(4:length(value)));
+                %set(mslice_config,field,'defaults');
                 is_read_only=true;
             elseif strncmp(value,'.',1) % this is probably relative path to a sample data below
                 full_dir=fullfile(get(mslice_config,'MspDir'),value(3:length(value)));
