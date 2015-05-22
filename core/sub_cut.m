@@ -1,6 +1,4 @@
 function cut=sub_cut(cut1,cut2,noebars)
-
-% function cut=sub_cut(cut1,cut2,noebars)
 % subtract a 'background' {cut2} from cut1 
 % returns structure cut with same fields as cut1
 % cut1 is structure with required fields (n=number of data points)
@@ -34,14 +32,14 @@ if ((length(cut1.x)~=length(cut2.x))|~all(cut1.x==cut2.x)),
    % perform linear interpolation of cut2.x values onto the overlapping range of cut1.x values
    %   disp(['The two cut data sets are not on the same x-grid.'])
    format short g;
-   disp(['Interpolate cut2 values ('num2str(length(cut2.x)) ...
-         ' points with ' num2str(cut2.x(1)) '<= x <= ' num2str(cut2.x(end)) ') ']);
-   disp(['on the grid of cut1 (' num2str(length(cut1.x)) ...
-         ' points with ' num2str(cut1.x(1)) '<= x <= ' num2str(cut1.x(end)) ') ']);
+   disp(['Interpolate cut2 values (',num2str(length(cut2.x)),...
+         ' points with ',num2str(cut2.x(1)),'<= x <= ',num2str(cut2.x(end)),') ']);
+   disp(['on the grid of cut1 (',num2str(length(cut1.x)),...
+         ' points with ',num2str(cut1.x(1)),'<= x <= ',num2str(cut1.x(end)),') ']);
    index=((cut1.x>=min(cut2.x))&(cut1.x<=max(cut2.x)));
    m=sum(index); % final points in the subtracted cut
    if m==0,	% === no overlapping points
-      disp(['The two cuts have no overlapping x-ranges. Subtraction not performed.']);
+      disp('The two cuts have no overlapping x-ranges. Subtraction not performed.');
       cut=[];
       return;
    else

@@ -208,9 +208,9 @@ end
 % === call cut_spe routine with different parameters for cuts through 3d data (single crystal+psd) and 2d data (single crystal+non-PSD or powder)
 % see if plot wanted or not (added TGP)
 if exist('cmd','var')&(~isempty(cmd))&(ischar(cmd))&(strcmp(cmd(~isspace(cmd)),'noplot')),
-    noplot=(1>0);   % demand there is no plot
+    noplot=true;   % demand there is no plot
 else
-    noplot=(1<0);
+    noplot=false;
 end
 
 if (sample==1)&&(analmode==1)&&(psd==1),

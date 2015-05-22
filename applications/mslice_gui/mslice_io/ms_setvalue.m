@@ -31,11 +31,18 @@ if ~exist('h_cw','var') || isempty(h_cw)
 end
 % === locate handle to field object
 h=findobj(h_cw,'Tag',['ms_' field_name]);
-if isempty(h)||~isnumeric(h)||(numel(h)~=1)||~ishandle(h),
-    fprintf('Could not locate a unique handle to object of name %s. Return.\n',field_name);
-    return;
+if verLessThan('matlab','8.4')
+    if isempty(h)||~isnumeric(h)||(numel(h)~=1)||~ishandle(h),
+        fprintf('Could not locate a unique handle to object of name %s. Return.\n',field_name);
+        return;
+    end
+else
+    if isempty(h)||(numel(h)~=1)||~ishandle(h),
+        fprintf('Could not locate a unique handle to object of name %s. Return.\n',field_name);
+        return;
+    end
+    
 end
-
 % === convert value into a universal string format
 if ~exist('value','var'), % if ~exist assume []
     value=[];
@@ -66,7 +73,7 @@ if strcmp(get(h,'Style'),'checkbox'),
         set(h,'Value',floor(str2double(val)));
         %disp(['ms_' field_name ' gets ''Value'' property ' num2str(floor(str2num(val)))]);
     elseif isnumeric(val) &&( val>=0 && val <2)
-        set(h,'Value',floor(val));        
+        set(h,'Value',floor(val));
     else
         fprintf('Invalid value for a checkbox, could be only 0 or 1 (unchecked or checked)');
         return;
@@ -100,7 +107,7 @@ elseif strcmp(get(h,'Style'),'popupmenu'),
 else
     if exist('highlight','var')
         if exist('colour','var')
-            set(h,'String',val,'ForegroundColor',colour);            
+            set(h,'String',val,'ForegroundColor',colour);
         else
             set(h,'String',val,'ForegroundColor','b');
         end
