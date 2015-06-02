@@ -50,7 +50,7 @@ else
     end
     disp(mess)
 end
-disp('! Matlab code: Last ISIS substantial modifications date: 01/05/2014!')
+disp('! Matlab code: Last ISIS substantial modifications date: 01/06/2014!')
 disp('!------------------------------------------------------------------!')
 
 
