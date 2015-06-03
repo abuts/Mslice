@@ -103,5 +103,9 @@ u2=[0 0 1 0];
 u3=[0 0 0 1];
 data.u=[u1;u2;u3];
 data.axis_label=str2mat('Q_h','Q_l','E');
-data.axis_unitlabel=str2mat(' in 1.16 Å^{-1}',' in 1.16 Å^{-1}', ' (meV)','Intensity (arb. units)');
+if verLessThan('matlab','8.4')
+    data.axis_unitlabel=str2mat(' in 1.16 ï¿½^{-1}',' in 1.16 ï¿½^{-1}', ' (meV)','Intensity (arb. units)');
+else
+    data.axis_unitlabel=str2mat(' in 1.16 \AA^{-1}',' in 1.16 \AA^{-1}', ' (meV)','Intensity (arb. units)');
+end
 data.axis_unitlength=[1.16 1.16 1];

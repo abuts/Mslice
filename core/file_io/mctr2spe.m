@@ -115,7 +115,11 @@ if set==1,
 	u3=[0 0 0 1];
 	data.u=[u1;u2;u3];
 	data.axis_label=str2mat('Qk','Ql','E');
-	data.axis_unitlabel=str2mat('in 1 Å^{-1}','in 1 Å^{-1}', ' (meV)','Intensity (arb. units)');
+    if verLessThan('matlab','8.4')
+        data.axis_unitlabel=str2mat('in 1 ï¿½^{-1}','in 1 ï¿½^{-1}', ' (meV)','Intensity (arb. units)');
+    else
+        data.axis_unitlabel=str2mat('in 1 \AA^{-1}','in 1 \AA^{-1}', ' (meV)','Intensity (arb. units)');
+    end
    data.axis_unitlength=[1 1 1];
 elseif set==2,
 	v1=reshape(Qk,ndet,ne);
@@ -132,7 +136,11 @@ elseif set==2,
 	u3=[0 0 1 0];
 	data.u=[u1;u2;u3];
 	data.axis_label=str2mat('Qk','E','Ql');
-	data.axis_unitlabel=str2mat('in 1 Å^{-1}',' (meV)','in 1 Å^{-1}','Intensity (arb. units)');
+    if verLessThan('matlab','8.4')    
+        data.axis_unitlabel=str2mat('in 1 ï¿½^{-1}',' (meV)','in 1 ï¿½^{-1}','Intensity (arb. units)');
+    else
+        data.axis_unitlabel=str2mat('in 1 \AA^{-1}',' (meV)','in 1 \AA^{-1}','Intensity (arb. units)');        
+    end
    data.axis_unitlength=[1 1 1];
 end   
 

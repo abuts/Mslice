@@ -15,7 +15,7 @@ fig=findobj('Tag','disp_spe');
 if isempty(fig),
     colordef none;	% black background
     % === create a new figure with 'Tag' property 'disp_spe'
-    if verLessThen('matlab','8.4')
+    if verLessThan('matlab','8.4')
         fig=figure('Tag','disp_spe','PaperPositionMode','auto','Name','MSlice : Display','Renderer','zbuffer');
     else
         fig=figure('Tag','disp_spe','PaperPositionMode','auto','Name','MSlice : Display');
@@ -123,9 +123,9 @@ else
     colormap jet;
 end
 
-% === set aspect ratio 1:1 if units along x and y are the same and are Å^{-1}
-if (~isempty(strfind(data.axis_unitlabel(1,:),'Å^{-1}')))&& ...
-        (~isempty(strfind(data.axis_unitlabel(2,:),'Å^{-1}')))
+% === set aspect ratio 1:1 if units along x and y are the same and are ï¿½^{-1}
+if (~isempty(strfind(data.axis_unitlabel(1,:),'ï¿½^{-1}')))&& ...
+        (~isempty(strfind(data.axis_unitlabel(2,:),'ï¿½^{-1}')))
     figure(fig);
     set(gca,'DataAspectRatioMode','manual');
     a=get(gca,'DataAspectRatio');
@@ -148,7 +148,7 @@ x=1/aspect(1)*(XLim(2)-XLim(1));
 y=1/aspect(2)*(YLim(2)-YLim(1));
 scx=pos(3)/x;
 scy=pos(4)/y;
-if scx<scy,
+if scx<scy && verLessThan('matlab','8.4')
     height=scx*y;
     pos=get(h,'Position');
     set(h,'PlotBoxAspectRatio',[0.975*pos(3) height 1]);
