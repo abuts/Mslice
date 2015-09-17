@@ -439,8 +439,9 @@ if ~isempty(out_file)&&isempty(strfind(out_type,'none')),
     if to_cut_file&&(~isempty(strfind(lower(out_type),'mfit'))),
         cut.efixed=data.efixed;   % numeric
         cut.emode=data.emode;       % numeric
-        cut.MspDir=data.MspDir;   % string
-        cut.MspFile=data.MspFile; % string
+        mcf= mslice_config;
+        cut.MspDir=mcf.MspDir;   % string
+        cut.MspFile=mcf.MspFile; % string
         cut.sample=data.sample;   % numeric
         if data.sample==1,    % single crystal, so save lattice parameters and crystal orientation as well
             cut.abc=data.abc;   % [as bs cs; aa bb cc]
