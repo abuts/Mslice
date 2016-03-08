@@ -24,12 +24,12 @@ function [new_checksum, modifiers_successfull]=copy_and_modify_file(source_file,
 
 fs=fopen(source_file,'r');
 if fs<=0
-    error('FUNC_COPIER:copyAndModify',' error opening source file %s',fsource);
+    error('FUNC_COPIER:copyAndModify',' error opening source file %s',source_file);
 end
 cl1 = onCleanup(@()fclose(fs));
 ft= fopen(dest_file,'w');
 if ft<=0
-    error('FUNC_COPIER:copyAndModify',' error opening target file file %s',fdest);
+    error('FUNC_COPIER:copyAndModify',' error opening target file file %s',dest_file);
 end
 cl2 = onCleanup(@()fclose(ft));
 % clear all previous information (got may be from loading) abour successfully replaced

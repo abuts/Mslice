@@ -1,4 +1,4 @@
-classdef mem_msl_fs < Singleton
+classdef mem_msl_fs < handle
     % The class provides file system type interface for saving/storing memfiles
     % in memory
     %

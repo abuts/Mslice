@@ -1,9 +1,9 @@
-classdef loaders_msl_factory < Singleton
+classdef loaders_msl_factory < handle
     % The class responsible for providing and initiating requested file loader on
     % demand
     %
     %
-    % $Revision: 373 $ ($Date: 2014-04-05 20:25:26 +0100 (Sat, 05 Apr 2014) $)
+    % $Revision: 486 $ ($Date: 2016-03-01 22:09:20 +0000 (Tue, 01 Mar 2016) $)
     %
     
     
@@ -62,7 +62,7 @@ classdef loaders_msl_factory < Singleton
     
     methods % Public Access
         function descr_list=get.reader_descriptions(obj)
-            % returns list of the supported readers namew sith their briefe
+            % returns list of the supported readers names with their brief
             % descriptions
             descr_list = obj.reader_descriptions_;
         end
@@ -93,8 +93,12 @@ classdef loaders_msl_factory < Singleton
             end
             for i=1:numel(obj.supported_readers)
                 loader = obj.supported_readers{i};
+				% check if loader can load the file. Return structure, containing 
+				% opened file handle and auxiliary information, read from the file
+				% if it can load a file for init function not to read it again. 
                 [ok,fh] = loader.can_load(full_data_name);
                 if ok
+					% if loader can, initialize loader with the file.
                     if exist('par_file_name','var')
                         loader=loader.init(full_data_name,par_file_name,fh);
                     else

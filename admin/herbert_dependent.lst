@@ -1,6 +1,6 @@
 source_name_;checksum_;source_path_;is_folder_class_;dest_path_;dest_name_;dest_checksum_;fext_;
-Singleton;605818384;\classes;0;\classes;;;.m
-equal_to_tol;2703169259;\utilities\maths;0;utilities/general;;;.m
+Singleton;4125136848;\classes;0;\classes;;;.m
+equal_to_tol;515772168;\utilities\maths;0;utilities/general;;;.m
 check_file_exist;1022712591;\classes\data_loaders;0;\classes\data_loaders;;;.m
 find_dataset_info;1773122636;\classes\data_loaders;0;\classes\data_loaders;;;.m
 find_root_nexus_dir;3691192246;\classes\data_loaders;0;\classes\data_loaders;;;.m
@@ -19,9 +19,9 @@ check_isconfigured;705233309;\configuration\@config_store\private;0;classes/conf
 clear_particular_config;1668723461;\configuration\@config_store\private;0;classes/configuration/@config_stor_msl/private;;;.m
 config_file_name;2291498219;\configuration\@config_store\private;0;classes/configuration/@config_stor_msl/private;;291633068;.m;1;config_store;config_stor_msl
 delete_all_files;2716191474;\configuration\@config_store\private;0;classes/configuration/@config_stor_msl/private;;533193462;.m;1;config_store;config_stor_msl
-get_config_internal;4018828867;\configuration\@config_store\private;0;classes/configuration/@config_stor_msl/private;;;.m
-load_config_from_file;4171252459;\configuration\@config_store\private;0;classes/configuration/@config_stor_msl/private;;;.m
-make_config_folder;1307835925;\configuration\@config_store\private;0;classes/configuration/@config_stor_msl/private;;;.m
+get_config_internal;736880845;\configuration\@config_store\private;0;classes/configuration/@config_stor_msl/private;;;.m
+load_config_from_file;1843018594;\configuration\@config_store\private;0;classes/configuration/@config_stor_msl/private;;;.m
+make_config_folder;1307835925;utilities\misc;0;classes\configuration/@config_store/private;;;.m
 save_config;2519456900;\configuration\@config_store\private;0;classes/configuration/@config_stor_msl/private;;;.m
 get_par;3963156461;\classes\data_loaders;0;\classes\data_loaders;;1226288644;.m;2;asciipar_loader;asciipar_msl_ldr;loaders_factory;loaders_msl_factory
 asciipar_loader;3887595296;\classes\data_loaders\@asciipar_loader;1;classes\data_loaders\@asciipar_msl_ldr;asciipar_msl_ldr;3137711500;.m;1;asciipar_loader;asciipar_msl_ldr
@@ -53,7 +53,7 @@ load_data;1654939195;\classes\data_loaders\@memfile;0;classes/data_loaders/@ldr_
 memfile;170522648;\classes\data_loaders\@memfile;1;classes\data_loaders\@ldr_msl_membased;ldr_msl_membased;3842611272;.m;3;a_loader;a_msl_loader;memfile;ldr_msl_membased;mem_file_fs;mem_msl_fs
 check_defined_fields;422082653;\classes\data_loaders\@memfile\private;0;classes/data_loaders/@ldr_msl_membased/private;;;.m
 parse_load_varargout;3147460406;\classes\data_loaders\@memfile\private;0;classes/data_loaders/@ldr_msl_membased/private;;;.m
-mem_file_fs;2307130069;\classes\data_loaders;0;;mem_msl_fs;1709677606;.m;1;mem_file_fs;mem_msl_fs
-loaders_factory;2836751681;\classes\data_loaders;0;;loaders_msl_factory;3856220077;.m;6;loaders_factory;loaders_msl_factory;a_loader;a_msl_loader;loader_ascii;ldr_msl_ascii;loader_nxspe;ldr_msl_nxspe;loader_speh5;ldr_msl_speh5;memfile;ldr_msl_membased
+mem_file_fs;3242056402;\classes\data_loaders;0;;mem_msl_fs;294310870;.m;1;mem_file_fs;mem_msl_fs
+loaders_factory;656758600;\classes\data_loaders;0;;loaders_msl_factory;2310847893;.m;6;loaders_factory;loaders_msl_factory;a_loader;a_msl_loader;loader_ascii;ldr_msl_ascii;loader_nxspe;ldr_msl_nxspe;loader_speh5;ldr_msl_speh5;memfile;ldr_msl_membased
 store_internal;2460722403;\configuration\@config_store\private;0;classes/configuration/@config_stor_msl/private;;;.m
 load_ASCII_phx_as_par;861236340;\classes\data_loaders\@asciipar_loader\private;0;classes/data_loaders/@asciipar_msl_ldr/private;;;.m
