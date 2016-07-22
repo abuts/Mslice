@@ -365,6 +365,11 @@ else
     sample=get(findobj('Tag','ms_sample'),'Value');
     if sample==1,
         analmode=get(findobj('Tag','ms_analysis_mode'),'Value');
+    elseif isempty(sample)
+        warning('MSLICE:gui_not_present',...
+            'Can not retrieve data from runnung Mslice GUI. Assuming powder analysis')
+        sample = 2;
+        analmode=1;
     end
     if (sample==1)&&(analmode==1),    % single crystal sample, analysed as single crystal and with conventional (non-PSD) detectors
         temp=data.u(y,:)*mean([vy_min vy_max]);
