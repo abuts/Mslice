@@ -17,7 +17,7 @@ classdef mslice_config<config_bas_msl
         cut_OutputDir   % default folder to save cuts.
         slice_font_size=10
         cut_font_size=10
-        use_mex=true    % try to use mex if found
+        use_mex=false    % try to use mex if found
         force_mex_if_use_mex=false % fail if mex files do not work
         
         % if to set on Matlab path Herbert/Maltab unit test harness
@@ -40,7 +40,7 @@ classdef mslice_config<config_bas_msl
         
         slice_font_size_  =  10
         cut_font_size_    =  10
-        use_mex_          =  true    % try to use mex if found
+        use_mex_          =  false    % try to use mex if found
         force_mex_if_use_mex_=false % fail if mex files do not work
         %
         init_tests_  =  false
