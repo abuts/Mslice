@@ -13,7 +13,7 @@ function [varargout]=load_data(this,new_file_name)
 
 % $Author: Alex Buts; 20/10/2011
 %
-% $Revision: 323 $ ($Date: 2014-01-10 19:52:56 +0000 (Fri, 10 Jan 2014) $)
+% $Revision: 502 $ ($Date: 2016-05-26 10:27:20 +0100 (Thu, 26 May 2016) $)
 
 
 if exist('new_file_name','var')
@@ -59,9 +59,9 @@ ERR(nans) = 0;
 % Fill output argument(s)
 if nargout == 1
     % set also all dependent on S variables
-    this.S_stor  =S;
-    this.ERR_stor=ERR;
-    this.en_stor =en;
+    this.S_  =S;
+    this.ERR_=ERR;
+    this.en_ =en;
     
     varargout{1}=this;
 elseif nargout ==2
@@ -72,9 +72,9 @@ elseif nargout == 3
     varargout{2}=ERR;
     varargout{3}=en;
 elseif nargout == 4
-    this.S_stor  =S;
-    this.ERR_stor=ERR;
-    this.en_stor =en;
+    this.S_  =S;
+    this.ERR_=ERR;
+    this.en_ =en;
     
     varargout{1}=S;
     varargout{2}=ERR;

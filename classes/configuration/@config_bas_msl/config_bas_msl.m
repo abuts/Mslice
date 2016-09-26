@@ -104,7 +104,7 @@ classdef config_bas_msl
             name = this.class_name_;
         end
         function folder = get.config_folder()
-            folder = config_stor_msl.instance().config_folder;
+            folder = config_stor_msl.instance.config_folder;
         end
         %-----------------------------------------------------------------
         function is = get_saveable_default(this)
@@ -115,11 +115,11 @@ classdef config_bas_msl
             is = this.is_saveable_;
         end
         function is=get.saveable(this)
-            is = config_stor_msl.instance().get_saveable(this);
+            is = config_stor_msl.instance.get_saveable(this);
         end
         %
         function this=set.saveable(this,val)
-            config_stor_msl.instance().set_saveable(this,val);
+            config_stor_msl.instance.set_saveable(this,val);
         end
         %------------------------------------------------------------------
         function is = get.returns_defaults(this)
@@ -132,6 +132,12 @@ classdef config_bas_msl
             else
                 this.returns_defaults_=false;
             end
+        end
+        function isit = is_default(this)
+            % check if a configuration has been changed by user or 
+            % still has its default values    
+            cn = this.class_name;
+            isit = ~config_stor_msl.instance.has_config(cn);
         end
         %------------------------------------------------------------------
         function value =get_or_restore_field(this,field_name)
@@ -146,7 +152,7 @@ classdef config_bas_msl
                 % get actual configuration
                 % if class have never been stored in configuration, it
                 % will return defaults
-                value = config_stor_msl.instance().get_config_field(this,field_name);
+                value = config_stor_msl.instance.get_config_field(this,field_name);
             end
         end
         %

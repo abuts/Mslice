@@ -35,7 +35,16 @@ if nargin==1
 else
     start_app(msl_default_path);    
 end
-path = fileparts(which('mslice_init.m'));
+path = fileparts(which('mslice_init.m'))
+
+% set up multiusers computer specific settings, 
+% namely settings wich are common for all new users of the specific computer
+% e.g.:
+mc = mslice_config()
+if mc.is_default
+% mc.use_mex = true;
+end
+
 
 
 function start_app(path)

@@ -4,13 +4,13 @@ function arr = get_consistent_array(this,field_name)
 %
 %
 %
-% $Revision: 319 $ ($Date: 2014-01-08 22:27:51 +0000 (Wed, 08 Jan 2014) $)
+% $Revision: 502 $ ($Date: 2016-05-26 10:27:20 +0100 (Thu, 26 May 2016) $)
 %
 
 
 if ~isempty(this.(field_name))
-    s_eq_err = all(size(this.S_stor)==size(this.ERR_stor));
-    en_suits_s = (size(this.en_stor,1) ==size(this.S_stor,1)+1);
+    s_eq_err = all(size(this.S_)==size(this.ERR_));
+    en_suits_s = (size(this.en_,1) ==size(this.S_,1)+1);
     
     if  s_eq_err && en_suits_s
         arr = this.(field_name);

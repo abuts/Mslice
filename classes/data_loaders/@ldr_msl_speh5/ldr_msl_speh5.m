@@ -3,7 +3,7 @@ classdef ldr_msl_speh5 < a_msl_loader
     % ASCII par file and all necessary additional parameters
     %   Detailed explanation goes here
     %
-    % $Revision: 374 $ ($Date: 2014-04-05 21:44:50 +0100 (Sat, 05 Apr 2014) $)
+    % $Revision: 502 $ ($Date: 2016-05-26 10:27:20 +0100 (Thu, 26 May 2016) $)
     %
     
     properties
@@ -123,11 +123,11 @@ classdef ldr_msl_speh5 < a_msl_loader
             end
             
             if exist('fh','var')
-                this.n_detindata_stor = fh.n_detectors;
-                this.en_stor          = fh.en;
+                this.n_detindata_ = fh.n_detectors;
+                this.en_          = fh.en;
                 this.efix             = fh.ei;
                 this.speh5_version    = fh.speh5_version;
-                this.data_file_name_stor = fh.file_name;
+                this.data_file_name_ = fh.file_name;
             else
                 this.file_name =speh5_file_name;
             end
@@ -161,7 +161,7 @@ classdef ldr_msl_speh5 < a_msl_loader
         end
         function this = set_data_info(this,full_speh5_file_name)
             % obtain data file information and store it into the class
-            [this.n_detindata_stor,this.en_stor,this.data_file_name_stor, ...
+            [this.n_detindata_,this.en_,this.data_file_name_, ...
                 this.efix,this.speh5_version]=ldr_msl_speh5.get_data_info(full_speh5_file_name);
         end
         

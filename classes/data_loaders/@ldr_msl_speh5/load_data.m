@@ -7,7 +7,7 @@ function [varargout]=load_data(this,new_file_name)
 % as all loaders are accessed through common interface.
 %
 %
-% $Revision: 323 $ ($Date: 2014-01-10 19:52:56 +0000 (Fri, 10 Jan 2014) $)
+% $Revision: 502 $ ($Date: 2016-05-26 10:27:20 +0100 (Thu, 26 May 2016) $)
 %
 if exist('new_file_name','var')
     this.file_name =new_file_name ;
@@ -43,8 +43,8 @@ data{1}(nans) = NaN;
 data{2}(nans) = 0;
 
  % set also all dependent on S variables
-this.S_stor   = data{1};
-this.ERR_stor = data{2};
+this.S_   = data{1};
+this.ERR_ = data{2};
 
 
 

@@ -4,7 +4,7 @@ classdef ldr_msl_ascii < a_msl_loader
     %
     % $Author: Alex Buts; 20/10/2011
     %
-    % $Revision: 373 $ ($Date: 2014-04-05 20:25:26 +0100 (Sat, 05 Apr 2014) $)
+    % $Revision: 502 $ ($Date: 2016-05-26 10:27:20 +0100 (Thu, 26 May 2016) $)
     %
     
     methods(Static)
@@ -110,9 +110,9 @@ classdef ldr_msl_ascii < a_msl_loader
                 end
             end
             if exist('fh','var')
-                ascii_loader.n_detindata_stor    = fh.n_detectors;
-                ascii_loader.en_stor             = fh.en;
-                ascii_loader.data_file_name_stor = fh.file_name;
+                ascii_loader.n_detindata_    = fh.n_detectors;
+                ascii_loader.en_             = fh.en;
+                ascii_loader.data_file_name_ = fh.file_name;
             else
                 % set new file name, run all checks on this file and set up
                 % all file information
@@ -123,9 +123,9 @@ classdef ldr_msl_ascii < a_msl_loader
         function this = set_data_info(this,full_spe_file_name)
             % obtain data file information and set it into class
             [ndet,en,full_file_name]=ldr_msl_ascii.get_data_info(full_spe_file_name);
-            this.data_file_name_stor = full_file_name;
-            this.n_detindata_stor = ndet;
-            this.en_stor = en;
+            this.data_file_name_ = full_file_name;
+            this.n_detindata_ = ndet;
+            this.en_ = en;
         end
         
         function ascii_loader = ldr_msl_ascii(full_spe_file_name,varargin)
