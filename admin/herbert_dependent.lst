@@ -7,8 +7,8 @@ find_root_nexus_dir;3691192246;\classes\data_loaders;0;\classes\data_loaders;;;.
 get_hor_format;1633491885;\classes\data_loaders;0;\classes\data_loaders;;;.m
 get_ascii_file;3348760070;\_lowlevelcode\cpp\get_ascii_file;0;_LowLevelCode\32and64after7.4;;;.vcproj
 get_ascii_file;634804819;\_lowlevelcode\cpp\get_ascii_file;0;_LowLevelCode\32and64after7.4;;;.sln
-IIget_ascii_file;3693888723;\_lowlevelcode\cpp\get_ascii_file;0;_LowLevelCode\32and64after7.4;;;.cpp
-get_ascii_file;2992038803;\_lowlevelcode\cpp\get_ascii_file;0;_LowLevelCode\32and64after7.4;;;.cpp
+IIget_ascii_file;2959419126;\_lowlevelcode\cpp\get_ascii_file;0;_LowLevelCode\32and64after7.4;;;.cpp
+get_ascii_file;3732987071;\_lowlevelcode\cpp\get_ascii_file;0;_LowLevelCode\32and64after7.4;;;.cpp
 config_base;3531595709;\configuration\@config_base;1;classes\configuration\@config_bas_msl;config_bas_msl;3497029718;.m;2;config_base;config_bas_msl;config_store;config_stor_msl
 get;1015692523;\configuration\@config_base;0;classes/configuration/@config_bas_msl;;;.m
 get_all;2853662267;\configuration\@config_base;0;classes/configuration/@config_bas_msl;;3017915423;.m;1;config_store;config_stor_msl
@@ -58,3 +58,4 @@ loaders_factory;656758600;\classes\data_loaders;0;;loaders_msl_factory;231084789
 store_internal;2460722403;\configuration\@config_store\private;0;classes/configuration/@config_stor_msl/private;;;.m
 load_ASCII_phx_as_par;861236340;\classes\data_loaders\@asciipar_loader\private;0;classes/data_loaders/@asciipar_msl_ldr/private;;;.m
 set_file_name_;2783976310;\classes\data_loaders\@a_loader\private;0;classes/data_loaders/@a_msl_loader/private;;;.m
+copy_files_list;2589724069;\admin;0;utilities/general;;;.m

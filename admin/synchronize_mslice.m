@@ -6,8 +6,6 @@ function fc_list=synchronize_mslice(varargin)
 %   $Rev$ ($Date$)
 %
 %
-
-
 % HERBERT HAS TO BE INITIATED AFTER Mslice for this function to work
 % properly!
 her_availible=false;
@@ -57,6 +55,9 @@ files_copied = {'check_file_exist.m','find_dataset_info',...
 for i=1:numel(files_copied)
     fc=fc.add_dependency(files_copied{i});
 end
+
+control.dest_folder='utilities/general';
+fc=fc.add_dependency('admin/copy_files_list.m',control);
 
 
 control.modifiers={'asciipar_loader','asciipar_msl_ldr','loaders_factory','loaders_msl_factory'};
