@@ -12,7 +12,7 @@ function ext=spe_ext(varargin)
 % the result of the function is formatted as needed to use in a
 % filter for uigetfile
 %
-% $Revision: 268 $ ($Date: 2014-03-13 14:11:31 +0000 (Thu, 13 Mar 2014) $)
+% $Revision$ ($Date$)
 %
 win_fs = ispc;
 % provide output as cellarray of extensions with the description of the

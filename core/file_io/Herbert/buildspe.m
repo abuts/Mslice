@@ -25,7 +25,7 @@ function data=buildspe(spe_filename,phx_filename,sum_filename,data_mode)
 % data_mode is the number, which describes data analysis mode i.e.
 % crystal(1) or powder(2)
 %
-% $Revision: 376 $ ($Date: 2014-04-06 20:22:55 +0100 (Sun, 06 Apr 2014) $)
+% $Revision$ ($Date$)
 
 
 % === return if no parameters passed

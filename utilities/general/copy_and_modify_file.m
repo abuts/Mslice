@@ -18,7 +18,7 @@ function [new_checksum, modifiers_successfull]=copy_and_modify_file(source_file,
 %               contatining the words, modified while copied from source to
 %               destignation.
 %
-% $Revision: 268 $ ($Date: 2014-03-13 14:11:31 +0000 (Thu, 13 Mar 2014) $)
+% $Revision$ ($Date$)
 %
 %
 

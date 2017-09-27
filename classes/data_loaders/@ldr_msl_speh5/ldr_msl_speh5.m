@@ -3,7 +3,7 @@ classdef ldr_msl_speh5 < a_msl_loader
     % ASCII par file and all necessary additional parameters
     %   Detailed explanation goes here
     %
-    % $Revision: 502 $ ($Date: 2016-05-26 10:27:20 +0100 (Thu, 26 May 2016) $)
+    % $Revision$ ($Date$)
     %
     
     properties

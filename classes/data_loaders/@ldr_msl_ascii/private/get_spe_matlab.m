@@ -16,7 +16,7 @@ function varargout = get_spe_matlab(filename,varargin)
 
 % Original author: T.G.Perring
 %
-% $Revision: 319 $ ($Date: 2014-01-08 22:27:51 +0000 (Wed, 08 Jan 2014) $)
+% $Revision$ ($Date$)
 %
 % Based on Radu coldea routine load_spe in mslice
 

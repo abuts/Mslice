@@ -2,7 +2,7 @@ function [s_empty,err_empty,dat_empty,det_empty] = data_empty(this)
 % helper method checks which data fields are empty
 %
 %
-% $Revision: 502 $ ($Date: 2016-05-26 10:27:20 +0100 (Thu, 26 May 2016) $)
+% $Revision$ ($Date$)
 %
 if isempty(this.S_)
     s_empty=true;

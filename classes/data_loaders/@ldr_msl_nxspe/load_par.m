@@ -59,7 +59,7 @@ function [det,this]=load_par(this,varargin)
 %
 
 %
-% $Revision: 407 $ ($Date: 2014-11-04 17:52:54 +0000 (Tue, 04 Nov 2014) $)
+% $Revision$ ($Date$)
 %
 options = {'-nohorace','-array','-horace','-forcereload','-getphx'}; % if options changes, parse_par_file_arg should also change
 [return_array,reload,file_provided,getphx,new_file_name,lext]=parse_par_file_arg(this,options,varargin{:});

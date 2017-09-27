@@ -2,7 +2,7 @@ classdef ldr_msl_membased<a_msl_loader
     % class which resembles data file stored to memory and loaded from
     % memory
     %
-    % $Revision: 502 $ ($Date: 2016-05-26 10:27:20 +0100 (Thu, 26 May 2016) $)
+    % $Revision$ ($Date$)
     %
     % the properties common for all data loaders.
     properties(Dependent)

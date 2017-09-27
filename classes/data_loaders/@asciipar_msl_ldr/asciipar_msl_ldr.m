@@ -11,7 +11,7 @@ classdef asciipar_msl_ldr
     % both with ASCII par files and the detector information containing in
     % the main data file (if the later intended to be used)
     %
-    % $Revision: 502 $ ($Date: 2016-05-26 10:27:20 +0100 (Thu, 26 May 2016) $)
+    % $Revision$ ($Date$)
     %
     % the properties common for all data loaders.
     properties(Dependent)

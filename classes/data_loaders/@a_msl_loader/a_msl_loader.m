@@ -21,7 +21,7 @@ classdef a_msl_loader < asciipar_msl_ldr;
     % $Author: Alex Buts; 05/01/2014
     %
     %
-    % $Revision: 502 $ ($Date: 2016-05-26 10:27:20 +0100 (Thu, 26 May 2016) $)
+    % $Revision$ ($Date$)
     %
     % the properties common for all data loaders.
     properties(Dependent)

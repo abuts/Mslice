@@ -21,7 +21,7 @@ function save_nxspe_internal(this,filename,efix,psi,varargin)
 % $Author: Alex Buts; 05/01/2014
 %
 %
-% $Revision: 385 $ ($Date: 2014-09-08 16:10:21 +0100 (Mon, 08 Sep 2014) $)
+% $Revision$ ($Date$)
 %
 % file access options
 options={'w', 'a'};

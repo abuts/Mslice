@@ -18,7 +18,7 @@ function [det,loader]=load_phx_or_par_private(loader,return_array,force_reload,g
 %                   profived for file to load from.
 %
 %
-% $Revision: 502 $ ($Date: 2016-05-26 10:27:20 +0100 (Thu, 26 May 2016) $)
+% $Revision$ ($Date$)
 %
 if ~isempty(loader.det_par_) &&(~force_reload)
     sample = loader.par_file_name;

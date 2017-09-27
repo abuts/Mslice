@@ -4,7 +4,7 @@ classdef ldr_msl_ascii < a_msl_loader
     %
     % $Author: Alex Buts; 20/10/2011
     %
-    % $Revision: 502 $ ($Date: 2016-05-26 10:27:20 +0100 (Thu, 26 May 2016) $)
+    % $Revision$ ($Date$)
     %
     
     methods(Static)

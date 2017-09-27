@@ -27,7 +27,7 @@ function folder_path=make_config_folder(folder_name)
 % usually the same for a given machine, so the path to the configurations 
 % will be the same next next time the function is called. 
 
-% $Revision: 502 $ ($Date: 2016-05-26 10:27:20 +0100 (Thu, 26 May 2016) $)
+% $Revision$ ($Date$)
 
 
 % First try to create where find startup.m
