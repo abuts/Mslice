@@ -15,10 +15,10 @@ classdef config_bas_msl
     % end
     %
     % b) it has default value, which differs from the property itself.
-    % 
+    %
     %    If user supposes to use suggested abstract methods implementations,
-    %    the name of the internal property with defaults 
-    %    has to be different from the public property name a) by the underscore 
+    %    the name of the internal property with defaults
+    %    has to be different from the public property name a) by the underscore
     %    at the end of its name
     %
     % properties(Access=private)
@@ -46,14 +46,14 @@ classdef config_bas_msl
         % property specifies if changes to the class should be stored on
         % hdd to restore them later
         saveable;
-        % if this property is set to true, class getters return default configurations 
+        % if this property is set to true, class getters return default configurations
         % instead of saved configurations
-        returns_defaults;      
-    end
-    properties(Constant)
+        returns_defaults;
+
         % the folder where the configuration data are stored (defined by
         % config store class, and provided here as an interface to it)
-        config_folder=[];
+        config_folder;
+
     end
     properties(Access=protected)
         % the name of the derived class with provides information to store
@@ -103,7 +103,7 @@ classdef config_bas_msl
         function name=get.class_name(this)
             name = this.class_name_;
         end
-        function folder = get.config_folder()
+        function folder = get.config_folder(this)
             folder = config_stor_msl.instance.config_folder;
         end
         %-----------------------------------------------------------------
@@ -134,8 +134,8 @@ classdef config_bas_msl
             end
         end
         function isit = is_default(this)
-            % check if a configuration has been changed by user or 
-            % still has its default values    
+            % check if a configuration has been changed by user or
+            % still has its default values
             cn = this.class_name;
             isit = ~config_stor_msl.instance.has_config(cn);
         end
@@ -185,10 +185,7 @@ classdef config_bas_msl
             
         end
     end
-    %
-    methods(Static)
-        
-    end
+ 
 end
 
 
