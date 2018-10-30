@@ -1,4 +1,4 @@
-classdef a_msl_loader < asciipar_msl_ldr;
+classdef a_msl_loader < asciipar_msl_ldr
     % Base class for all data loaders used by the rundata class and
     % loaders_factory
     %

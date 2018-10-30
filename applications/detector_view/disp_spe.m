@@ -117,7 +117,7 @@ caxis([img_range.i_min img_range.i_max]);
 shading(img_range.shad);
 
 % ==== choose colormap and plot colorbar
-if exist('map','var')&&isnumeric(map)&&(size(map,2)==3),
+if exist('map','var')&&isnumeric(map)&&(size(map,2)==3)
     colormap(map);
 else
     colormap jet;

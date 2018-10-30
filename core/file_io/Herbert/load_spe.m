@@ -58,10 +58,13 @@ function data=load_spe(spe_filename)
 
 
 % === if no input parameter given, return
-if ~exist('spe_filename','var'),
+if ~exist('spe_filename','var')
     help load_spe;
     return
 end
+
+
+
 
 % Determine if a single file or file difference to be read
 % ----------------------------------------------------------
@@ -91,7 +94,7 @@ if ~isempty(spe_filename2)   % must be a difference that is required
         data.ERR(index)=0;
         return
     catch
-        display ('Problem taking difference between spe files. Check they are commensurate')
+        disp('Problem taking difference between spe files. Check they are commensurate')
         data=[];
         return
     end
