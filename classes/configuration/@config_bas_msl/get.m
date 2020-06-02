@@ -14,22 +14,21 @@ function [out,varargout]= get(this,varargin)
 %
 % This is deprecated function kept for compatibility with old interface
 
-% $Revision$ ($Date$)
+% $Revision::      $Date:: 2020-02-10 16:05:56 +0000 (Mon, 10 Feb 2020) $)
 options = {'-public','defaults'};
 [ok,mess,public,defaults,fields_to_get]=parse_char_options(varargin,options);
 if ~ok; error('CONFIG_BASE:get',mess); end
 % public field is not currently used
 if defaults
-    this.returns_defaults = true;
+    if numel(fields_to_get) == 0
+        out = this.get_defaults();
+        return;
+    else
+        this.returns_defaults = true;
+    end
 end
 if numel(fields_to_get) == 0 % form 1
-    S = struct();
-    fields =  this.get_storage_field_names();
-    for i=1:numel(fields)
-        field = fields{i};
-        S.(field) = this.(field);
-    end
-    out  = S;
+    out = this.get_data_to_store();
     return;
 end
 
@@ -37,4 +36,5 @@ out = this.(fields_to_get{1});
 for i=2:nargout
     varargout{i-1} = this.(fields_to_get{i});
 end
+
 

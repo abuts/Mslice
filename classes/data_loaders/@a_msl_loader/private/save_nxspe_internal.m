@@ -3,7 +3,7 @@ function save_nxspe_internal(this,filename,efix,psi,varargin)
 % inputs:
 % filename -- the name of the file to write data to. Should not exist
 % efix     -- incident energy for direct or indirect instrument. Only
-%             direct is currently supported through NEXUS instrument as 
+%             direct is currently supported through NEXUS instrument as
 %             I've newer seen indirect nxspe (though it can work)
 % Optional variables:
 % psi      -- the rotation angle of crystal. will write NaN into file if
@@ -12,38 +12,38 @@ function save_nxspe_internal(this,filename,efix,psi,varargin)
 % file_access -- w, a options define readwrite or write access to the
 %                file. (see Matlab manual for details of these options)
 %                Adding to existing nxspe file is not currently supported,
-%                so the only difference between the options is that method 
+%                so the only difference between the options is that method
 %                will thow  if the file, opened in read-write mode exist.
 %
-%                Existing file in write mode will be silently 
-%                overwritten. 
+%                Existing file in write mode will be silently
+%                overwritten.
 %
 % $Author: Alex Buts; 05/01/2014
 %
 %
-% $Revision$ ($Date$)
+% $Revision::      $Date:: 2020-02-10 16:05:56 +0000 (Mon, 10 Feb 2020) $)
 %
 % file access options
 options={'w', 'a'};
 [ok,mess,write_access,ap]=parse_char_options(varargin,options);
 if ~ok
-    error('A_LOADER:load',mess);
+    error('A_LOADER:invalid_argument',mess);
 end
 [filepath,fname]=fileparts(filename);
 filename = fullfile(filepath,[fname,'.nxspe']);
 
 readwrite_access = true;
-if ap  
+if ap
     readwrite_access = true;
 end
 if write_access
-   readwrite_access =false;
+    readwrite_access =false;
 end
 
 % check inputs and set defaults.
-if exist(filename,'file') 
+if exist(filename,'file')
     if readwrite_access
-        error('A_LOADER:saveNXSPE','File %s already exist',filename);
+        error('A_LOADER:invalid_argument','File %s already exist',filename);
     else
         delete(filename);
     end
@@ -57,20 +57,24 @@ if ~exist('emode','var')
     end
 end
 if emode<0 || emode>2
-    error('A_LOADER:saveNXSPE','attempt to save with unsupported emode %d; emode has to be from 0 to 2',emode);
+    error('A_LOADER:invalid_argument',...
+        'attempt to save with unsupported emode %d; emode has to be from 0 to 2',emode);
 end
 if ~exist('efix','var')
     try
         efix = this.efix;
     catch
-        error('A_LOADER:saveNXSPE','efix has to be defined for saveNXSPE but it is not');
+        error('A_LOADER:invalid_argument',...
+            'efix has to be defined for saveNXSPE but it is not');
     end
 end
 if isempty(efix)
-    error('A_LOADER:saveNXSPE','efix has to be not empty for saveNXSPE but it is empty');
+    error('A_LOADER:invalid_argument',...
+        'efix has to be not empty for saveNXSPE but it is empty');
 end
 if ~isnumeric(efix)
-    error('A_LOADER:saveNXSPE',' expecting efix to have digita value but it has %s: ',efix);
+    error('A_LOADER:invalid_argument',...
+        ' expecting efix to have digita value but it has %s: ',efix);
 end
 if ~exist('psi','var')
     try
@@ -83,16 +87,20 @@ if isempty(psi) || ~isreal(psi)
     psi =NaN;
 end
 if isempty(this.det_par) || ischar(this.det_par)
-    error('A_LOADER:saveNXSPE','data do not contain correct detector information to save');
+    error('A_LOADER:invalid_argument',...
+        'data do not contain correct detector information to save');
 end
 if isempty(this.S) || ischar(this.S)
-    error('A_LOADER:saveNXSPE','data do not contain correct signal information to save');
+    error('A_LOADER:invalid_argument',...
+        'data do not contain correct signal information to save');
 end
 if isempty(this.ERR) || ischar(this.ERR)
-    error('A_LOADER:saveNXSPE','data do not contain correct error information to save');
+    error('A_LOADER:invalid_argument',...
+        'data do not contain correct error information to save');
 end
 if isempty(this.n_detectors) || ischar(this.n_detectors)
-    error('A_LOADER:saveNXSPE','data do not contain correct detector information or detectors are not consistent with signal and error arrays');
+    error('A_LOADER:invalid_argument',...
+        'data do not contain correct detector information or detectors are not consistent with signal and error arrays');
 end
 
 %--------------------------------------------------------------------------
@@ -115,9 +123,9 @@ fid = H5F.create(filename,'H5F_ACC_TRUNC',fcpl,fapl);
 %
 % make this file look like real nexus
 if matlab_version_num()<=7.07
-    %pNew->iVID=H5Gopen(pNew->iFID,"/");    
+    %pNew->iVID=H5Gopen(pNew->iFID,"/");
     file = fid;
-    fid = H5G.open(fid,'/');    
+    fid = H5G.open(fid,'/');
 end
 write_attr_group(fid,file_attr);
 
@@ -134,7 +142,7 @@ else
 end
 
 write_string_sign(group_id,'definition','NXSPE','version',version);
-[dummy,hv] = herbert_version('-brief');
+hv = herbert_version();
 write_string_sign(group_id,'program_name','herbert','version',hv);
 %-------------------------------------------------------------------------
 % write nxspe info
@@ -154,8 +162,8 @@ H5P.close(fapl);
 if exist('file','var')
     H5G.close(fid);
     H5F.close(file);
-else    
-    H5F.close(fid);    
+else
+    H5F.close(fid);
 end
 end
 
@@ -179,7 +187,7 @@ function write_instrument(fid,efix)
 %
 group_id = H5G.create(fid,'instrument',10);
 write_attr_group(group_id,struct('NX_class','NXinstrument'));
-write_string_sign(group_id,'name','Horace','short_name','HOR');
+write_string_sign(group_id,'name','NXSPE','short_name','NXS');
 %
 group2_id = H5G.create(fid,'fermi',10);
 write_attr_group(group2_id,struct('NX_class','NXfermi_chopper'));
@@ -282,55 +290,4 @@ H5S.close(space_id);
 H5G.close(group_id);
 end
 %
-function write_attr_group(group_id,data)
-% write group of string attributes
-attr_names = fieldnames(data);
-for i=1:numel(attr_names)
-    
-    an = attr_names{i};
-    val = data.(an);
-    
-    if ischar(val)
-        type_id = H5T.copy('H5T_C_S1');
-        H5T.set_size(type_id, numel(val));
-        %type_id = H5T.create('H5T_STRING',numel(val));
-        space_id = H5S.create('H5S_SCALAR');
-        %loc_id, name, type_id, space_id, acpl_id        
-        attr_id = H5A.create(group_id,an,type_id,space_id,'H5P_DEFAULT');
-        %attr_id = H5A.create(loc_id, name, type_id, space_id, create_plist)         
-        H5A.write(attr_id,'H5ML_DEFAULT',val);
-        
-        H5A.close(attr_id);
-        H5S.close(space_id);
-        H5T.close(type_id);
-    end
-end
-end
-%
-function write_string_sign(group_id,ds_name,name,attr_name,attr_cont)
-% write string dataset with possible attribute
-% Such structure is used in NeXus e.g. to indicate that this file is nxspe file
-% and on number of other occasions
-%
-% type_id = H5T.copy('H5T_C_S1');
-% space_id = H5S.create_simple(1,numel(name),numel(name));
-% dataset_id = H5D.create(group_id,ds_name,type_id,space_id,'H5P_DEFAULT');
-% %space_id = H5S.create('H5S_SCALAR');
-% %dataset_id = H5D.create(group_id,definition,type_id,space_id,'H5P_DEFAULT');
-% H5D.write(dataset_id,'H5ML_DEFAULT','H5S_ALL','H5S_ALL','H5P_DEFAULT',name);
 
-filetype = H5T.copy ('H5T_FORTRAN_S1');
-H5T.set_size (filetype, numel(name));
-memtype = H5T.copy ('H5T_C_S1');
-H5T.set_size (memtype, numel(name));
-
-space = H5S.create_simple (1,1, 1);
-dataset_id = H5D.create (group_id, ds_name, filetype, space, 'H5P_DEFAULT');
-H5D.write (dataset_id, memtype, 'H5S_ALL', 'H5S_ALL', 'H5P_DEFAULT', name);
-
-write_attr_group(dataset_id,struct(attr_name,attr_cont));
-H5D.close(dataset_id);
-H5S.close(space);
-H5T.close(filetype);
-H5T.close(memtype);
-end

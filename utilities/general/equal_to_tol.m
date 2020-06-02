@@ -22,7 +22,7 @@ function [ok,mess]=equal_to_tol(a,b,varargin)
 %           It has the form: [abs_tol, rel_tol] where
 %               abs_tol     absolute tolerance (>=0; if =0 equality required)
 %               rel_tol     relative tolerance (>=0; if =0 equality required)
-%           If either criterion is satified then equality within tolerance
+%           If either criterion is satisfied then equality within tolerance
 %           is accepted.
 %             Examples:
 %               [1e-4, 1e-6]    absolute 1e-4 or relative 1e-6 required
@@ -39,7 +39,7 @@ function [ok,mess]=equal_to_tol(a,b,varargin)
 %               1e-4            absolute tolerance, equivalent to [1e-4, 0]
 %               -1e-6           relative tolerance, equivalent to [0, 1e-6]
 %
-%           [Lagacy compatibility: to apply an absolute as well as a relative
+%           [Legacy compatibility: to apply an absolute as well as a relative
 %            tolerance with a scalar negative value, set the value of the
 %            legacy keyword 'min_denominator' (see below)]
 %
@@ -67,7 +67,7 @@ function [ok,mess]=equal_to_tol(a,b,varargin)
 %                   Usually not required, as the name of a variable will
 %                  be discovered. However, if the input argument is an array
 %                  element e.g. my_variable{3}  then the name is not
-%                  discoverable in matlab, and default 'input_1' will be
+%                  discoverable in Matlab, and default 'input_1' will be
 %                  used unless a different value is given with the keyword
 %                  'name_a'.
 %
@@ -104,10 +104,10 @@ function [ok,mess]=equal_to_tol(a,b,varargin)
 
 % Original author: T.G.Perring
 %
-% $Revision$ ($Date$)
+% $Revision::      $Date:: 2020-02-10 16:05:56 +0000 (Mon, 10 Feb 2020) $)
 
 
-% The following code is pretty commplex as it has to handle legacy input as
+% The following code is pretty complex as it has to handle legacy input as
 % well. Touch at your peril!
 warn = warning('off','MATLAB:structOnObject');
 cleanup_obj = onCleanup(@()warning(warn));
@@ -136,11 +136,9 @@ elseif nargin==3 && isnumeric(varargin{1})
     
     % Determine if legacy input; it must be if tol is scalar
     if isscalar(varargin{1})
-        [opt.tol,ok,mess]=check_tol(varargin{1},0);
-        if ~ok, error(mess), end
+        opt.tol=check_tol(varargin{1},0);
     else
-        [opt.tol,ok,mess]=check_tol(varargin{1});
-        if ~ok, error(mess), end
+        opt.tol=check_tol(varargin{1});
     end
     
 else
@@ -155,7 +153,9 @@ else
         'name_a',name_a,...
         'name_b',name_b,...
         'min_denominator',0);
-    [par, opt, present, ~, ok, mess] = parse_arguments(varargin, opt);
+    cntl.keys_once=false;   % so name_a and name_b can be overridden by input arguments
+    cntl.keys_at_end=false; % as may have name_a or name_b appear first in some cases
+    [par, opt, present, ~, ok, mess] = parse_arguments(varargin, opt, cntl);
     if ~ok, error(mess), end
     
     % Determine the tolerance
@@ -164,14 +164,12 @@ else
         % There is a single parameter that is numeric, so must be tol
         if isscalar(par{1})
             % Legacy format
-            [tol,ok,mess]=check_tol(par{1},opt.min_denominator);
-            if ~ok, error(mess), end
+            tol=check_tol(par{1},opt.min_denominator);
         else
             % New format
-            [tol,ok,mess]=check_tol(par{1});
-            if ~ok, error(mess), end
+            tol=check_tol(par{1});
             % Invalid keyword 'min_denominator' cannot present with new format
-            if present.min_denominator  
+            if present.min_denominator
                 error('''min_denominator'' is only valid for legacy scalar tolerance')
             end
         end
@@ -189,16 +187,15 @@ else
             % difference to the test. Just need to check it is valid if given
             if present.min_denominator
                 % Treat as legacy
-                [tol,ok,mess] = check_tol(0,opt.min_denominator);
-                if ~ok, error(mess), end
+                tol = check_tol(0,opt.min_denominator);
             else
                 % Treat as new format
                 tol = [0,0];
             end
             
         else
-            % Tolerance keyword(s) present; usage is therefore non-legacy.            
-
+            % Tolerance keyword(s) present; usage is therefore non-legacy.
+            
             % Check that invalid keyword 'min_denominator' is not present
             if present.min_denominator
                 error('''min_denominator'' is only valid for legacy argument format')
@@ -207,8 +204,7 @@ else
             % Determine tolerance
             if present.tolerance && ~(present.abstolerance || present.reltolerance)
                 if isnumeric(opt.tolerance)
-                    [tol,ok,mess] = check_tol(opt.tolerance);
-                    if ~ok, error(mess), end
+                    tol = check_tol(opt.tolerance);
                 else
                     error('''tol'' must be numeric')
                 end
@@ -270,16 +266,13 @@ end
 
 
 %--------------------------------------------------------------------------------------------------
-function [tol_out, ok, mess] = check_tol (tol, min_denominator)
+function tol_out = check_tol (tol, min_denominator)
 % Convert all the possible inputs into [abs_tol, rel_tol]
 % Assumes tol_in is numeric
 %
-%   >> [tol, ok, mess] = check_tol (tol_in)
-%   >> [tol, ok, mess] = check_tol (tol_in, min_denominator]
+%   >> tol = check_tol (tol_in)
+%   >> tol = check_tol (tol_in, min_denominator]
 
-ok = true;
-mess = '';
-tol_out = [];
 
 ok_positive_scalar = @(x)(isnumeric(x) && isscalar(x) && ~isnan(x) && x>=0);
 
@@ -294,24 +287,25 @@ elseif isscalar(tol)
             if ok_positive_scalar(min_denominator)
                 tol_out = [min_denominator*abs(tol),abs(tol)];
             else
-                ok = false;
-                mess = 'Check value of ''min_denominator'' is greater or equal to zero';
+                error('CHECK_TOLL:invalid_argument',...
+                    'Check value of ''min_denominator'' is greater or equal to zero');
             end
         end
     else
-        ok = false;
-        mess = 'Tolerance cannot be NaN';
+        error('CHECK_TOLL:invalid_argument',...
+            'Tolerance cannot be NaN');
     end
     
 elseif numel(tol)==2
     if all(tol>=0)
         tol_out = tol;
     else
-        mess = 'Check tolerance has form [abs_tol, rel_tol] where both are >=0';
+        error('CHECK_TOLL:invalid_argument',...
+            'Check tolerance has form [abs_tol, rel_tol] where both are >=0');
     end
 else
-    ok = false;
-    mess = 'Check the size and type of the tolerance';
+    error('CHECK_TOLL:invalid_argument',...
+        'The tolerance is not a positive numeric scalar');
 end
 
 
@@ -372,12 +366,19 @@ elseif isobject(a) && isobject(b)
             name_a_ind = name_a;
             name_b_ind = name_b;
         end
-        Sa = struct(a(i));
-        Sb = struct(b(i));
+        if numel(a)==1     % to deal with containers.Map objects - will be scalar, a(1) fails!
+            Sa = struct(a);
+            Sb = struct(b);
+        else
+            Sa = struct(a(i));
+            Sb = struct(b(i));
+        end
         for j=1:numel(fields)
             [ok,mess] = equal_to_tol_private(Sa.(fields{j}), Sb.(fields{j}), opt,...
                 [name_a_ind,'.',fields{j}], [name_b_ind,'.',fields{j}]);
-            if ~ok, return, end
+            if ~ok
+                return, 
+            end
         end
     end
     
@@ -591,14 +592,18 @@ if isequal(size(a),size(b))
         elseif any((delta_abs>abs_tol)&(delta_rel>rel_tol))
             % Absolute or relative tolerance must be satisfied
             ok= false;
-            [max_delta_abs,ind_abs] = max(delta_abs);
-            [max_delta_rel,ind_rel] = max(delta_rel);
-            if max_delta_rel>max_delta_abs
-                mess=sprintf('%s and %s: Relative tolerance failure; max. error = %s at element %s',...
-                    name_a,name_b,num2str(max_delta_rel),['(',arraystr(sz,ind_rel),')']);
+            bad = (delta_abs>abs_tol)&(delta_rel>rel_tol);
+            ind_bad = find(bad);
+            [max_delta_abs,ind_abs] = max(delta_abs(bad));
+            [max_delta_rel,ind_rel] = max(delta_rel(bad));
+            if max_delta_rel/rel_tol>max_delta_abs/abs_tol
+                ind_bad = ind_bad(ind_rel);
+                mess=sprintf('%s and %s: Relative and absolute tolerance failure; max. error = %s (relative) at element %s',...
+                    name_a,name_b,num2str(max_delta_rel),['(',arraystr(sz,ind_bad),')']);
             else
-                mess=sprintf('%s and %s: Absolute tolerance failure; max. error = %s at element %s',...
-                    name_a,name_b,num2str(max_delta_abs),['(',arraystr(sz,ind_abs),')']);
+                ind_bad = ind_bad(ind_abs);
+                mess=sprintf('%s and %s: Relative and absolute tolerance failure; max. error = %s (absolute) at element %s',...
+                    name_a,name_b,num2str(max_delta_abs),['(',arraystr(sz,ind_bad),')']);
             end
             return
         end
@@ -630,3 +635,4 @@ else
     end
     str=str(1:end-1);
 end
+

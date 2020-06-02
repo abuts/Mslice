@@ -20,7 +20,6 @@ function phx=load_ASCII_phx(filename)
 
 % Original author: T.G.Perring
 %
-% $Revision$ ($Date$)
 
 % Remove blanks from beginning and end of filename
 
@@ -39,12 +38,12 @@ if use_mex
         phx=get_ascii_file(filename,'phx');
         [ncol,ndet]=size(phx);
         if ncol <7
-            phx=[phx(1,:);phx(3:6,:);1:ndet];            
+            phx=[phx(1,:);phx(3:6,:);1:ndet];
         else
             phx=[phx(1,:);phx(3:7,:)];
         end
     catch   %using matlab routine
-        force_mex = get(mslice_config,'force_mex_if_use_mex');
+        force_mex = get(herbert_config,'force_mex_if_use_mex');
         if ~force_mex
             warning('A_LOADER:get_phx','Cannot invoke C++ procedure get_ascii_file.%s while loading from file: %s;\n Reason: %s',mexext(),filename,lasterr());
             use_mex = false;
@@ -55,8 +54,8 @@ if use_mex
 end
 
 if ~use_mex
-   phx=get_phx_matlab(filename);
-   [ncol,ndet]=size(phx);
+    phx=get_phx_matlab(filename);
+    [ncol,ndet]=size(phx);
 end
 
 group=unique(round(phx(6,:)));
@@ -102,4 +101,5 @@ phx=[phx(1,:);phx(3:7,:)];
 %     phx.azim=arr(4,:);
 %     phx.dphi=arr(5,:);
 %     phx.danght=arr(6,:);
-    
+
+

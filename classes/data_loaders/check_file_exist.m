@@ -20,7 +20,7 @@ function [ok,mess,file_name,lext] = check_file_exist(file_name,supported_file_ex
 
 % $Author: Alex Buts; 20/10/2011
 %
-% $Revision$ ($Date$)
+% $Revision::      $Date:: 2020-02-10 16:05:56 +0000 (Mon, 10 Feb 2020) $)
 
 if ~isa(file_name,'char')
     ok=false;
@@ -48,17 +48,6 @@ end
 
 % make the file independent on the extension case;
 file_l =fullfile(filepath,[filename,lext]);
-if strcmp('.mem',lext)
-    ok = mem_file_fs.instance().file_exist(filename);
-    if ok
-        mess='';
-    else
-        mess = ['*** Can not find file: ',file_l];
-    end
-    file_name=[filename,lext];
-    return
-end
-
 % deal with normal files.
 if ~exist(file_l,'file')
     if ispc
@@ -80,3 +69,4 @@ else
 end
 ok=true;
 mess='';
+

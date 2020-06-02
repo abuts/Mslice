@@ -14,7 +14,7 @@ function [varargout]=load_data(this,new_file_name)
 %
 %
 %
-% $Revision$ ($Date$)
+% $Revision::      $Date:: 2020-02-10 16:05:56 +0000 (Mon, 10 Feb 2020) $)
 %
 
 if exist('new_file_name','var')
@@ -55,10 +55,11 @@ if nargout==1
     varargout{1}=this;
 else
     min_val = nargout;
-    if min_val>3;
+    if min_val>3
         min_val=3;
         varargout{4}=this;
     end
     varargout(1:min_val)={data{1:min_val}};
     
 end
+

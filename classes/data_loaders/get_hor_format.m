@@ -43,7 +43,7 @@ function det = get_hor_format(par_data,file_name)
 % det.filename<- filename;
 % det.filepath<- filepath;
 %
-% $Revision$ ($Date$)
+% $Revision::      $Date:: 2020-02-10 16:05:56 +0000 (Mon, 10 Feb 2020) $)
 %
 hor_fields={'group','x2','phi','azim','width','height'};
 array_colN=[6,1,2,3,4,5];
@@ -90,3 +90,4 @@ for i=1:numel(hor_fields)
     ind   = array_colN(i);
     det(ind,:) = par_data.(field);
 end
+

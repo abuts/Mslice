@@ -4,7 +4,7 @@ function arr = get_consistent_array(this,field_name)
 %
 %
 %
-% $Revision$ ($Date$)
+% $Revision::      $Date:: 2020-02-10 16:05:56 +0000 (Mon, 10 Feb 2020) $)
 %
 
 
@@ -27,5 +27,6 @@ if ~isempty(this.(field_name))
 else
     arr = [];
 end
+
 
 

@@ -3,7 +3,7 @@ function [varargout]=load_data(this,new_file_name)
 %
 % this fucntion is the method of load_spe class
 %
-% this function has to have its eqivalents in all other loader classes
+% this function has to have its equivalents in all other loader classes
 % as all loaders are accessed through common interface.
 %
 %usage:
@@ -13,15 +13,12 @@ function [varargout]=load_data(this,new_file_name)
 
 % $Author: Alex Buts; 20/10/2011
 %
-% $Revision$ ($Date$)
-
 
 if exist('new_file_name','var')
     if ~isa(new_file_name,'char')
         error('LOAD_ASCII:load_data','new file name has to be a string')
     end
     this.file_name  = new_file_name;
-    
 else
     if isempty(this.file_name)
         error('LOAD_ASCII:load_data','input spe file is not fully defined')
@@ -30,12 +27,11 @@ else
 end
 file_name  = this.file_name;
 
-use_mex=get(mslice_config,'use_mex');
+[use_mex,force_mex ]=config_stor_msl.instance().get_value('mslice_config','use_mex','force_mex_if_use_mex');
 if use_mex
     try
         [S,ERR,en] = get_ascii_file(file_name ,'spe');
     catch err
-        force_mex = get(mslice_config,'force_mex_if_use_mex');
         if ~force_mex
             if get(mslice_config,'log_level')>-1
                 warning('LOAD_ASCII:load_data',' Cannot read data using C++ routines -- reverted to Matlab\n Reason: %s',err.message);
@@ -48,7 +44,7 @@ if use_mex
     end
 end
 if ~use_mex
-    [S,ERR,en] = get_spe_matlab(file_name);
+    [S,ERR,en] = get_spe_(file_name);
 end
 
 % Convert symbolic NaN-s into ISO NaN-s
@@ -81,3 +77,4 @@ elseif nargout == 4
     varargout{3}=en;
     varargout{4}=this;
 end
+

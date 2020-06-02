@@ -11,17 +11,17 @@ classdef mslice_config<config_bas_msl
     end
     properties(Dependent)
         MspDir     % folder with msp files which describe Mslice configurations
-        MspFile='crystal_psd.msp' % default msp file
+        MspFile    % default msp file
         DataDir    % data files (spe files)
         PhxDir     % phx files (detector angular positions)
         cut_OutputDir   % default folder to save cuts.
-        slice_font_size=10
-        cut_font_size=10
-        use_mex=false    % try to use mex if found
-        force_mex_if_use_mex=false % fail if mex files do not work
+        slice_font_size
+        cut_font_size
+        use_mex              % if to use mex when found
+        force_mex_if_use_mex % fail if mex files do not work
         
         % if to set on Matlab path Herbert/Maltab unit test harness
-        init_tests=false;
+        init_tests;
         % the path to the unit tests folders used last time when unit tests
         % were enabled.
         last_unittest_path;
@@ -40,7 +40,7 @@ classdef mslice_config<config_bas_msl
         
         slice_font_size_  =  10
         cut_font_size_    =  10
-        use_mex_          =  false    % try to use mex if found
+        use_mex_          =  false   % try not to use mex if found
         force_mex_if_use_mex_=false % fail if mex files do not work
         %
         init_tests_  =  false

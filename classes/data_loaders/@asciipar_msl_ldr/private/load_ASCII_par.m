@@ -20,7 +20,6 @@ function par=load_ASCII_par(filename)
 
 % Original author: T.G.Perring
 %
-% $Revision$ ($Date$)
 
 % If no input parameter given, return
 if ~exist('filename','var')
@@ -35,12 +34,12 @@ filename=strtrim(filename);
 %     error('LOAD_ASCII:load_ASCII_par',' file %s has to be an ascii file but it is hdf5 file\n',filename);
 % end
 
-use_mex = get(mslice_config,'use_mex');
+use_mex = get(herbert_config,'use_mex');
 if use_mex
     try     %using C routine
         par=get_ascii_file(filename,'par');
     catch   %using matlab routine
-        force_mex = get(mslice_config,'force_mex_if_use_mex');
+        force_mex = get(herbert_config,'force_mex_if_use_mex');
         if ~force_mex
             warning('ASCIIPAR_LOADER:load_par','Cannot invoke C++ procedure get_ascii_file.%s while loading from file: %s;\n Reason: %s',mexext(),filename,lasterr());
             use_mex = false;
@@ -68,7 +67,7 @@ if fid==-1,
 end
 
 n=fscanf(fid,'%d \n',1);
-if get(mslice_config,'log_level')>0
+if get(herbert_config,'log_level')>0
     disp(['Loading .par file with ' num2str(n) ' detectors : ' filename]);
 end
 temp=fgetl(fid);
@@ -77,3 +76,4 @@ cols=length(par); % number of columns 5 or 6
 par=[par;fscanf(fid,'%f')];
 fclose(fid);
 par=reshape(par,cols,n);
+

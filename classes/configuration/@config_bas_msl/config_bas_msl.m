@@ -36,7 +36,7 @@ classdef config_bas_msl
     %
     %
     %
-    % $Revision$ ($Date$)
+    % $Revision::      $Date:: 2020-02-10 16:05:56 +0000 (Mon, 10 Feb 2020) $)
     %
     
     properties(Dependent)
@@ -155,6 +155,15 @@ classdef config_bas_msl
                 value = config_stor_msl.instance.get_config_field(this,field_name);
             end
         end
+        function data=get_defaults(this)
+            % method returns the structure with default class data,
+            fields = this.get_storage_field_names();
+            data=struct();
+            for i=1:numel(fields)
+                data.(fields{i}) = get_internal_field(this,fields{i});
+            end
+        end
+        
         %
         function data=get_data_to_store(this)
             % method returns the structure with the data, expected to be stored
@@ -162,7 +171,7 @@ classdef config_bas_msl
             fields = this.get_storage_field_names();
             data=struct();
             for i=1:numel(fields)
-                data.(fields{i}) = get_internal_field(this,fields{i});
+                data.(fields{i}) = this.(fields{i});
             end
         end
         %
@@ -187,5 +196,6 @@ classdef config_bas_msl
     end
  
 end
+
 
 

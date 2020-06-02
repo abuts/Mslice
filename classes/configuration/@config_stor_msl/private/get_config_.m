@@ -19,8 +19,6 @@ function config_data=get_config_(this,class_to_restore)
 % and stays there for further usage. 
 %
 %
-% $Revision: 655 $ ($Date: 2017-11-10 10:47:24 +0000 (Fri, 10 Nov 2017) $)
-%
 if ischar(class_to_restore)
     class_name = class_to_restore;
     class_to_restore = feval(class_name);
@@ -53,7 +51,7 @@ else
     % set obtained config data into storage.
     try
         if isempty(config_data) % get defaults
-            config_data = class_to_restore.get_data_to_store();
+            config_data = class_to_restore.get_defaults();
         end
     catch ME
         if (strcmp(ME.identifier,'MATLAB:noSuchMethodOrField'))
@@ -73,4 +71,5 @@ else
     end
     
 end
+
 

@@ -1,5 +1,5 @@
 function store_internal(this,config_class,force_save,varargin)
-% Function stores the configutation class - child of a config_bas_msl class
+% Function stores the configutation class - child of a config_base class
 % in single memory place and
 % in a special file in the configurations location folder.
 %
@@ -12,9 +12,17 @@ function store_internal(this,config_class,force_save,varargin)
 % defaults. 
 %
 %
-% $Revision$ ($Date$)
+% $Revision::      $Date:: 2020-02-10 16:05:56 +0000 (Mon, 10 Feb 2020) $)
 %
-class_name = config_class.class_name;
+if isa(config_class,'config_bas_msl')
+    class_name = config_class.class_name;
+elseif(is_string(config_class))
+    class_name = config_class;
+    config_class = feval(class_name);
+else
+    error('CONFIG_STORE:invalid_argument',...
+        'input for config_store should be either instance of config class or string with a config class name')   
+end
 if nargin>3 % we need to set some fields before storing the configuration. 
     if isfield(this.config_storage_,class_name)
         data_to_save = this.config_storage_.(class_name);
@@ -37,7 +45,7 @@ if config_class.saveable || force_save
     if isfield(this.config_storage_,class_name) && ~force_save
         % if the data to save have not changed, we not saving anything to
         % file
-        if isequal(this.config_storage_.(class_name),data_to_save);
+        if isequal(this.config_storage_.(class_name),data_to_save)
             % there is subtle problem if data have never been stored to
             % file
             return;
@@ -51,6 +59,7 @@ if config_class.saveable || force_save
 end
 % store data in memory too.
 this.config_storage_.(class_name)  = data_to_save;
+
 
 
 

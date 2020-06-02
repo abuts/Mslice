@@ -3,7 +3,8 @@ function [prop_value,out] =get_config_val_internal(this,class_name,prop_name,var
 %
 %input:
 % class_name -- name of the class to restore value from HDD or memory if
-%                     already loaded
+%               already loaded or the instance of such class
+%
 % prop_name  -- the name of the property to get stored value
 %
 %Returns:
@@ -11,15 +12,25 @@ function [prop_value,out] =get_config_val_internal(this,class_name,prop_name,var
 % the value of the requested property.
 %
 %
-% $Revision: 624 $ ($Date: 2017-09-27 15:46:51 +0100 (Wed, 27 Sep 2017) $)
+% $Revision:: 840 ($Date:: 2020-02-10 16:05:56 +0000 (Mon, 10 Feb 2020) $)
 %
 
-
+if isa(class_name,'config_base') % should be class instance;
+    class_to_restore  = class_name;
+    class_name = class_to_restore.class_name;
+elseif ischar(class_name)%  
+    if ~isfield(this.config_storage_,class_name)
+        % get class instance to work with recovery/defaults
+        class_to_restore = feval(class_name);
+    end
+else
+    error('CONFIG_STORE:invalid_argument',...
+        'invalid data type to restore values for');
+end
 % if class exist in memory, return it from memory;
 if isfield(this.config_storage_,class_name)
     config_data = this.config_storage_.(class_name);
 else
-    class_to_restore = feval(class_name);
     filename = fullfile(this.config_folder,[class_name,'.mat']);
     class_fields = class_to_restore.get_storage_field_names();
     [config_data,result,mess] = load_config_from_file(filename,class_fields);
@@ -70,5 +81,6 @@ out = cell(nout,1);
 for i=1:nout
     out{i} = config_data.(other_prop_names{i});
 end
+
 
 

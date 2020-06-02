@@ -20,14 +20,16 @@ classdef funcCopier
     end
     properties(Constant,Access=private)
         % fields to modify in Herbert class to work in mslice class
-        fields_to_modify_={'herbert_config','use_mex_C'};
-        modify_with_={'mslice_config','use_mex'};
+        fields_to_modify_={'herbert_config'};
+        modify_with_={'mslice_config'};
     end
     properties(Access=protected)
         % target root folder
         mslice_folder_;
         % source root folder
         herbert_folder_;
+        % the folder with main Herbert code located
+        herbert_core_ = 'herbert_core';
     end
     
     methods
@@ -59,7 +61,7 @@ classdef funcCopier
         %------------------------------------------------------------------
         function obj= init(obj)
             obj.mslice_folder = fileparts(which('mslice_init.m'));
-            obj.herbert_folder=fileparts(which('herbert_init.m'));
+            obj.herbert_folder=herbert_root;
             if isempty(obj.mslice_folder) || isempty(obj.herbert_folder)
                 error('FUNC_COPIED:constructor',...
                     'both herbert and mslice have to be on a data search path for this class to work');
@@ -92,7 +94,7 @@ classdef funcCopier
         function this=load_list(this,filename)
             full_file = fullfile(this.config_file_path,filename);
             fh=fopen(full_file,'r');
-            if fh<0;
+            if fh<0
                 warning('FUNC_COPIER:save_list',' can not open file %s to read data. Nothing loaded',filename);
                 return;
             end
@@ -105,10 +107,10 @@ classdef funcCopier
                     fd1=fd.from_string(line);
                     key_name = get_key_name(fd1);
                     this.files_2copy_list.(key_name) = fd1;
-%                     source_name = fd1.source_name;
-%                     if strcmp(source_name,'check_file_exist.m')
-%                         disp('  ');
-%                     end
+                    %                     source_name = fd1.source_name;
+                    %                     if strcmp(source_name,'check_file_exist.m')
+                    %                         disp('  ');
+                    %                     end
                     
                 end
                 line=fgetl(fh);
@@ -120,7 +122,7 @@ classdef funcCopier
             
         end
         %------------------------------------------------------------------
-        function this=add_dependency(this,dep,varargin)
+        function obj=add_dependency(obj,dep,varargin)
             % method to add new dependency to the dependencies list.
             %
             if nargin>2
@@ -130,11 +132,28 @@ classdef funcCopier
             end
             if isa(dep,'file_descriptor')
                 key_name = get_key_name(dep);
-                this.files_2copy_list.(key_name)=dep;
+                obj.files_2copy_list.(key_name)=dep;
                 return
             else
-                full_name = fullfile(this.herbert_folder,dep);
-                
+                full_name = which(dep);
+                if isempty(full_name)
+                    full_name = obj.look_in_herbert(dep);
+                end
+
+                if ispc
+                    cmpr = lower(full_name);
+                else
+                    cmpr = full_name;                     
+                end
+                if ~isempty(strfind(cmpr,obj.mslice_folder_))
+                    short_name = strrep(cmpr,obj.mslice_folder_,'');
+                    full_name  = obj.look_in_herbert(short_name );
+                    if isempty(full_name)
+                        error('ADD_DEPENDENCY:invalid_argument',...
+                            ' The dependency %s can not be find in Herbert',...
+                            dep);
+                    end
+                end
                 
                 if isfield(control,'dest_folder')
                     target_folder = control.dest_folder;
@@ -151,10 +170,10 @@ classdef funcCopier
                     for i=1:numel(files)
                         the_file=files{i};
                         if ~isempty(target_folder)
-                            control.dest_folder=this.replace_path_cut_root(the_file,dep,target_folder);
+                            control.dest_folder=obj.replace_path_cut_root(the_file,dep,target_folder);
                         end
                         
-                        this=this.add_dependency(the_file,control);
+                        obj=obj.add_dependency(the_file,control);
                     end
                     return
                 else
@@ -180,8 +199,21 @@ classdef funcCopier
             end
             
             key_name = get_key_name(fd);
-            this.files_2copy_list.(key_name)=fd;
+            obj.files_2copy_list.(key_name)=fd;
             
+        end
+        function full_path = look_in_herbert(obj,filename)
+            % the routine tries to find Matlab file filename within the
+            % Herbert code tree
+            [fp,ff,fex] = fileparts(filename);
+            short_name = [ff,fex];
+            full_path  = fullfile(obj.herbert_folder_,obj.herbert_core_,fp,short_name);
+            if ~(exist(full_path,'file') >= 2 )
+                full_path  = fullfile(obj.herbert_folder_,fp,short_name);
+                if ~(exist(full_path,'file') >= 2 )
+                    full_path = '';
+                end
+            end
         end
         %------------------------------------------------------------------
         function this=copy_dependencies(this,check_thoroughly)
@@ -194,10 +226,10 @@ classdef funcCopier
             nDependencies = numel(names);
             for i=1:nDependencies
                 descriptor = this.files_2copy_list.(names{i});
-%                 source_name = descriptor.source_name;
-%                 if strcmp(source_name,'check_file_exist.m')
-%                     disp('  ');
-%                 end
+                %                 source_name = descriptor.source_name;
+                %                 if strcmp(source_name,'check_file_exist.m')
+                %                     disp('  ');
+                %                 end
                 [source_modidied,target_modified,check]= descriptor.is_modified(check_thoroughly);
                 if source_modidied
                     if target_modified % make copy of the target file and tell about it
@@ -229,18 +261,18 @@ classdef funcCopier
             nNew = 0;
             nModified=0;
             for i=1:nDependencies
-%                 source_name = other_dependencies.files_2copy_list.(addnames{i}).source_name;
-%                 if strcmp(source_name,'check_file_exist.m')
-%                     disp('  ');
-%                 end
+                %                 source_name = other_dependencies.files_2copy_list.(addnames{i}).source_name;
+                %                 if strcmp(source_name,'check_file_exist.m')
+                %                     disp('  ');
+                %                 end
                 
-                if ~isfield(this.files_2copy_list,addnames{i})                    
+                if ~isfield(this.files_2copy_list,addnames{i})
                     this.files_2copy_list.(addnames{i}) = other_dependencies.files_2copy_list.(addnames{i});
                     nNew = nNew+1;
                 elseif check_thoroughly
                     if this.files_2copy_list.(addnames{i}).n_fields_to_modify ~= other_dependencies.files_2copy_list.(addnames{i}).n_fields_to_modify;
                         nModified=nModified+1;
-                        this.files_2copy_list.(addnames{i}) = other_dependencies.files_2copy_list.(addnames{i});                        
+                        this.files_2copy_list.(addnames{i}) = other_dependencies.files_2copy_list.(addnames{i});
                     end
                 end
             end

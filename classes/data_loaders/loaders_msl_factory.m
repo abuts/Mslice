@@ -3,7 +3,7 @@ classdef loaders_msl_factory < handle
     % demand
     %
     %
-    % $Revision$ ($Date$)
+    % $Revision::      $Date:: 2020-02-10 16:05:56 +0000 (Mon, 10 Feb 2020) $)
     %
     
     
@@ -11,7 +11,7 @@ classdef loaders_msl_factory < handle
         % Registered file readers:
         % Add all new file readers which inherit from a_msl_loader to this list in the order
         % of expected frequency for their appearance.
-        supported_readers = {ldr_msl_nxspe(),ldr_msl_ascii(),ldr_msl_membased(),ldr_msl_speh5()};
+        supported_readers = {ldr_msl_nxspe(),ldr_msl_ascii()};
         % field describes
         reader_descriptions_ = {};
         % supported filenames extensions;
@@ -113,3 +113,4 @@ classdef loaders_msl_factory < handle
     
     
 end
+

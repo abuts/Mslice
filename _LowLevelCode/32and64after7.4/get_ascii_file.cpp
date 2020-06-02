@@ -1,9 +1,10 @@
 // get_ascii_file.cpp : Defines the exported functions for the DLL application.
 //
 #include "get_ascii_file.h"
+#include "../utility/version.h"
 /*! \file get_ascii_file.cpp
 *
-*  \brief     result=get_ascii_file(fileName,[file_type]) function reads par, phx or spx - ASCII 
+*  \brief     result=get_ascii_file(fileName,[file_type]) function reads par, phx or spx - ASCII
 *             files depending on the output arguments specified and the file format itself
 *
 * usage:
@@ -11,14 +12,14 @@
 * [result] = get_ascii_file(fileName,[file_type])
 *
 *
-* input arguments: 
+* input arguments:
 *	file_name -- a string which specifies the name of the input data file.
 *	             The file has to be an ascii file of format specified below
 *	file_type -- optional string, defining the file format
 *	             three values for this string are currently possible:
 *				 spe, par,  phx or nothing
 *				 if omitted, the program tries to identify the file type by itself
-*				 if the option is specified and the file format differs from the requested, 
+*				 if the option is specified and the file format differs from the requested,
 *				 the error is returned
 *
 *output parameters:    three forms are possible:
@@ -69,7 +70,7 @@
 *
 *-----------------------------------------------------------------------
 *
-* $Revision$ ($Date$)
+* $Revision::      $Date:: 2020-02-10 16:05:56 +0000 (Mon, 10 Feb 2020) $)
 */
 
 /*!
@@ -94,16 +95,15 @@ void mexFunction(int nlhs, mxArray *plhs[ ],int nrhs, const mxArray *prhs[ ]){
   FileTypeDescriptor FILE_TYPE;   // file descriptor will tell which file we have opened and some additional information about it
 
 
-  std::string fileTypesAccepted[iNumFileTypes+1]; 
+  std::string fileTypesAccepted[iNumFileTypes+1];
   fileTypesAccepted[iPAR_type]    ="par";
   fileTypesAccepted[iPHX_type]    ="phx";
   fileTypesAccepted[iSPE_type]    ="spe";
   fileTypesAccepted[iNumFileTypes]="undefined";
 
-//--------->  ANALYSE INPUT PARAMETERS;
-  const char REVISION[]="$Revision::      $ ($Date::                                              $)";
-  if(nrhs==0&&nlhs==1){
-        plhs[0]=mxCreateString(REVISION); 
+  //--------->  ANALYSE INPUT PARAMETERS;
+  if (nrhs == 0 && (nlhs == 0 || nlhs == 1)) {
+        plhs[0] = mxCreateString(Herbert::VERSION);
         return;
   }
 
@@ -131,13 +131,13 @@ void mexFunction(int nlhs, mxArray *plhs[ ],int nrhs, const mxArray *prhs[ ]){
         }
   }
 
-//----------> INPUT PARAMETERS: Analyse, which file type is requested
+//----------> INPUT PARAMETERS: Analyze, which file type is requested
   currentFileType=iNumFileTypes; // set the current file type to the value, which it can never have for a valid file type;
-  if(nrhs==iNumInputs){          // second parameter is present and we should analyse it
+  if(nrhs==iNumInputs){          // second parameter is present and we should analyze it
       if(!mxIsChar(prhs[iFileType])||(mxGetM(prhs[iFileType]))!=1){  // not a file type
             buf<<"second parameter, if present has to be a scalar string, which specify a file type\n";      goto error;
       }else{                                                         // get file type
-            int fileType_Length = mxGetN(prhs[iFileType])+1;
+            std::size_t fileType_Length = mxGetN(prhs[iFileType])+1;
             if(fileType_Length!=4){	buf<<"second parameter has to be a string of 3 ASCII symbols\n";	   	goto error;
             }
             if(mxGetString(prhs[iFileType], fileType, fileType_Length)){
@@ -159,13 +159,13 @@ void mexFunction(int nlhs, mxArray *plhs[ ],int nrhs, const mxArray *prhs[ ]){
       }
   }  // second parameter is present and have been identified;
 
-//----------> INPUT PARAMETERS: open file and analyse,  it its type is the same as the type requested plus get other service information;
+//----------> INPUT PARAMETERS: open file and analyze,  it its type is the same as the type requested plus get other service information;
     try{
         FILE_TYPE=get_ASCII_header(inputFileName,data_stream);
     }catch(const char *Error){
         buf<<Error<<std::endl;  goto error;
     }
-    if(currentFileType!=iNumFileTypes){  // then a file type reqiested is specified and we have to check if the real file type corresponds to the requested
+    if(currentFileType!=iNumFileTypes){  // then a file type requested is specified and we have to check if the real file type corresponds to the requested
         if(FILE_TYPE.Type!=currentFileType){
             buf<<" it is requested to open a <"<<inputFileType<<"> file, but the internal file format identified as <"<<fileTypesAccepted[FILE_TYPE.Type]<<"> file\n";
             goto error;
@@ -230,3 +230,4 @@ error:
   mexErrMsgTxt(err_msg.c_str());
 
 }
+

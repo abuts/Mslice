@@ -61,6 +61,8 @@ classdef file_descriptor
         % the field contains the paris which were successfully modified
         % during copy and modify process
         mod_success_ = struct();
+        % new herbert root folder, to remove from Mslice path if present
+        her_core_ = 'herbert_core';
     end
     properties(Constant,Access=protected)
         % the names of the fields which always written to file
@@ -155,7 +157,7 @@ classdef file_descriptor
         end
         %------------------------------------
         function spath = get.short_dest_path(this)
-            if isempty(this.dest_path_);
+            if isempty(this.dest_path_)
                 spath = this.source_path_;
             else
                 if numel(this.dest_path_)==1 && this.dest_path_== '-'
@@ -164,6 +166,8 @@ classdef file_descriptor
                     spath = this.dest_path_;
                 end
             end
+            spath = replace(spath,this.her_core_,'');
+            spath = replace(spath,[filesep,filesep],filesep);
         end
         
         function this=set.short_dest_path(this,path)

@@ -6,32 +6,53 @@ classdef config_stor_msl < handle
     %
     %
     %
-    % $Revision$ ($Date$)
+    % $Revision::      $Date:: 2020-02-10 16:05:56 +0000 (Mon, 10 Feb 2020) $)
     %
     properties(Dependent)
         % the full path to the folder where the configuration is stored
         config_folder;
-        % property to observe config classes currently initated in
+        % property to observe config classes currently initiated in
         % the singleton (mainly for testing and debug purposes)
         config_classes;
-    end
-    properties(Constant=true)
         % the name of the folder where the configuration is stored;
-        config_folder_name='mprogs_config';
+        config_folder_name
     end
     properties(Access=private)
         config_folder_;
         config_storage_;
         saveable_;
+        config_folder_name_ = 'mprogs_config';
     end
     
     methods(Access=private)
         % Guard the constructor against external invocation.  We only want
         % to allow a single instance of this class.  See description in
         % Singleton superclass.
-        function newStore = config_stor_msl()
-            % Initialise config folder path
-            newStore.config_folder_ = make_config_folder(config_stor_msl.config_folder_name);
+        function newStore = config_stor_msl(varargin)
+            % create and initialize config_stor_msl;
+            [is_virtual,type]=is_idaaas();
+            if is_virtual
+                newStore.config_folder_name_ = ['mprogs_config_',type];
+            end
+            [is_virtual,build_name] = is_jenkins();
+            if is_virtual
+                [~,build_name] = fileparts(build_name); % remove all possible folder path's of the build name 
+                % to be able to create valid file name.
+                newStore.config_folder_name_ = ['mprogs_config_',build_name];
+            end
+            
+            if nargin>0
+                [fp,fn] = fileparts(varargin{1});
+                cfn = config_stor_msl.instance().config_folder_name;
+                if strcmpi(fn,cfn)
+                    newStore.config_folder_ = make_config_folder(cfn,fp);
+                else
+                    newStore.config_folder_ = make_config_folder(cfn,varargin{1});
+                end
+            else
+                % Initialise default config folder path according to
+                newStore.config_folder_ = make_config_folder(newStore.config_folder_name);
+            end
             % initialize configurations storage.
             newStore.config_storage_ = struct();
             newStore.saveable_ = containers.Map();
@@ -40,21 +61,49 @@ classdef config_stor_msl < handle
     
     methods(Static)
         function obj = instance(varargin)
-            % Instance function concrete implementation.
+            % Get instance of unique config_stor_msl implementation.
+            %
+            % Usage:
+            % con = config_stor_msl.instance({[a_config_folder_name],'clear'})'
+            % Where optional parameter does the following:
+            % 'clear' -- removes all configurations from memory.
+            % a_config_folder_name -- if present, sets the location of the
+            %                         current config store in memory to the
+            %                         folder provided
             %
             persistent unique_store_;
             if nargin>0
                 unique_store_ = [];
                 obj = [];
-                return;
+                if strcmp(varargin{1},'clear')
+                    return;
+                end
             end
             if isempty(unique_store_)
-                obj = config_stor_msl();
+                obj = config_stor_msl(varargin{:});
                 unique_store_ = obj;
             else
                 obj = unique_store_;
             end
         end
+        function set_config_folder(config_folder_name)
+            % set the location for a folder with configuration to a location
+            % provided as input.
+            %
+            % If the folder does not exist, its created. The configurations
+            % currently in memory are retained but will be saved to the new
+            % location on request only.
+            if ~ischar(config_folder_name)
+                error('CONFIG_STORE:invalid_argument',...
+                    'config folder value has to be provided as a char string')
+            end
+            if strcmpi(config_folder_name,'clear')
+                error('CONFIG_STORE:invalid_argument',...
+                    'the config folder name can not be: ''clear''')
+            end
+            config_stor_msl.instance(config_folder_name);
+        end
+        
     end
     methods
         function store_config(this,config_class,varargin)
@@ -69,7 +118,7 @@ classdef config_stor_msl < handle
             options={'-forcesave'};
             [ok,mess,force_save,other_options]=parse_char_options(varargin,options);
             if ~ok
-                error('CONFIG_STORE:store_config',mess);
+                error('CONFIG_STORE:invalid_argument',mess);
             end
             store_internal(this,config_class,force_save,other_options{:});
         end
@@ -88,13 +137,15 @@ classdef config_stor_msl < handle
             % Returns:
             % field_val1,field_val2, etc... -- the values of the requested
             %                                  fields
+            %
             if isa(class_to_restore,'config_bas_msl')
                 class_name = class_to_restore.class_name;
             elseif ischar(class_to_restore)
                 class_name = class_to_restore;
+                class_to_restore = feval(class_name);
             else
                 error('CONFIG_STORE:invalid_argument',...
-                    'Config class has to be a chield of the config_bas_msl class');
+                    'Config class has to be a child of the config_bas_msl class or the name of such class');
             end
             
             if isfield(this.config_storage_,class_name)
@@ -104,20 +155,50 @@ classdef config_stor_msl < handle
             end
             
             if numel(varargin) < nargout
-                error('CONFIG_STORE:restore_config',' some output values are not set by this function call');
+                error('CONFIG_STORE:runtime_error',...
+                    ' some output values are not set by this function call');
             end
-            val=config_data.(varargin{1});
+            %
+            if isfield(config_data,varargin{1})
+                val=config_data.(varargin{1});
+            else
+                warning('CONFIG_STORE:restore_config',...
+                    'Class %s field %s is not stored in configuration. Returning defaults',...
+                    class_name,varargin{1});
+                val = class_to_restore.get_internal_field(varargin{1});
+            end
             for i=2:nargout
-                varargout{i-1}=config_data.(varargin{i});
+                if isfield(config_data,varargin{i})
+                    varargout{i-1}=config_data.(varargin{i});
+                else
+                    warning('CONFIG_STORE:restore_config',...
+                        'Class %s field %s is not stored in configuration. Returning defaults',...
+                        class_name,varargin{i});
+                    varargout{i-1} = class_to_restore.get_internal_field(varargin{i});
+                end
             end
             
         end
         %------------------------------------------------------------------
-        % Two methods responsible for the class to be configured saveable
-        % saveble property is not stored to HDD and is the property
-        % of the object persistent untill objects configuration is in memory
+        % Two methods responsible for the class to be configured savable
+        % savable property is not stored to HDD and is the property
+        % of the object persistent until objects configuration is in memory
         function is = get_saveable(this,class_to_check)
-            class_name = class_to_check.class_name;
+            % returns true if a configuration class requested as input is savable
+            % i.e. changes in configuration are stored on hdd
+            % usage:
+            %>>is = config_stor_msl.instance().get_saveable('class_name')
+            %or
+            %>>is = config_stor_msl.instance().get_saveable(class_instance)
+            %
+            % where 'class_name' or class_instance is a configuration class
+            % to check
+            %
+            if is_string(class_to_check)
+                class_name  = class_to_check;
+            else
+                class_name = class_to_check.class_name;
+            end
             if this.saveable_.isKey(class_name)
                 is = this.saveable_(class_name);
             else
@@ -126,12 +207,29 @@ classdef config_stor_msl < handle
             end
         end
         function set_saveable(this,class_instance,is_it)
+            % set or clear the property, which defines if the changes in
+            % the class configuration are stored on hdd
+            % usage:
+            %>>config_stor_msl.instance().set_saveable('class_name',to_save)
+            %or
+            %>>config_stor_msl.instance().set_saveable(class_instance,to_save)
+            %
+            % where 'class_name' or class_instance is a configuration class
+            % to set and the variable to_save is true if the class should be
+            % made savable and false otherwise.
+            %
+            
             if is_it > 0
                 is_saveable=true;
             else
                 is_saveable=false;
             end
-            class_name = class_instance.class_name;
+            if is_string(class_instance)
+                class_name  = class_instance;
+            else
+                class_name = class_instance.class_name;
+            end
+            
             this.saveable_(class_name)=is_saveable;
         end
         %------------------------------------------------------------------
@@ -143,7 +241,7 @@ classdef config_stor_msl < handle
             %>>val =
             %      config_stor_msl.instance().get_value(class_name,property_name)
             % or
-            %>> val1,val2,val3 = config_stor_msl.instance().get_value(class_name,property_name1,property_name2,property_name3)
+            %>>[val1,val2,val3] = config_stor_msl.instance().get_value(class_name,property_name1,property_name2,property_name3)
             %
             [config_val,out] = this.get_config_val_internal(class_name,value_name,varargin);
             nout = max(nargout,1) - 1;
@@ -163,17 +261,17 @@ classdef config_stor_msl < handle
             %
             % if class_to_restore has option returns_defaults==true,
             % default class configuration is returned
-     
+            
             %Usage:
             %
             % obj = conifg_store.instance().restore_config(herbert_config)
-            %       unusual instance of herbert config, with modified
-            %       detaults. Should not be used
+            %       unusual instance of Herbert config, with modified
+            %       defaults. Should not be used
             %
-            % [use_mex,use_mex_C]=conifg_store.instance().restore_config(herbert_config,...
-            %                     'use_mex','use_mex_C')
-            %                     returns current herbert config settings for fields
-            %                      'use_mex' and 'use_mex_C'
+            % [use_mex,log_level]=conifg_store.instance().restore_config(herbert_config,...
+            %                     'use_mex','log_level')
+            %                      returns current Herbert config settings for fields
+            %                      'use_mex' and 'log_level'
             
             config_data=this.get_config_(class_to_restore);
             % execute class setters.
@@ -182,7 +280,7 @@ classdef config_stor_msl < handle
             % Despite we are not returning the resulting configuration,
             % executing this allows to set up global dependent fields (e.g.
             % set up unit test directories. But this can not set up
-            % internal privated dependent fields so a configuration can not
+            % internal private dependent fields so a configuration can not
             % have such fields! (the setting got lost)
             class_to_restore.set_stored_data(config_data);
         end
@@ -208,7 +306,7 @@ classdef config_stor_msl < handle
             options={'-files'};
             [ok,mess,clear_file]=parse_char_options(varargin,options);
             if ~ok
-                error('CONFIG_STORE:clear_config',mess);
+                error('CONFIG_STORE:invalid_argument',mess);
             end
             clear_particular_config(this,class_instance,clear_file);
         end
@@ -221,13 +319,14 @@ classdef config_stor_msl < handle
             options={'-files'};
             [ok,mess,clear_files]=parse_char_options(varargin,options);
             if ~ok
-                error('CONFIG_STORE:clear_config',mess);
+                error('CONFIG_STORE:invalid_argument',mess);
             end
             if clear_files
                 this.delete_all_files();
             end
             config_stor_msl.instance('clear');
         end
+        %
         function isit=is_configured(this,class_instance,varargin)
             % method checks if the class class_instance is
             % stored within the config_stor_msl
@@ -238,15 +337,28 @@ classdef config_stor_msl < handle
             options={'-in_mem'};
             [ok,mess,check_mem_only]=parse_char_options(varargin,options);
             if ~ok
-                error('CONFIG_STORE:is_configured',mess);
+                error('CONFIG_STORE:invalid_argument',mess);
             end
             %
             isit = check_isconfigured(this,class_instance,check_mem_only);
         end
         %------------------------------------------------------------------
-        function path=get.config_folder(this)
-            path=this.config_folder_;
+        function path=get.config_folder(obj)
+            path=obj.config_folder_;
         end
+        %
+        function fn=get.config_folder_name(obj)
+            fn = obj.config_folder_name_;
+        end
+        %
+        function set_config_path(obj,new_path)
+            % set new config store path. Existing configurations are
+            % unloaded from memory.
+            %
+            % Should be used with care and necessary mainly for MPI workers
+            obj.instance(new_path);
+        end
+        
         %
         function storage = get.config_classes(this)
             storage = fieldnames(this.config_storage_);
@@ -254,4 +366,5 @@ classdef config_stor_msl < handle
         
     end
 end
+
 
