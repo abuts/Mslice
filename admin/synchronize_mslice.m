@@ -54,7 +54,8 @@ fc=fc.add_dependency(fd);
 
 %
 files_copied = {'check_file_exist.m','find_dataset_info',...
-    'find_root_nexus_dir','get_hor_format','is_idaaas','is_jenkins'};
+    'find_root_nexus_dir','get_hor_format','is_idaaas','is_jenkins',...
+    'getComputerName'};
 for i=1:numel(files_copied)
     fc=fc.add_dependency(files_copied{i});
 end
