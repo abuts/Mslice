@@ -1,7 +1,7 @@
 function [isthere,nh] = is_handle_exist(this,h)
  % handle already there
 %
-%   $Rev$ ($Date$)
+%   $Rev: 345 $ ($Date: 2017-09-27 15:50:53 +0100 (Wed, 27 Sep 2017) $)
 %
  
 nh = numel(this.handles);                  

@@ -52,7 +52,7 @@ function data=load_spe(spe_filename)
 %
 % MODIFIED TO WORK WITH HERBERT:
 %
-% $Revision$ ($Date$)
+% $Revision: 347 $ ($Date: 2018-10-30 17:52:52 +0000 (Tue, 30 Oct 2018) $)
 %
 %
 

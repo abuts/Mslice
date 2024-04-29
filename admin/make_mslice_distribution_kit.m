@@ -9,7 +9,7 @@ function make_mslice_distribution_kit
 % libisis_init.m resides and add to the search path the file libisis_on.m, 
 % after renaming the file libisis_on.mt.
 % 
-% $Revision$ ($Date$)
+% $Revision: 345 $ ($Date: 2017-09-27 15:50:53 +0100 (Wed, 27 Sep 2017) $)
 %
 rootpath = fileparts(which('mslice_init')); % MUST have rootpath so that libisis_init, libisis_off included
 % code path and snv path are identified relatively to rootpath and have to

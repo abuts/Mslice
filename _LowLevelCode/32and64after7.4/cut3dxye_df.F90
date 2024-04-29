@@ -17,7 +17,7 @@ subroutine mexFunction(nlhs, plhs, nrhs, prhs)
 !123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678
 !         1         2         3         4         5         6         7         8         9         0
   character*(75):: REVISION                         
-  DATA REVISION /"$Revision::      $ ($Date::                                              $)"/
+  DATA REVISION /"$Revision:: 345  $ ($Date:: 2017-09-27 15:50:53 +0100 (Wed, 27 Sep 2017) $)"/
   
   mwpointer :: plhs(*), prhs(*)
   integer*4 :: nrhs, nlhs,complex_flag

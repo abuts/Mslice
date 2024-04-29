@@ -14,7 +14,7 @@ function [ok,mess] = mcopy_and_rename(input_file,output_path,output_name)
 % if invoked without output arguments, errors are thrown, if with, errors
 % reported in the output arguments
 %
-%   $Rev$ ($Date$)
+%   $Rev: 345 $ ($Date: 2017-09-27 15:50:53 +0100 (Wed, 27 Sep 2017) $)
 %
 %  23/09/2014 first very ineffective version, which would replace substring
 %  multiple times if the source is a substing of the target

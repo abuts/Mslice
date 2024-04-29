@@ -6,7 +6,7 @@ function vals = ms_getfields
 %
 % T.G.Perring 13 July 2005
 %
-% $Rev$  ($Date$)
+% $Rev: 345 $  ($Date: 2017-09-27 15:50:53 +0100 (Wed, 27 Sep 2017) $)
 %
 % After examining the function ms_setvalue, the following would appear to get
 % all the tags corresponding to mslice variables

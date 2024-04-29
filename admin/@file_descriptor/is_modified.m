@@ -7,7 +7,7 @@ function [copy_source,store_destination,mod_targ]=is_modified(this,varargin)
 % the file assumed modified when its checksum is changed
 %
 %
-%   $Rev$ ($Date$)
+%   $Rev: 345 $ ($Date: 2017-09-27 15:50:53 +0100 (Wed, 27 Sep 2017) $)
 %
 
 

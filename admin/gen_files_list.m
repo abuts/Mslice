@@ -3,7 +3,7 @@ function file_names = gen_files_list(folder_path,folder_name,top_files)
 % subdirectories with file path related to the root folder directory
 %
 %
-%   $Rev$ ($Date$)
+%   $Rev: 345 $ ($Date: 2017-09-27 15:50:53 +0100 (Wed, 27 Sep 2017) $)
 %
 
 %

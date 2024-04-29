@@ -19,7 +19,7 @@ function value=ms_getvalue(input,opt)
 %
 % For a full list of field names, type >> ms_getfields
 %
-%  $Rev$  ($Date$)
+%  $Rev: 345 $  ($Date: 2017-09-27 15:50:53 +0100 (Wed, 27 Sep 2017) $)
 %
 
 h_cw=findobj('Tag','ms_ControlWindow');

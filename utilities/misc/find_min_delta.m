@@ -16,7 +16,7 @@ function [dx_min,dy_min] = find_min_delta( range,grid,u)
 % u         -- mslice data field, describing axis ordering
 %
 %
-%  $Revision$   ($Date$)
+%  $Revision: 345 $   ($Date: 2017-09-27 15:50:53 +0100 (Wed, 27 Sep 2017) $)
 %
 gr_size= size(grid);
 grid=reshape(grid,gr_size(1)*gr_size(2),gr_size(3));

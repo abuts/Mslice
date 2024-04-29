@@ -12,7 +12,7 @@ subroutine mexFunction(nlhs, plhs, nrhs, prhs)
 #include "fintrf.h"
   character*(40) :: PROG_NAME= 'Fortran spe2proj (spe2proh_df.F90)      '
   character*(75):: REVISION                         
-  DATA REVISION /"$Revision::      $ ($Date::                                              $)"/
+  DATA REVISION /"$Revision:: 345  $ ($Date:: 2017-09-27 15:50:53 +0100 (Wed, 27 Sep 2017) $)"/
   
   mwpointer :: plhs(*), prhs(*)
   integer*4 :: nrhs, nlhs,complex_flag 

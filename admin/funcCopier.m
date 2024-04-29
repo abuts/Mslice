@@ -3,7 +3,7 @@ classdef funcCopier
     % mslice
     %
     %
-    %   $Rev$ ($Date$)
+    %   $Rev: 348 $ ($Date: 2020-06-02 19:39:46 +0100 (Tue, 02 Jun 2020) $)
     %
     properties(Dependent)
         % target root folder

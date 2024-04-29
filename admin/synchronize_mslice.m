@@ -3,7 +3,7 @@ function fc_list=synchronize_mslice(varargin)
 % its source
 %
 %
-%   $Rev$ ($Date$)
+%   $Rev: 351 $ ($Date: 2020-06-03 10:04:10 +0100 (Wed, 03 Jun 2020) $)
 %
 %
 % HERBERT HAS TO BE INITIATED AFTER Mslice for this function to work

@@ -1,7 +1,7 @@
 function this=add(this,gui_element,visible)
  % add collection of graphic elements to users menu
 %
-%   $Rev$ ($Date$)
+%   $Rev: 345 $ ($Date: 2017-09-27 15:50:53 +0100 (Wed, 27 Sep 2017) $)
 %
 if any(ismember(this.elements_names,gui_element.name)) % already there
        return;

@@ -5,7 +5,7 @@
 !     07-Oct-2000 compiled for PC/WINNT using Matlab 5.3 and
 !     Digital Visual Fortran Professional Edition 6
 !    
-!    $Revisison: $  ($Date$)
+!    $Revisison: $  ($Date: 2017-09-27 15:50:53 +0100 (Wed, 27 Sep 2017) $)
 !  
 !====================================================================	
 subroutine mexFunction(nlhs, plhs, nrhs, prhs)
@@ -13,7 +13,7 @@ subroutine mexFunction(nlhs, plhs, nrhs, prhs)
 ! declares the pointer and integer sizes for current os and platform
 #include "fintrf.h"
   character*(40) :: PROG_NAME= 'Fortran SPE in mslice (load_spe_df.F90) '
-  character*(70) :: PROG_REV = '$Rev::      $ ($Date::                                              $)'
+  character*(70) :: PROG_REV = '$Rev:: 345  $ ($Date:: 2017-09-27 15:50:53 +0100 (Wed, 27 Sep 2017) $)'
   character*(110):: REVISION
 
   

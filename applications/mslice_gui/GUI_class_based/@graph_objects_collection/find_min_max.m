@@ -2,7 +2,7 @@ function [r_min,r_max,this]=find_min_max(this,handles,not_reset_class_min_max)
 % method to find min-max screen values of the object group. 
 %
 %
-%   $Rev$ ($Date$)
+%   $Rev: 345 $ ($Date: 2017-09-27 15:50:53 +0100 (Wed, 27 Sep 2017) $)
 %
 
 if ~iscell(handles)

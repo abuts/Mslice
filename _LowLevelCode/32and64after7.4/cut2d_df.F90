@@ -6,7 +6,7 @@
 !     and rebin data along vx axis [vx_min to vx_max] 
 !     24-Oct-2000 version for Digital Visual Fortran 6
 !     use passing pointers in Fortran through the %VAL construct
-!    $Revision$ ($Date$)
+!    $Revision: 345 $ ($Date: 2017-09-27 15:50:53 +0100 (Wed, 27 Sep 2017) $)
 !===============================================================================
 subroutine mexFunction(nlhs, plhs, nrhs, prhs)
   implicit NONE
@@ -18,8 +18,8 @@ subroutine mexFunction(nlhs, plhs, nrhs, prhs)
 !         1         2         3         4         5         6         7         8         9         0
 !   character*(71) :: PROG_REV 
     character*(75):: REVISION                         
-    DATA REVISION /"$Revision::      $ ($Date::                                              $)"/
-!   DATA PROG_REV/"$Rev::      $ ($Date::                                              $)"/
+    DATA REVISION /"$Revision:: 345  $ ($Date:: 2017-09-27 15:50:53 +0100 (Wed, 27 Sep 2017) $)"/
+!   DATA PROG_REV/"$Rev:: 345  $ ($Date:: 2017-09-27 15:50:53 +0100 (Wed, 27 Sep 2017) $)"/
    
   
   !     <temp> will be temporary mxArray in place of plhs(1),plhs(2),...

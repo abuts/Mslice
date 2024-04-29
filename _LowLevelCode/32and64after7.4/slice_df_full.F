@@ -16,7 +16,7 @@ C	-----------------------------
 C     Modified version of slice_df that returns the information to write out a slice
 C     in the format expected by TOBYFIT_V2
 C
-C    $Revision$  ($Date$)
+C    $Revision: 345 $  ($Date: 2017-09-27 15:50:53 +0100 (Wed, 27 Sep 2017) $)
 C
 C==============================================================================================
       subroutine mexFunction(nlhs, plhs, nrhs, prhs)
@@ -25,8 +25,8 @@ C-----------------------------------------------------------------------
 C declares the pointer and integer sizes for current os and platform
 #include "fintrf.h"
       character*(75):: REVISION =
-     c "$Revision::      $ " //
-     c "($Date::                                              $)"
+     c "$Revision:: 345  $ " //
+     c "($Date:: 2017-09-27 15:50:53 +0100 (Wed, 27 Sep 2017) $)"
 
       mwpointer :: plhs(*), prhs(*)
 	integer*4 :: nrhs, nlhs,cpfg

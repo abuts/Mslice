@@ -16,7 +16,7 @@ function numver=matlab_version_num
 %   ans =
 %       7.0400  (i.e. not 7.4)
 %
-% $Revision$ ($Date$)
+% $Revision:: 840 ($Date:: 2020-02-10 16:05:56 +0000 (Mon, 10 Feb 2020) $)
 %
 
 
@@ -28,3 +28,4 @@ vers=version;
 
 vs = regexp(vers,'\.','split');
 numver = str2double(vs{1})+0.01*str2double(vs{2});
+

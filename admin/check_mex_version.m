@@ -4,7 +4,7 @@ function [rez,n_errors,minVer,maxVer,compilation_date]=check_mex_version()
 % version; it they support code version
 % returns this version
 %
-% Rev:   $ ($Date$)
+% Rev:   $ ($Date: 2017-09-27 15:50:53 +0100 (Wed, 27 Sep 2017) $)
 %
 
 functions_name_list={'Avpix         : ','Cut2D         : ','Cut3D         : ',...
