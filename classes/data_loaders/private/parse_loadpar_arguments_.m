@@ -25,7 +25,7 @@ function [return_array,force_reload,getphx,lext,new_filename]=parse_loadpar_argu
 %                    detector information if the full file name
 %                    (with path)
 %                    stored in the horace detector structure
-%                    coinsides with par_file_name defined in
+%                    coincides with par_file_name defined in
 %                    the class. Include this option if one
 %                    wants to reload this information at each
 %                    load_par.
@@ -42,7 +42,7 @@ options = {'-nohorace','-array','-horace','-forcereload','-getphx'};
 [ok,mess,return_array,return_array2,hor_format_deprecated,force_reload,getphx,file_name]=...
     parse_char_options(varargin,options);
 if ~ok
-    if get(herbert_config,'log_level')>0
+    if get(mslice_config,'log_level')>0
         disp('Usage:');
         help([CallClassName,'.load_par']);
     end
@@ -61,7 +61,7 @@ if hor_format_deprecated
         'option -horace is deprecated, loader returns data in horace format by default')
 end
 if numel(file_name)>1
-    if get(herbert_config,'log_level')>0
+    if get(mslice_config,'log_level')>0
         disp('Usage:');
         help([CallClassName,'.load_par']);
     end

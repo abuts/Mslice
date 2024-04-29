@@ -31,7 +31,7 @@ function [S,ok,mess] = parse_set_internal (varargin)
 %
 % NOTE: For internal use only.
 
-% $Revision::      $Date:: 2020-02-10 16:05:56 +0000 (Mon, 10 Feb 2020) $)
+% $Revision:: 840 ($Date:: 2020-02-10 16:05:56 +0000 (Mon, 10 Feb 2020) $)
 
 % Default return values
 S=struct();
@@ -61,11 +61,11 @@ if narg==1
         if numel(unique(field_nams))~=numel(field_nams)
             ok=false; mess='One or more name arguments are repeated'; return
         end           
-    elseif isa(svar,'config_base')
+    elseif isa(svar,'config_bas_msl')
         S = svar.get_data_to_store();
         return;
     else
-        ok=false; mess='Second parameter of two has to be a structure, a cell array, config_base class or the option ''defaults'''; return
+        ok=false; mess='Second parameter of two has to be a structure, a cell array, config_bas_msl class or the option ''defaults'''; return
     end
 
 elseif narg==2 && iscell(varargin{1}) && iscell(varargin{2})

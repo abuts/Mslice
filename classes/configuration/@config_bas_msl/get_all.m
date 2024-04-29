@@ -23,8 +23,6 @@ function S=get_all(this,opt)
 %
 
 
-% $Revision::      $Date:: 2020-02-10 16:05:56 +0000 (Mon, 10 Feb 2020) $)
-
 if nargin==1
     S=config_stor_msl(false);
 elseif nargin==2 && ischar(opt) && ~isempty(opt) && size(opt,1)==1 && strncmpi(opt,'defaults',length(opt))

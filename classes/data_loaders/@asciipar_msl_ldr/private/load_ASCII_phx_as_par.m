@@ -1,7 +1,14 @@
-function par=load_ASCII_phx_as_par(filename)
+function par=load_ASCII_phx_as_par(filename,accuracy)
 % Load data from ASCII mslice .phx file
 %   >> par = load_ASCII_phx_as_par(filename)
+%   >> par = load_ASCII_phx_as_par(filename,accuracy)
 %
+% Inputs:
+% filename -- name of the par file to read
+% accuracy -- if provided, the number of digits to keep
+%             after decimal point. If not provided, the
+%             accuracy is equal to asciipar_msl_ldr.ASCII_PARAM_ACCURACY
+
 % data has following fields:
 %
 %     par(6,ndet)   contents of array
@@ -29,17 +36,21 @@ if ~exist('filename','var')
     help get_par;
     return
 end
+if ~exist('accuracy', 'var')
+    accuracy = asciipar_msl_ldr.ASCII_PARAM_ACCURACY;
+end
+
 
 filename=strtrim(filename);
 
-use_mex = get(herbert_config,'use_mex');
+use_mex = get(mslice_config,'use_mex');
 if use_mex
     try     %using C routine
         phx=get_ascii_file(filename,'phx');
         [ncol,ndata]=size(phx);
         phx=[phx(1,:);phx(3:6,:);1:ndata];
     catch   %using matlab routine
-        force_mex = get(herbert_config,'force_mex_if_use_mex');
+        force_mex = get(mslice_config,'force_mex_if_use_mex');
         if ~force_mex
             warning('A_LOADER:get_phx','Cannot invoke C++ procedure get_ascii_file.%s while loading from file: %s;\n Reason: %s',mexext(),filename,lasterr());
             use_mex = false;
@@ -52,10 +63,14 @@ end
 if ~use_mex
    phx=get_phx_matlab(filename);
 end
+
+%
+% round-off parameters to 'accuracy' digits after decimal pointfor consistency
+% as the real accuracy is even lower but different OS interpret
+% missing digits differently
+%
 % convert phx to par (not implemented)
-par = phx;
-
-
+par  = round(phx,accuracy);
 
 function phx= get_phx_matlab(file_tmp)
 % Read file (use matlab)
@@ -96,5 +111,3 @@ end
 %     phx.azim=arr(4,:);
 %     phx.dphi=arr(5,:);
 %     phx.danght=arr(6,:);
-    
-

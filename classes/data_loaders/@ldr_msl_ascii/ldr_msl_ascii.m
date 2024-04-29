@@ -2,10 +2,13 @@ classdef ldr_msl_ascii < a_msl_loader
     % helper class to provide loading experiment data from
     % ASCII spe file and  ASCII par file
     %
-    % $Author: Alex Buts; 20/10/2011
-    %
-    % $Revision::      $Date:: 2020-02-10 16:05:56 +0000 (Mon, 10 Feb 2020) $)
-    %
+    properties(Constant)
+        % when read ASCII data, keep the specified number of digits after
+        % decimal point to obtain consistent results on different operating
+        % systems
+        ASCII_DATA_ACCURACY = 4;
+    end
+
     
     methods(Static)
         function fext=get_file_extension()
@@ -62,22 +65,26 @@ classdef ldr_msl_ascii < a_msl_loader
             %
             %
             if ~exist('file_name','var')
-                error('LOAD_ASCII:invalid_argument',' has to be called with valid file name');
+                error('HERBERT:loader_ascii:invalid_argument',...
+                    ' has to be called with valid file name');
             end
             
             if ischar(file_name)
                 [ok,mess,full_file_name] = check_file_exist(file_name,{'.spe'});
                 if ~ok
-                    error('LOAD_ASCII:invalid_argument',mess);
+                    error('HERBERT:loader_ascii:invalid_argument',...
+                        mess);
                 end
             else
-                error('LOAD_ASCII:invalid_argument',' has to be called with valid file name');
+                error('HERBERT:loader_ascii:invalid_argument',...
+                    ' has to be called with valid file name');
             end
             %
             % get info about ascii spe file;
             [ne,ndet,en]= get_spe_(full_file_name,'-info_only');
             if numel(en) ~= ne+1
-                error('LOADER_ASCII:invalid_argument',' ill formatted ascii spe file %s',file_name);
+                error('HERBERT:loader_ascii:invalid_argument',...
+                    ' Ill formatted ascii spe file %s',file_name);
             end
         end
     end
@@ -142,7 +149,7 @@ classdef ldr_msl_ascii < a_msl_loader
             if exist('fh','var')
                 ascii_loader.n_detindata_    = fh.n_detectors;
                 ascii_loader.en_             = fh.en;
-                ascii_loader.data_file_name_ = fh.file_name;
+                ascii_loader.file_name_ = fh.file_name;
             else
                 % set new file name, run all checks on this file and set up
                 % all file information
@@ -151,12 +158,12 @@ classdef ldr_msl_ascii < a_msl_loader
             end
         end
         %
-        function this = set_data_info(this,full_spe_file_name)
+        function obj = set_data_info(obj,full_spe_file_name)
             % obtain data file information and set it into class
-            [ndet,en,full_file_name]=ldr_msl_ascii.get_data_info(full_spe_file_name);
-            this.data_file_name_ = full_file_name;
-            this.n_detindata_ = ndet;
-            this.en_ = en;
+            [ndet,en,full_file_name]=loader_ascii.get_data_info(full_spe_file_name);
+            obj.file_name_ = full_file_name;
+            obj.n_detindata_ = ndet;
+            obj.en_ = en;
         end
     end
 end

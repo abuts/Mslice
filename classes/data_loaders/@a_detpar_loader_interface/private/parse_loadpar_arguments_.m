@@ -1,5 +1,5 @@
 function [return_array,force_reload,getphx,lext,new_filename]=parse_loadpar_arguments_(obj,varargin)
-% Auxiliry method processes the arguments specified with load_par methods
+% Auxiliary method processes the arguments specified with load_par methods
 %
 % usage:
 %>>this = load_par(this,'-nohor')
@@ -42,7 +42,7 @@ options = {'-nohorace','-array','-horace','-forcereload','-getphx'};
 [ok,mess,return_array,return_array2,hor_format_deprecated,force_reload,getphx,file_name]=...
     parse_char_options(varargin,options);
 if ~ok
-    if get(herbert_config,'log_level')>0
+    if get(mslice_config,'log_level')>0
         disp('Usage:');
         help([CallClassName,'.load_par']);
     end
@@ -58,15 +58,15 @@ end
 %
 if hor_format_deprecated
     warning([upper(CallClassName),':deprecated_option'],...
-        'option -horace is deprecated, loader returns data in horace format by default')
+        'option -horace is deprecated, loader returns data in Horace format by default')
 end
 if numel(file_name)>1
-    if get(herbert_config,'log_level')>0
+    if get(mslice_config,'log_level')>0
         disp('Usage:');
         help([CallClassName,'.load_par']);
     end
-    error([upper(CallClassName),':invalid_argument'],...
-        'Too many input aruments')
+    error(['HERBERT:',CallClassName,':invalid_argument'],...
+        'Too many input arguments')
 elseif numel(file_name)==1
     new_filename = file_name{1};
 else
@@ -74,8 +74,8 @@ else
 end
 
 if isempty(obj.par_file_name) && isempty(new_filename)
-    error([upper(CallClassName),':invalid_argument'],...
-        'Attempting to load ASCII detector parameters but the parameters file is not defined')
+    error(['HERBERT:',CallClassName,':invalid_argument'],...
+        'Attempting to load detector parameters but the parameters file is not defined')
 end
 
 if isempty(new_filename)
@@ -86,6 +86,3 @@ end
 
 [~,~,lext] = fileparts(filename);
 lext= lower(lext);
-
-
-

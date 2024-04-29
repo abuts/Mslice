@@ -12,7 +12,7 @@ function   [enable,xunit_path]=process_xunit_tests_path(this, enable )
 % deployed, Herbert has to be present on the matlab search path. 
 % Later it can be taken from stored configuration file.
 %
-% $Revision$ ($Date$)
+% $Revision: 345 $ ($Date: 2017-09-27 15:50:53 +0100 (Wed, 27 Sep 2017) $)
 %
 
 unit_test_base = fileparts(which('herbert_init.m'));

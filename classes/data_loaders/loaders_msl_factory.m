@@ -3,7 +3,6 @@ classdef loaders_msl_factory < handle
     % demand
     %
     %
-    % $Revision::      $Date:: 2020-02-10 16:05:56 +0000 (Mon, 10 Feb 2020) $)
     %
     
     

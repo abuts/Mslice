@@ -17,9 +17,6 @@ function [det,obj]=load_phx_or_par_private(obj,return_array,force_reload,getphx,
 %                   full filename in this structure coincides with the one,
 %                   provided for file to load from.
 %
-%
-% $Revision::      $Date:: 2020-02-10 16:05:56 +0000 (Mon, 10 Feb 2020) $)
-%
 if ~isempty(obj.det_par_) &&(~force_reload)
     sample = obj.par_file_name;
     [par_path,par_file,pext] = fileparts(sample);
@@ -48,7 +45,8 @@ switch lext
         rez  =  load_ASCII_phx(obj.par_file_name);
         is_phx = true;
     otherwise
-        error('ASCIIPAR_LOADER:load_par','unknown file extension for file %s',obj.par_file_name);
+        error('HERBERT:asciipar_msl_ldr:invalid_argument',...
+            'unknown file extension for file %s',obj.par_file_name);
 end
 %
 %
@@ -62,7 +60,8 @@ if size_par(1)==5
     det_id = 1:ndet;
     rez = [rez;det_id];
 elseif(size_par(1)~=6)
-    error('ASCIIPAR_LOADER:load_par',' proper par file has to have 5 or 6 column but this one has %d',size_par(1));
+     error('HERBERT:asciipar_msl_ldr:invalid_argument',...
+        ' proper par file has to have 5 or 6 column but this one has %d',size_par(1));
 end
 %
 if return_array
@@ -88,7 +87,7 @@ else
     end
     det =  get_hor_format(par,obj.par_file_name);
     obj.det_par_    = det;
-    obj.n_detinpar_ = ndet;
+    obj.n_det_in_par_ = ndet;
     loader_defined=true;
 end
 
@@ -109,7 +108,7 @@ if nargout >1 && ~loader_defined
         det_i =  get_hor_format(par,obj.par_file_name);
     end
     obj.det_par_    = det_i;
-    obj.n_detinpar_ = ndet;
+    obj.n_det_in_par_ = ndet;
     
 end
 %

@@ -20,7 +20,6 @@ function [ok,mess,file_name,lext] = check_file_exist(file_name,supported_file_ex
 
 % $Author: Alex Buts; 20/10/2011
 %
-% $Revision::      $Date:: 2020-02-10 16:05:56 +0000 (Mon, 10 Feb 2020) $)
 
 if ~isa(file_name,'char')
     ok=false;
@@ -49,7 +48,7 @@ end
 % make the file independent on the extension case;
 file_l =fullfile(filepath,[filename,lext]);
 % deal with normal files.
-if ~exist(file_l,'file')
+if ~is_file(file_l)
     if ispc
         ok = false;
         file_l= regexprep(file_l,'\\','/');
@@ -57,7 +56,7 @@ if ~exist(file_l,'file')
         return;
     end
     file_u=fullfile(filepath,[filename,upper(ext)]);
-    if ~exist(file_u,'file')
+    if ~is_file(file_u)
         ok = false;
         fp = regexprep(fullfile(filepath,filename),'\\','/');
         mess = ['*** Can not find file: ',fp,' with extensions: ',lext,' or ',upper(ext)];

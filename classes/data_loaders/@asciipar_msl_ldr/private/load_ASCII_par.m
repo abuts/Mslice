@@ -1,6 +1,13 @@
-function par=load_ASCII_par(filename)
+function par=load_ASCII_par(filename,accuracy)
 % Load data from ASCII Tobyfit .par file
 %   >> par = load_ASCII_par(filename)
+%   >> par = load_ASCII_par(filename,accuracy)
+% Inputs:
+% filename -- name of the par file to read
+% accuracy -- if provided, the number of digits to keep
+%             after decimal point. If not provided, the
+%             accuracy is equal to asciipar_msl_ldr.ASCII_PARAM_ACCURACY
+%
 %
 % data has following fields:
 %
@@ -26,6 +33,9 @@ if ~exist('filename','var')
     help load_ASCII_par;
     return
 end
+if ~exist('accuracy', 'var')
+    accuracy = asciipar_msl_ldr.ASCII_PARAM_ACCURACY;
+end
 % Remove blanks from beginning and end of filename
 filename=strtrim(filename);
 
@@ -34,17 +44,19 @@ filename=strtrim(filename);
 %     error('LOAD_ASCII:load_ASCII_par',' file %s has to be an ascii file but it is hdf5 file\n',filename);
 % end
 
-use_mex = get(herbert_config,'use_mex');
+use_mex = get(mslice_config,'use_mex');
 if use_mex
     try     %using C routine
         par=get_ascii_file(filename,'par');
-    catch   %using matlab routine
-        force_mex = get(herbert_config,'force_mex_if_use_mex');
+    catch  ME %using matlab routine
+        force_mex = get(mslice_config,'force_mex_if_use_mex');
         if ~force_mex
             warning('ASCIIPAR_LOADER:load_par','Cannot invoke C++ procedure get_ascii_file.%s while loading from file: %s;\n Reason: %s',mexext(),filename,lasterr());
             use_mex = false;
         else
-            error('ASCIIPAR_LOADER:load_par','Cannot invoke C++ procedure get_ascii_file.%s while loading from file: %s;\n Reason: %s',mexext(),filename,lasterr());
+            error('HERBERT:asciipar_msl_ldr:invalid_argument', ...
+                'Cannot invoke C++ procedure get_ascii_file.%s while loading from file: %s;\n Reason: %s', ...
+                mexext(),filename,ME.message);
         end
     end
 end
@@ -54,6 +66,10 @@ if ~use_mex
 end
 
 par(3,:) = -par(3,:);
+% round-off parameters to 'accuracy' digits after dot for consistency
+% as the real accuracy is even lower but different OS interpret
+% missing digits differently
+par = round(par,accuracy);
 
 
 
@@ -62,12 +78,12 @@ function par=get_par_matlab(filename)
 % Load data from ASCII Tobyfit .par file using matlab
 
 fid=fopen(filename,'rt');
-if fid==-1,
+if fid==-1
     error('A_LOADER:get_par_matlab','Error opening file %s\n',filename);
 end
 
 n=fscanf(fid,'%d \n',1);
-if get(herbert_config,'log_level')>0
+if get(mslice_config,'log_level')>0
     disp(['Loading .par file with ' num2str(n) ' detectors : ' filename]);
 end
 temp=fgetl(fid);
@@ -77,3 +93,4 @@ par=[par;fscanf(fid,'%f')];
 fclose(fid);
 par=reshape(par,cols,n);
 
+end

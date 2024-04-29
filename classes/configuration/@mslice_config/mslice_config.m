@@ -1,10 +1,8 @@
 classdef mslice_config<config_bas_msl
-    % Class holds Mslice savable configuration -- child of config_base
+    % Class holds Mslice saveable configuration -- child of config_bas_msl
     %
     %
-    % $Revision$ ($Date$)
-    %
-    
+     
     properties(Dependent,SetAccess=private)
         MSliceDir  % -- calculated: Mslice folder
         SampleDir  % -- calculated: folder with default msp configuration files which define GUI
@@ -213,11 +211,15 @@ classdef mslice_config<config_bas_msl
             % which should be saved
             fields = this.saved_properties_list_;
         end
-        function value = get_internal_field(this,field_name)
+        function value = get_default_value(obj,field_name)
             % method gets internal field value bypassing standard get/set
-            % methods interface
-            value = this.([field_name,'_']);
+            % methods interface.
+            % Relies on assumption, that each public
+            % field has a private field with name different by underscore
+            %
+            % implemented here to get access to protected properties values
+            value = obj.([field_name,'_']);
         end
-        
+     
     end
 end
