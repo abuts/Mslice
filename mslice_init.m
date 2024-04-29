@@ -51,7 +51,7 @@ else
     disp(mess)
 end
 disp('! Matlab code: Last ISIS substantial modifications date: 01/06/2015!')
-disp('!              Synchronized with recent Herbert changes: 01/06/2020!')
+disp('!              Synchronized with recent Herbert changes: 01/05/2024!')
 disp('!------------------------------------------------------------------!')
 
 
